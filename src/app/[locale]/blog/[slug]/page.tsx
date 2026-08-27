@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { ArrowLeft, ArrowUpRight } from "lucide-react"
 import { HeroIn } from "@/components/motion"
 import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
@@ -29,7 +29,12 @@ export async function generateMetadata({
     title: post.title,
     description: post.description,
     alternates: { canonical: `/${locale}/blog/${post.slug}` },
-    openGraph: { title: post.title, description: post.description, type: "article" },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: "article",
+      url: `${SITE_URL}/${locale}/blog/${post.slug}`,
+    },
   }
 }
 
@@ -39,10 +44,13 @@ export default async function BlogPostPage({
   params: Promise<{ locale: string; slug: string }>
 }) {
   const { locale, slug } = await params
-  const d = getDict(locale)
-  const lp = (path: string) => `/${locale}${path}`
   const post = getBlogPost(slug)
   if (!post) notFound()
+  if (locale !== "en") {
+    redirect(`/en/blog/${post.slug}`)
+  }
+  const d = getDict(locale)
+  const lp = (path: string) => `/${locale}${path}`
 
   const related = BLOG_POSTS.filter((p) => p.slug !== post.slug)
     .sort((a, b) => (a.category === post.category ? -1 : b.category === post.category ? 1 : 0))
@@ -91,12 +99,6 @@ export default async function BlogPostPage({
           </h1>
           <p className="mt-4 text-sm text-gray-500 dark:text-gray-500">{post.meta}</p>
         </HeroIn>
-
-        {locale !== "en" && (
-          <p className="mt-6 rounded-2xl border border-gray-800 bg-[#0a1220]/60 px-5 py-3.5 text-sm italic text-gray-400">
-            {d.blogPost.untranslatedNote}
-          </p>
-        )}
 
         <HeroIn delay={0.16}>
           <div

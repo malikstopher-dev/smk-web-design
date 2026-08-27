@@ -83,6 +83,7 @@ export function GlobeMarkers({
   const reducedRef = useRef(false)
   const [width, setWidth] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
+  const [shouldRender, setShouldRender] = useState(false)
 
   useEffect(() => {
     reducedRef.current = window.matchMedia(
@@ -164,10 +165,24 @@ export function GlobeMarkers({
       if (w > 0) setWidth((prev) => (prev === w ? prev : w))
     })
     ro.observe(el)
-    return () => ro.disconnect()
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldRender(true)
+          io.disconnect()
+        }
+      },
+      { rootMargin: "100px" },
+    )
+    io.observe(el)
+    return () => {
+      ro.disconnect()
+      io.disconnect()
+    }
   }, [])
 
   useEffect(() => {
+    if (!shouldRender) return
     const canvas = canvasRef.current
     if (!canvas || width === 0 || !markers?.length) return
 
@@ -276,7 +291,7 @@ export function GlobeMarkers({
       cancelAnimationFrame(frame)
       globe.destroy()
     }
-  }, [width, speed, markers, vecs])
+  }, [width, speed, markers, vecs, shouldRender])
 
   const handleTiltMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (reducedRef.current || e.pointerType !== "mouse") return

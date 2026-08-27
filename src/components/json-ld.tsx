@@ -40,7 +40,7 @@ export function personSchema(description?: string) {
       addressRegion: "Gauteng",
       addressCountry: "ZA",
     },
-    telephone: "+27729998863",
+    telephone: "+27825100050",
     email: "info@stopher-malik.co.za",
     worksFor: {
       "@type": "Organization",
@@ -75,16 +75,15 @@ export function localBusinessSchema(description?: string) {
     name: "SMK Web Design",
     alternateName: "Stopher Malik Web Design",
     url: SITE_URL,
-    logo: `${SITE_URL}/logo.png`,
     image: `${SITE_URL}/stopher-portrait.png`,
-    telephone: "+27729998863",
+    telephone: "+27825100050",
     email: "info@stopher-malik.co.za",
     description:
       description ??
       "SMK Web Design is a professional web design studio in Johannesburg, South Africa. We build high-converting, performance-optimised websites that help businesses attract more clients and grow online.",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "6 Wroxham Rd Paulshof",
+      streetAddress: "6 Wroxham Rd, Paulshof",
       addressLocality: "Sandton",
       addressRegion: "Gauteng",
       postalCode: "2191",

@@ -1,8 +1,7 @@
 import type { Metadata } from "next"
-import { JsonLd, breadcrumbSchema } from "@/components/json-ld"
+import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
 import { CtaBand, PageHero } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
-import { StatCounter } from "@/components/stat-counter"
 import { getDict } from "@/i18n/index"
 import { FilterableWorkGrid } from "@/components/work-grid"
 
@@ -17,6 +16,7 @@ export async function generateMetadata({
     title: d.workPage.metaTitle,
     description: d.workPage.metaDesc,
     alternates: { canonical: `/${locale}/work` },
+    openGraph: { url: `${SITE_URL}/${locale}/work` },
   }
 }
 
@@ -46,21 +46,12 @@ export default async function WorkPage({
         </Reveal>
 
         <Reveal delay={120}>
-          <dl className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {d.stats.map((s) => (
-              <div
-                key={s.label}
-                className="rounded-2xl border border-gray-200 px-6 py-7 text-center dark:border-gray-800"
-              >
-                <dd className="font-display text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                  <StatCounter value={s.value} />
-                </dd>
-                <dt className="mt-1.5 text-sm text-gray-500 dark:text-gray-400">
-                  {s.label}
-                </dt>
-              </div>
-            ))}
-          </dl>
+          <p className="mt-16 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+            <span className="font-semibold text-gray-900 dark:text-white">
+              {d.aboutPage.factLineLead}
+            </span>{" "}
+            {d.aboutPage.factLineRest}
+          </p>
         </Reveal>
       </section>
 

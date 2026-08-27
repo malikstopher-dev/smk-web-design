@@ -266,8 +266,27 @@ export function CosmicBackground() {
     }
 
     let t = 0
+    let visible = !document.hidden
+    let inView = true
+
+    const onVisibility = () => {
+      visible = !document.hidden
+    }
+    document.addEventListener("visibilitychange", onVisibility)
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting
+      },
+      { threshold: 0 },
+    )
+    io.observe(document.documentElement)
 
     function render(ts: number) {
+      if (!visible || !inView) {
+        raf = requestAnimationFrame(render)
+        return
+      }
       t += 0.016
       ctx.clearRect(0, 0, W, H)
 
@@ -414,6 +433,8 @@ export function CosmicBackground() {
         "pointerleave",
         onPointerLeave,
       )
+      document.removeEventListener("visibilitychange", onVisibility)
+      io.disconnect()
     }
   }, [])
 

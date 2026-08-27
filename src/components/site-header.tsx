@@ -117,19 +117,18 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
 
           <nav aria-label="Primary" className="hidden items-center gap-6 md:flex">
             {items.map((item) => (
-              <Magnetic key={item.href} strength={0.25} maxShift={3}>
-                <Link
-                  href={lp(item.href)}
-                  aria-current={isActive(item.href) ? "page" : undefined}
-                  className={`relative inline-block py-1 text-sm transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-px after:bg-white after:transition-all after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                    isActive(item.href)
-                      ? "font-medium text-white after:w-full"
-                      : "text-gray-400 after:w-0 hover:text-white hover:after:w-full"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              </Magnetic>
+              <Link
+                key={item.href}
+                href={lp(item.href)}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={`relative inline-block py-1 text-sm transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-px after:bg-white after:transition-all after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                  isActive(item.href)
+                    ? "font-medium text-white after:w-full"
+                    : "text-gray-400 after:w-0 hover:text-white hover:after:w-full"
+                }`}
+              >
+                {item.label}
+              </Link>
             ))}
             <LanguageSwitcher locale={locale} ariaLabel={dict.langSwitcher.aria} />
             <Magnetic strength={0.25} maxShift={4}>

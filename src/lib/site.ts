@@ -18,7 +18,7 @@ export const SITE = {
     label: "+27 82 510 0050",
     url: "https://wa.me/27825100050",
   },
-  phone: "+27729998863",
+  phone: "+27825100050",
   email: "info@stopher-malik.co.za",
   hours: "Mon–Fri 08:00–18:00 · Sat 09:00–14:00",
   socials: [
@@ -26,24 +26,7 @@ export const SITE = {
     { name: "X", handle: "@stopher_malik", url: "https://x.com/stopher_malik" },
     { name: "LinkedIn", handle: "/in/stophermalik", url: "https://www.linkedin.com/in/stophermalik/" },
   ],
-  stats: [
-    { value: "22+", label: "Projects shipped" },
-    { value: "100%", label: "Satisfaction" },
-    { value: "48h", label: "First draft" },
-  ],
 } as const
-
-export const NAV = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/services", label: "Services" },
-  { href: "/work", label: "Work" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/blog", label: "Blog" },
-] as const
-
-export const BIO =
-  "I help businesses in South Africa, Democratic Republic of the Congo, Mozambique, Canada, and beyond with high-performing websites that rank on Google and turn visitors into paying customers. I design systems that attract, engage, and convert."
 
 export interface ServiceItem {
   slug: string
@@ -167,24 +150,5 @@ export const PRICING: PricingTier[] = [
     ],
     bestFor: "Established businesses wanting a dominant digital presence",
     cta: "Go Premium",
-  },
-]
-
-export const PROCESS_STEPS = [
-  {
-    title: "Discovery call",
-    body: "A free 30-minute WhatsApp or phone call. We map your goals, your customers and what 'working' looks like for you.",
-  },
-  {
-    title: "First draft in 48h",
-    body: "You see the design direction within two days: real layout, real copy structure, not a mood board.",
-  },
-  {
-    title: "Build & refine",
-    body: "We build the production site, you review on your own devices, and we refine until it converts.",
-  },
-  {
-    title: "Launch & rank",
-    body: "Deployed to fast global infrastructure with SEO, analytics and Google Business Profile set up from day one.",
   },
 ]

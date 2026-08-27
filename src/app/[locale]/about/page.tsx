@@ -1,10 +1,8 @@
 import type { Metadata } from "next"
 import Image from "next/image"
-import { FadeIn } from "@/components/motion"
-import { JsonLd, breadcrumbSchema, personSchema } from "@/components/json-ld"
+import { JsonLd, SITE_URL, breadcrumbSchema, personSchema } from "@/components/json-ld"
 import { CtaBand, PageHero } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
-import { StatCounter } from "@/components/stat-counter"
 import { getDict } from "@/i18n/index"
 
 export async function generateMetadata({
@@ -18,6 +16,7 @@ export async function generateMetadata({
     title: d.aboutPage.metaTitle,
     description: d.aboutPage.metaDesc,
     alternates: { canonical: `/${locale}/about` },
+    openGraph: { url: `${SITE_URL}/${locale}/about` },
   }
 }
 
@@ -75,18 +74,12 @@ export default async function AboutPage({
             </p>
           </Reveal>
           <Reveal delay={0.18}>
-            <dl className="mt-9 grid grid-cols-3 gap-6 border-y border-gray-800 py-7">
-              {d.stats.map((s, i) => (
-                <FadeIn key={s.label} delay={i * 0.08}>
-                  <dd className="font-display text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl dark:text-white">
-                    <StatCounter value={s.value} />
-                  </dd>
-                  <dt className="mt-1 text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
-                    {s.label}
-                  </dt>
-                </FadeIn>
-              ))}
-            </dl>
+            <p className="mt-9 border-y border-gray-800 py-7 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {d.aboutPage.factLineLead}
+              </span>{" "}
+              {d.aboutPage.factLineRest}
+            </p>
           </Reveal>
 
           <div className="mt-12">
@@ -95,20 +88,15 @@ export default async function AboutPage({
                 {d.aboutPage.processHeading}
               </h2>
             </Reveal>
-            <ol className="mt-7 space-y-0">
+            <ol className="mt-7 divide-y divide-gray-800">
               {d.aboutPage.process.map((step, i) => (
                 <li key={step.title}>
                   <Reveal delay={i * 80}>
-                    <div className="flex gap-5 pb-8 last:pb-0">
-                      <div className="flex flex-col items-center">
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gray-300 font-mono text-xs text-gray-900 dark:border-gray-700 dark:text-white">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        {i < d.aboutPage.process.length - 1 && (
-                          <span className="mt-1 w-px flex-1 bg-gradient-to-b from-gray-300 to-transparent dark:from-gray-700" />
-                        )}
-                      </div>
-                      <div className="pt-1.5">
+                    <div className="grid gap-2 py-5 sm:grid-cols-[8rem_1fr] sm:gap-8">
+                      <span className="text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-gray-500">
+                        Step {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div>
                         <h3 className="font-semibold text-gray-900 dark:text-white">
                           {step.title}
                         </h3>

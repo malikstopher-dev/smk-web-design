@@ -44,7 +44,6 @@ export function ServicesRail({ children }: { children: ReactNode }) {
 }
 
 function AccordionItem({
-  index,
   title,
   short,
   slug,
@@ -53,7 +52,6 @@ function AccordionItem({
   locale,
   viewServiceLabel,
 }: {
-  index: number
   title: string
   short: string
   slug: string
@@ -70,9 +68,6 @@ function AccordionItem({
         aria-expanded={open}
         className="flex w-full items-center gap-4 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
       >
-        <span className="font-mono text-xs text-gray-600">
-          0{index + 1}
-        </span>
         <span className="min-w-0 flex-1">
           <span className="block font-display text-lg font-semibold tracking-tight text-white">
             {title}
@@ -130,7 +125,6 @@ export function HomeServicesList({
           {items.map((s, i) => (
             <AccordionItem
               key={s.slug}
-              index={i}
               title={s.title}
               short={s.short}
               slug={s.slug}
@@ -144,23 +138,18 @@ export function HomeServicesList({
       </div>
 
       <ol className="mt-10 hidden divide-y divide-gray-100 overflow-hidden rounded-3xl border border-gray-200 md:block dark:divide-gray-800 dark:border-gray-800">
-        {items.map((s, i) => (
-          <li key={s.slug} className="pl-8">
+        {items.map((s) => (
+          <li key={s.slug}>
             <Link
               href={`/${locale}/services#${s.slug}`}
               className="group flex items-center justify-between gap-4 p-6 transition-colors hover:bg-white/5 sm:p-7"
             >
-              <span className="flex min-w-0 items-baseline gap-5">
-                <span className="font-mono text-xs text-gray-400 dark:text-gray-600">
-                  0{i + 1}
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                  {s.title}
                 </span>
-                <span className="min-w-0">
-                  <span className="block font-display text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                    {s.title}
-                  </span>
-                  <span className="mt-1 block truncate text-sm text-gray-500 dark:text-gray-400">
-                    {s.short}
-                  </span>
+                <span className="mt-1 block text-sm text-gray-500 dark:text-gray-400">
+                  {s.short}
                 </span>
               </span>
               <ArrowUpRight className="h-5 w-5 shrink-0 text-gray-300 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gray-900 dark:text-gray-600 dark:group-hover:text-white" />

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { JsonLd, breadcrumbSchema } from "@/components/json-ld"
+import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
 import { PageHero } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
 import { PricingCards } from "@/components/pricing-cards"
@@ -16,6 +16,7 @@ export async function generateMetadata({
     title: d.pricingPage.metaTitle,
     description: d.pricingPage.metaDesc,
     alternates: { canonical: `/${locale}/pricing` },
+    openGraph: { url: `${SITE_URL}/${locale}/pricing` },
   }
 }
 

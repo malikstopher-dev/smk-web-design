@@ -37,7 +37,6 @@ export interface Dict {
     ctaTitle: string
     ctaBody: string
   }
-  featuredWorkLabel: string
   viewLiveSite: string
   aboutPage: {
     metaTitle: string
@@ -46,9 +45,8 @@ export interface Dict {
     lede: string
     intro: string
     body: string
-    statProjects: string
-    statSatisfaction: string
-    statDraft: string
+    factLineLead: string
+    factLineRest: string
     portraitAlt: string
     locationCaption: string
     processHeading: string
@@ -125,6 +123,8 @@ export interface Dict {
     title: string
     lede: string
     enNotice: string
+    comingSoonTitle: string
+    comingSoonBody: string
     readCta: string
     ctaTitle: string
     ctaBody: string
@@ -133,7 +133,6 @@ export interface Dict {
   blogPost: {
     backLabel: string
     relatedLabel: string
-    untranslatedNote: string
   }
   footer: {
     blurb: string
@@ -170,5 +169,4 @@ export interface Dict {
     personDesc: string
     businessDesc: string
   }
-  stats: { value: string; label: string }[]
 }

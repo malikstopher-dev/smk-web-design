@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
       {
-        source: "/work/:path*",
+        source: "/work/:path*.{jpg,jpeg,png,webp,avif,svg}",
         headers: [
           {
             key: "Cache-Control",

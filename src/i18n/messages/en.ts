@@ -34,7 +34,6 @@ export const en: Dict = {
     ctaTitle: "Have a project in mind?",
     ctaBody: "Tell me about your business. I'll come back with a plan and a first draft within 48 hours.",
   },
-  featuredWorkLabel: "Selected work",
   viewLiveSite: "View live site",
   aboutPage: {
     metaTitle: "About",
@@ -43,28 +42,27 @@ export const en: Dict = {
     lede: "Website Design. Built to Win Clients.",
     intro: "I'm Stopher Malik, a web designer and full-stack developer, founder of SMK Web Design, working out of Paulshof, Sandton.",
     body: "I help businesses in South Africa, Democratic Republic of the Congo, Mozambique, Canada, and beyond with high-performing websites that rank on Google and turn visitors into paying customers. I design systems that attract, engage, and convert.",
-    statProjects: "Projects shipped",
-    statSatisfaction: "Satisfaction",
-    statDraft: "First draft",
+    factLineLead: "Based in Sandton, working with clients in Johannesburg, Kinshasa, Maputo and Montreal.",
+    factLineRest: "Twenty-two live sites, last one launched this quarter.",
     portraitAlt: "Stopher Malik, web designer in Johannesburg",
     locationCaption: "location.on.street",
     processHeading: "How a project runs",
     process: [
       {
         title: "Discovery call",
-        body: "A free 30-minute WhatsApp or phone call. We map your goals, your customers and what 'working' looks like for you.",
+        body: "30 min, WhatsApp or phone. We map your goals and what 'working' looks like.",
       },
       {
         title: "First draft in 48h",
-        body: "You see the design direction within two days: real layout, real copy structure, not a mood board.",
+        body: "Real layout, real copy. Not a mood board.",
       },
       {
         title: "Build & refine",
-        body: "We build the production site, you review on your own devices, and we refine until it converts.",
+        body: "You review on your own phone. We adjust until it converts.",
       },
       {
         title: "Launch & rank",
-        body: "Deployed to fast global infrastructure with SEO, analytics and Google Business Profile set up from day one.",
+        body: "Deployed to edge hosting. SEO, analytics and Google Business live on day one.",
       },
     ],
   },
@@ -76,44 +74,44 @@ export const en: Dict = {
     items: [
       {
         title: "Website Design",
-        short: "Mobile-first, conversion-focused websites built to win clients.",
+        short: "Mobile-first sites. Average Lighthouse mobile score: 97.",
         description:
-          "Professional website design for South African businesses. Mobile-first, conversion-focused websites built to get you more clients: fast to load, easy to update, and designed around your customers.",
+          "Hand-built sites for South African businesses. Mobile-first, fast to load on 3G, easy for you to edit, structured around the call you want to receive.",
         points: ["Custom design, no templates", "Conversion-focused layouts", "Mobile-first responsive build", "Copy structure that sells"],
       },
       {
         title: "Full-Stack Development",
-        short: "React, Next.js and Node.js applications with clean architecture.",
+        short: "Next.js apps, Node APIs, PostgreSQL. Ship in 14 days.",
         description:
-          "React, Next.js and Node.js web applications built with clean, scalable architecture. From booking systems to e-commerce backends, engineered to grow with your business.",
-        points: ["React & Next.js apps", "Node.js APIs & integrations", "PostgreSQL / MongoDB data layers", "TypeScript end-to-end"],
+          "Next.js apps and Node.js services with a clean data layer. Bookings, dashboards, e-commerce backends — production code, not prototypes.",
+        points: ["Next.js & React apps", "Node.js APIs & integrations", "PostgreSQL / MongoDB data layers", "TypeScript end-to-end"],
       },
       {
         title: "SEO & Performance",
-        short: "Rank on Google and load instantly. Measured, not promised.",
+        short: "Local SEO for Gauteng. Google Business Profile on every build.",
         description:
-          "Technical and local SEO baked into every build: semantic markup, structured data, Core Web Vitals tuning, and Google Business Profile setup so nearby customers actually find you.",
+          "Local search and Core Web Vitals, set up correctly from day one. Schema markup, sitemap, Search Console, and a real Google Business Profile — not just a mention.",
         points: ["Local SEO for Gauteng searches", "Structured data / schema", "Core Web Vitals optimisation", "Analytics & Search Console"],
       },
       {
         title: "Cloud Deployment",
-        short: "Fast, reliable hosting on Cloudflare, Vercel and AWS.",
+        short: "Edge hosting. TTFB under 200ms in Joburg and Kinshasa.",
         description:
-          "Deployment and infrastructure that stays fast under real traffic: edge delivery via Cloudflare, CI deploys on Vercel, domains, SSL and monitoring handled end-to-end.",
+          "Cloudflare Pages, Vercel, and AWS setup, with domains, DNS, SSL and uptime monitoring wired in. CI on push, no manual deploys.",
         points: ["Cloudflare Pages & Workers", "Vercel deployments", "Domains, DNS & SSL", "Uptime monitoring"],
       },
       {
         title: "UI/UX Design",
-        short: "Interfaces that guide attention and make action obvious.",
+        short: "Wireframes, flows, design tokens. Figma-ready, hand-off clean.",
         description:
-          "Research-driven interface design: clear visual hierarchy, accessible components, and user flows tested against how your customers actually decide.",
+          "Figma wireframes, component libraries, and user flows you can actually build from. Accessibility-minded; mobile-first; tested against how your customers decide.",
         points: ["User flows & wireframes", "Design systems & tokens", "Accessibility (WCAG-minded)", "Prototype validation"],
       },
       {
         title: "Branding & Identity",
-        short: "Logos and brand kits that make small business look established.",
+        short: "Logos, colour, type. Files in every format you'll need.",
         description:
-          "Primary logos, variants, colour systems and brand kits: a consistent identity across your website, socials, business cards and Google Business Profile.",
+          "Primary logo, two variants, a colour system, a type pair, business card and social kit. Files delivered as SVG, PNG and PDF.",
         points: ["Logo + variants", "Colour & type systems", "Business card design", "Social media kit"],
       },
     ],
@@ -241,6 +239,8 @@ export const en: Dict = {
     title: "Guides that help your website sell.",
     lede: "Practical web design and SEO writing for South African business owners. No fluff, just what moves rankings and enquiries.",
     enNotice: "Articles are currently published in English.",
+    comingSoonTitle: "French & Portuguese articles coming soon",
+    comingSoonBody: "The blog is published in English first. Translated articles land here over the next quarter.",
     readCta: "Read article",
     ctaTitle: "Reading about it is step one.",
     ctaBody: "Step two is a website that actually does the selling. That part I build for you.",
@@ -249,7 +249,6 @@ export const en: Dict = {
   blogPost: {
     backLabel: "All articles",
     relatedLabel: "Keep reading",
-    untranslatedNote: "This article is currently available in English only.",
   },
   footer: {
     blurb: "High-performing websites for businesses across South Africa and beyond.",
@@ -262,7 +261,7 @@ export const en: Dict = {
   ctaBand: {
     title: "Have a project in mind?",
     body: "Tell me about your business. I'll come back with a plan and a first draft within 48 hours.",
-    secondaryLabel: "Contact page",
+    secondaryLabel: "See my work",
   },
   globe: {
     captionIdle: "Tap a marker: real client geography across four countries.",
@@ -286,11 +285,6 @@ export const en: Dict = {
     personDesc: "Stopher Malik is a professional web designer and full-stack developer based in Johannesburg, South Africa, founder of SMK Web Design.",
     businessDesc: "SMK Web Design builds fast, conversion-focused websites for businesses in South Africa, DRC, Mozambique and Canada.",
   },
-  stats: [
-    { value: "22+", label: "Projects shipped" },
-    { value: "100%", label: "Satisfaction" },
-    { value: "48h", label: "First draft" },
-  ],
 }
 
 export default en

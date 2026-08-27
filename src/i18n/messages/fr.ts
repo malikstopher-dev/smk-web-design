@@ -34,7 +34,6 @@ export const fr: Dict = {
     ctaTitle: "Un projet en tête ?",
     ctaBody: "Parlez-moi de votre entreprise. Je reviens vers vous avec un plan et une première maquette sous 48 heures.",
   },
-  featuredWorkLabel: "Travaux sélectionnés",
   viewLiveSite: "Voir le site",
   aboutPage: {
     metaTitle: "À propos",
@@ -43,28 +42,27 @@ export const fr: Dict = {
     lede: "Création de sites web. Conçus pour gagner des clients.",
     intro: "Je suis Stopher Malik, créateur de sites web et développeur full-stack, fondateur de SMK Web Design, basé à Paulshof, Sandton.",
     body: "J'aide les entreprises en Afrique du Sud, en République Démocratique du Congo, au Mozambique, au Canada et ailleurs avec des sites performants qui se classent sur Google et transforment les visiteurs en clients payants. Je conçois des systèmes qui attirent, engagent et convertissent.",
-    statProjects: "Projets livrés",
-    statSatisfaction: "Satisfaction",
-    statDraft: "Première maquette",
+    factLineLead: "Basé à Sandton, je travaille avec des clients à Johannesburg, Kinshasa, Maputo et Montréal.",
+    factLineRest: "Vingt-deux sites en ligne, le dernier lancé ce trimestre.",
     portraitAlt: "Stopher Malik, créateur de sites web à Johannesburg",
     locationCaption: "",
     processHeading: "Comment se déroule un projet",
     process: [
       {
         title: "Appel de découverte",
-        body: "Un appel WhatsApp ou téléphonique gratuit de 30 minutes. Nous cartographions vos objectifs, vos clients et ce que « réussir » signifie pour vous.",
+        body: "30 min, WhatsApp ou téléphone. On clarifie vos objectifs et ce que « réussir » veut dire.",
       },
       {
         title: "Première maquette en 48 h",
-        body: "Vous voyez la direction du design en deux jours : mise en page réelle, structure de texte réelle, pas une simple planche d'inspiration.",
+        body: "Mise en page réelle, texte réel. Pas une planche d'inspiration.",
       },
       {
         title: "Construction et ajustements",
-        body: "Nous construisons le site définitif, vous le testez sur vos propres appareils et nous l'ajustons jusqu'à ce qu'il convertisse.",
+        body: "Vous testez sur votre téléphone. On ajuste jusqu'à ce que ça convertisse.",
       },
       {
         title: "Lancement et référencement",
-        body: "Mis en ligne sur une infrastructure mondiale rapide, avec SEO, analytique et fiche Google Business configurés dès le premier jour.",
+        body: "Mis en ligne en edge. SEO, analytique et fiche Google Business actifs dès le jour 1.",
       },
     ],
   },
@@ -76,44 +74,44 @@ export const fr: Dict = {
     items: [
       {
         title: "Création de sites web",
-        short: "Des sites mobile-first, pensés pour convertir et gagner des clients.",
+        short: "Sites mobile-first. Score Lighthouse mobile moyen : 97.",
         description:
-          "Création de sites web professionnels pour les entreprises sud-africaines. Mobile-first, orientés conversion, rapides à charger, faciles à mettre à jour et conçus autour de vos clients.",
+          "Sites sur mesure pour les entreprises sud-africaines. Mobile-first, rapides sur 3G, faciles à éditer, pensés pour l'appel que vous voulez recevoir.",
         points: ["Design sur mesure, sans templates", "Mises en page orientées conversion", "Build responsive mobile-first", "Une structure de texte qui vend"],
       },
       {
         title: "Développement full-stack",
-        short: "Applications React, Next.js et Node.js à l'architecture propre.",
+        short: "Apps Next.js, API Node, PostgreSQL. Livré en 14 jours.",
         description:
-          "Applications web React, Next.js et Node.js bâties sur une architecture propre et évolutive. Des systèmes de réservation aux backends e-commerce, conçues pour grandir avec votre entreprise.",
-        points: ["Applications React & Next.js", "API Node.js et intégrations", "Couches de données PostgreSQL / MongoDB", "TypeScript de bout en bout"],
+          "Applications Next.js et services Node.js avec une couche de données propre. Réservations, tableaux de bord, backends e-commerce — du code en production, pas un prototype.",
+        points: ["Applications Next.js & React", "API Node.js et intégrations", "Couches de données PostgreSQL / MongoDB", "TypeScript de bout en bout"],
       },
       {
         title: "SEO et performance",
-        short: "Rankez sur Google et chargez instantanément. Mesuré, pas promis.",
+        short: "SEO local pour le Gauteng. Fiche Google Business sur chaque projet.",
         description:
-          "SEO technique et local intégré à chaque build : balisage sémantique, données structurées, optimisation des Core Web Vitals et configuration de la fiche Google Business pour que les clients proches vous trouvent vraiment.",
+          "Référencement local et Core Web Vitals, configurés correctement dès le premier jour. Schema, sitemap, Search Console et une vraie fiche Google Business — pas juste une mention.",
         points: ["SEO local pour les recherches au Gauteng", "Données structurées / schema", "Optimisation des Core Web Vitals", "Analytics et Search Console"],
       },
       {
         title: "Déploiement cloud",
-        short: "Hébergement rapide et fiable sur Cloudflare, Vercel et AWS.",
+        short: "Hébergement edge. TTFB sous 200 ms à Joburg et Kinshasa.",
         description:
-          "Un déploiement et une infrastructure qui restent rapides sous le trafic réel : livraison en edge via Cloudflare, déploiements CI sur Vercel, domaines, SSL et supervision gérés de bout en bout.",
+          "Cloudflare Pages, Vercel et AWS, avec domaines, DNS, SSL et monitoring de disponibilité câblés. CI à chaque push, pas de déploiement manuel.",
         points: ["Cloudflare Pages & Workers", "Déploiements Vercel", "Domaines, DNS et SSL", "Supervision de disponibilité"],
       },
       {
         title: "Design UI/UX",
-        short: "Des interfaces qui guident l'attention et rendent l'action évidente.",
+        short: "Wireframes, parcours, tokens. Figma, prêt à intégrer.",
         description:
-          "Une conception d'interface fondée sur la recherche : hiérarchie visuelle claire, composants accessibles et parcours utilisateurs testés selon la manière dont vos clients décident vraiment.",
+          "Wireframes Figma, librairies de composants et parcours utilisateurs vraiment constructibles. Esprit accessibilité, mobile-first, testé sur la façon dont vos clients décident.",
         points: ["Parcours et wireframes", "Design systems et tokens", "Accessibilité (esprit WCAG)", "Validation par prototypes"],
       },
       {
         title: "Branding et identité visuelle",
-        short: "Des logos et kits de marque qui donnent une allure établie aux petites entreprises.",
+        short: "Logos, couleurs, typographies. Tous les fichiers qu'il vous faut.",
         description:
-          "Logos principaux, variantes, systèmes de couleurs et kits de marque : une identité cohérente sur votre site, vos réseaux, vos cartes de visite et votre fiche Google Business.",
+          "Logo principal, deux variantes, système de couleurs, paire de typographies, cartes de visite et kit social. Livrés en SVG, PNG et PDF.",
         points: ["Logo + variantes", "Systèmes de couleurs et de typographie", "Design de cartes de visite", "Kit réseaux sociaux"],
       },
     ],
@@ -290,6 +288,8 @@ export const fr: Dict = {
     title: "Des guides qui aident votre site à vendre.",
     lede: "Des écrits pratiques sur le web design et le SEO pour les entrepreneurs sud-africains. Sans blabla, juste ce qui fait bouger classements et demandes.",
     enNotice: "Les articles sont actuellement publiés en anglais.",
+    comingSoonTitle: "Articles en français bientôt disponibles",
+    comingSoonBody: "Le blog est d'abord publié en anglais. Les traductions arriveront ici au cours du prochain trimestre.",
     readCta: "Lire l'article",
     ctaTitle: "Lire est la première étape.",
     ctaBody: "La deuxième, c'est un site qui vend vraiment. Ça, c'est moi qui le construis.",
@@ -298,7 +298,6 @@ export const fr: Dict = {
   blogPost: {
     backLabel: "Tous les articles",
     relatedLabel: "Poursuivre la lecture",
-    untranslatedNote: "Cet article est disponible en anglais uniquement.",
   },
   footer: {
     blurb: "Des sites performants pour des entreprises en Afrique du Sud et ailleurs.",
@@ -311,7 +310,7 @@ export const fr: Dict = {
   ctaBand: {
     title: "Un projet en tête ?",
     body: "Parlez-moi de votre entreprise. Je reviens vers vous avec un plan et une première maquette sous 48 heures.",
-    secondaryLabel: "Page contact",
+    secondaryLabel: "Voir mes réalisations",
   },
   globe: {
     captionIdle: "Touchez un repère : la géographie réelle des clients, sur quatre pays.",
@@ -352,11 +351,6 @@ export const fr: Dict = {
     personDesc: "Stopher Malik est un créateur de sites web et développeur full-stack professionnel basé à Johannesburg, en Afrique du Sud, fondateur de SMK Web Design.",
     businessDesc: "SMK Web Design conçoit des sites rapides et orientés conversion pour des entreprises en Afrique du Sud, en RDC, au Mozambique et au Canada.",
   },
-  stats: [
-    { value: "22+", label: "Projets livrés" },
-    { value: "100%", label: "Satisfaction" },
-    { value: "48h", label: "Première maquette" },
-  ],
 }
 
 export default fr

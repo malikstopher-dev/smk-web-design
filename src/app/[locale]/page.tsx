@@ -9,6 +9,7 @@ import {
   JsonLd,
   localBusinessSchema,
   personSchema,
+  SITE_URL,
   websiteSchema,
 } from "@/components/json-ld"
 import { HeroIn, HoverButton } from "@/components/motion"
@@ -33,6 +34,7 @@ export async function generateMetadata({
     title: { absolute: d.meta.homeTitle },
     description: d.meta.homeDesc,
     alternates: { canonical: `/${locale}` },
+    openGraph: { url: `${SITE_URL}/${locale}` },
   }
 }
 

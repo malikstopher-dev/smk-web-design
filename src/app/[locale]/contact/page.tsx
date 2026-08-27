@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Clock, CreditCard, Mail, MapPin, MessageCircle } from "lucide-react"
 import { ContactForm } from "@/components/contact-form"
-import { JsonLd, breadcrumbSchema, localBusinessSchema } from "@/components/json-ld"
+import { JsonLd, SITE_URL, breadcrumbSchema, localBusinessSchema } from "@/components/json-ld"
 import { PageHero } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
@@ -18,6 +18,7 @@ export async function generateMetadata({
     title: d.contactPage.metaTitle,
     description: d.contactPage.metaDesc,
     alternates: { canonical: `/${locale}/contact` },
+    openGraph: { url: `${SITE_URL}/${locale}/contact` },
   }
 }
 

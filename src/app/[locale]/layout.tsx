@@ -1,10 +1,9 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { DocumentLang } from "@/components/document-lang"
 import { SITE_URL } from "@/components/json-ld"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
-import { HTML_LANG, LOCALES, OG_LOCALE, isLocale } from "@/i18n/config"
+import { LOCALES, OG_LOCALE, isLocale } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
 
 export function generateStaticParams() {
@@ -29,7 +28,7 @@ export async function generateMetadata({
       type: "website",
       siteName: "SMK Web Design",
       locale: OG_LOCALE[isLocale(locale) ? locale : "en"],
-      url: SITE_URL,
+      url: `${SITE_URL}/${locale}`,
       images: [
         {
           url: "/og-image-1200x630.png",
@@ -62,7 +61,6 @@ export default async function LocaleLayout({
 
   return (
     <>
-      <DocumentLang lang={HTML_LANG[locale]} />
       <SiteHeader locale={locale} dict={d} />
       <main className="flex-1 pb-14 sm:pb-24">{children}</main>
       <SiteFooter locale={locale} dict={d} />

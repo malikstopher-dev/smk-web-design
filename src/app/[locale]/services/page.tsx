@@ -3,7 +3,7 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { HoverLift } from "@/components/motion"
 import { SpotlightCard } from "@/components/spotlight-card"
-import { JsonLd, breadcrumbSchema } from "@/components/json-ld"
+import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
 import { CtaBand, PageHero } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
@@ -20,6 +20,7 @@ export async function generateMetadata({
     title: d.servicesPage.metaTitle,
     description: d.servicesPage.metaDesc,
     alternates: { canonical: `/${locale}/services` },
+    openGraph: { url: `${SITE_URL}/${locale}/services` },
   }
 }
 

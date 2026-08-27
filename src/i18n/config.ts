@@ -27,5 +27,6 @@ export function localizedPath(pathname: string, locale: Locale): string {
   const withoutLocale = localeFromPathname(pathname)
     ? pathname.split("/").slice(2).join("/")
     : pathname.replace(/^\//, "")
-  return `/${locale}${withoutLocale ? `/${withoutLocale}` : ""}`
+  const safe = withoutLocale.replace(/\.\.+/g, "").replace(/\/+/g, "/")
+  return `/${locale}${safe ? `/${safe}` : ""}`
 }
