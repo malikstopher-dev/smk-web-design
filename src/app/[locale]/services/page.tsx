@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import { HoverLift } from "@/components/motion"
+import { SpotlightCard } from "@/components/spotlight-card"
 import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
 import { CtaBand, PageHero } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
@@ -46,59 +48,62 @@ export default async function ServicesPage({
         lede={d.servicesPage.lede}
       />
 
-      <section className="smk-container">
-        <ol className="border-t border-white/10">
+      <section className="mx-auto max-w-6xl px-6 pb-12 sm:px-10">
+        <div className="grid gap-6 lg:grid-cols-2">
           {SERVICES.map((s, i) => (
-            <li
+            <Reveal
               key={s.slug}
-              id={s.slug}
-              className="border-b border-white/10 scroll-mt-24"
+              delay={(i % 2) * 0.09}
+              className={i % 2 === 1 ? "lg:mt-14" : ""}
             >
-              <Reveal delay={i * 50}>
-                <article className="grid grid-cols-1 gap-x-[var(--gutter)] gap-y-4 py-10 sm:grid-cols-12">
-                  <span className="text-xs uppercase tracking-[0.14em] text-gray-500 sm:col-span-2">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div className="sm:col-span-6">
-                    <h2 className="text-2xl font-medium tracking-tight text-white sm:text-3xl">
+              <HoverLift className="h-full">
+                <SpotlightCard className="h-full rounded-3xl">
+                  <article
+                    id={s.slug}
+                    className={`depth-card flex h-full scroll-mt-24 flex-col rounded-3xl border p-8 shadow-lg shadow-black/20 transition-shadow duration-150 hover:shadow-2xl hover:shadow-black/50 ${
+                      i === 0
+                        ? "border-gray-600 bg-[#0a1220]/85"
+                        : "border-gray-800 bg-[#050a14]/70"
+                    }`}
+                  >
+                    <span className="font-mono text-xs text-gray-400 dark:text-gray-600">
+                      0{i + 1}
+                    </span>
+                    <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                       {d.servicesPage.items[i].title}
                     </h2>
-                    <p className="mt-3 text-base leading-relaxed text-gray-400">
+                    <p className="mt-3 leading-relaxed text-gray-600 dark:text-gray-400">
                       {d.servicesPage.items[i].description}
                     </p>
-                  </div>
-                  <div className="sm:col-span-4">
-                    <ul className="space-y-1.5 text-sm text-gray-300">
+                    <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
                       {d.servicesPage.items[i].points.map((p) => (
                         <li
                           key={p}
-                          className="flex items-start gap-2.5"
+                          className="flex items-start gap-2.5 text-sm text-gray-700 dark:text-gray-300"
                         >
                           <span
                             aria-hidden
-                            className="mt-0.5 text-gray-500"
+                            className="mt-px font-mono text-xs leading-5 text-gray-500 dark:text-gray-500"
                           >
                             +
                           </span>
-                          <span>{p}</span>
+                          {p}
                         </li>
                       ))}
                     </ul>
                     <Link
-                      href={`${lp("/contact")}?service=${encodeURIComponent(
-                        d.servicesPage.items[i].title,
-                      )}`}
-                      className="smk-link mt-4 inline-flex items-center gap-1.5 text-sm text-white"
+                      href={`${lp("/contact")}?service=${encodeURIComponent(d.servicesPage.items[i].title)}`}
+                      className="group mt-auto inline-flex items-center gap-1.5 pt-7 text-sm font-medium text-gray-900 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 dark:text-white dark:focus-visible:ring-white"
                     >
                       {d.servicesPage.discuss}
-                      <ArrowRight className="h-3.5 w-3.5" />
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
                     </Link>
-                  </div>
-                </article>
-              </Reveal>
-            </li>
+                  </article>
+                </SpotlightCard>
+              </HoverLift>
+            </Reveal>
           ))}
-        </ol>
+        </div>
       </section>
 
       <CtaBand

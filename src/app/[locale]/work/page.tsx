@@ -38,20 +38,16 @@ export default async function WorkPage({
         ])}
       />
 
-      <PageHero
-        eyebrow={d.nav.work}
-        title={d.workPage.title}
-        lede={d.workPage.lede}
-      />
+      <PageHero eyebrow={d.nav.work} title={d.workPage.title} lede={d.workPage.lede} />
 
-      <section className="smk-container">
+      <section className="mx-auto max-w-6xl px-6 sm:px-10">
         <Reveal>
-          <FilterableWorkGrid dict={d} />
+          <FilterableWorkGrid locale={locale} dict={d} />
         </Reveal>
 
         <Reveal delay={120}>
-          <p className="mt-24 text-sm leading-relaxed text-gray-400">
-            <span className="font-medium text-white">
+          <p className="mt-16 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+            <span className="font-semibold text-gray-900 dark:text-white">
               {d.aboutPage.factLineLead}
             </span>{" "}
             {d.aboutPage.factLineRest}

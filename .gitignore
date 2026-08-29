@@ -39,6 +39,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# local snapshot of the live site (kept on disk only, not in git)
-MALIK CURRENT/

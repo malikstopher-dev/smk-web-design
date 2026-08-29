@@ -34,20 +34,19 @@ export default async function AboutPage({
       <JsonLd data={personSchema(d.jsonld.personDesc)} />
       <JsonLd
         data={breadcrumbSchema([
-          { name: d.nav.home, path: `/${locale}` },
+          {
+            name: d.nav.home,
+            path: `/${locale}`,
+          },
           { name: d.nav.about, path: lp("/about") },
         ])}
       />
 
-      <PageHero
-        eyebrow={d.nav.about}
-        title={d.aboutPage.title}
-        lede={d.aboutPage.lede}
-      />
+      <PageHero eyebrow={d.nav.about} title={d.aboutPage.title} lede={d.aboutPage.lede} />
 
-      <section className="smk-container grid grid-cols-1 gap-12 pb-12 md:grid-cols-12 md:gap-x-[var(--gutter)]">
-        <Reveal className="md:col-span-5">
-          <div className="relative overflow-hidden rounded-md">
+      <section className="mx-auto grid max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl border border-gray-800 shadow-2xl shadow-black/40">
             <Image
               src="/stopher-portrait.png"
               alt={d.aboutPage.portraitAlt}
@@ -57,54 +56,51 @@ export default async function AboutPage({
               priority
             />
           </div>
-          <p className="mt-3 text-xs text-gray-500">
-            <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+          <p className="mt-4 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-gray-900 dark:bg-white" />
             Paulshof, Sandton
           </p>
         </Reveal>
 
-        <div className="md:col-span-7">
+        <div>
           <Reveal>
-            <p className="text-lg leading-relaxed text-gray-200 sm:text-xl">
+            <p className="text-lg leading-relaxed text-gray-600 dark:text-gray-400">
               {d.aboutPage.intro}
             </p>
           </Reveal>
           <Reveal delay={90}>
-            <p className="mt-5 max-w-[var(--col-7)] text-base leading-relaxed text-gray-400">
+            <p className="mt-5 leading-relaxed text-gray-600 dark:text-gray-400">
               {d.aboutPage.body}
             </p>
           </Reveal>
-          <Reveal delay={140}>
-            <p className="mt-9 border-t border-white/10 pt-5 text-sm leading-relaxed text-gray-400">
-              <span className="font-medium text-white">
+          <Reveal delay={0.18}>
+            <p className="mt-9 border-y border-gray-800 py-7 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+              <span className="font-semibold text-gray-900 dark:text-white">
                 {d.aboutPage.factLineLead}
               </span>{" "}
               {d.aboutPage.factLineRest}
             </p>
           </Reveal>
 
-          <div className="mt-16">
+          <div className="mt-12">
             <Reveal>
-              <h2 className="text-2xl font-medium tracking-tight text-white sm:text-3xl">
+              <h2 className="font-display text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                 {d.aboutPage.processHeading}
               </h2>
             </Reveal>
-            <ol className="mt-7 border-t border-white/10">
+            <ol className="mt-7 divide-y divide-gray-800">
               {d.aboutPage.process.map((step, i) => (
-                <li
-                  key={step.title}
-                  className="border-b border-white/10"
-                >
-                  <Reveal delay={i * 60}>
-                    <div className="grid grid-cols-1 gap-2 py-6 sm:grid-cols-[6rem_1fr] sm:gap-8">
-                      <span className="text-xs uppercase tracking-[0.14em] text-gray-500">
+                <li key={step.title}>
+                  <Reveal delay={i * 80}>
+                    <div className="grid gap-2 py-5 sm:grid-cols-[8rem_1fr] sm:gap-8">
+                      <span className="text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-gray-500">
                         Step {String(i + 1).padStart(2, "0")}
                       </span>
                       <div>
-                        <h3 className="text-base font-medium text-white sm:text-lg">
+                        <h3 className="font-semibold text-gray-900 dark:text-white">
                           {step.title}
                         </h3>
-                        <p className="mt-2 max-w-[var(--col-6)] text-sm leading-relaxed text-gray-400">
+                        <p className="mt-1.5 max-w-md text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                           {step.body}
                         </p>
                       </div>

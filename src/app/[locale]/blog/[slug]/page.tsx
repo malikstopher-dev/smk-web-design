@@ -79,11 +79,11 @@ export default async function BlogPostPage({
         ])}
       />
 
-      <article className="smk-container smk-page">
+      <article className="mx-auto max-w-3xl px-6 pb-16 pt-16 sm:pt-24">
         <HeroIn>
           <Link
             href={lp("/blog")}
-            className="smk-link inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-gray-500"
+            className="inline-flex h-9 items-center gap-2 rounded-full border border-gray-700 px-4 text-xs font-medium text-gray-400 transition-colors hover:border-white hover:text-white"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             {d.blogPost.backLabel}
@@ -91,58 +91,57 @@ export default async function BlogPostPage({
         </HeroIn>
 
         <HeroIn delay={0.08}>
-          <span className="mt-8 inline-block text-xs uppercase tracking-[0.14em] text-gray-500">
+          <span className="mt-8 inline-flex items-center rounded-full border border-gray-700 px-2.5 py-0.5 text-[11px] font-medium text-gray-400">
             {post.category}
           </span>
-          <h1 className="mt-3 max-w-[var(--col-9)] text-3xl font-medium leading-[1.1] tracking-tight text-white sm:text-4xl md:text-5xl">
+          <h1 className="mt-4 font-display text-3xl font-semibold leading-tight tracking-tight text-gray-900 sm:text-5xl dark:text-white">
             {post.title}
           </h1>
-          <p className="mt-4 text-xs text-gray-500">{post.meta}</p>
+          <p className="mt-4 text-sm text-gray-500 dark:text-gray-500">{post.meta}</p>
         </HeroIn>
 
         <HeroIn delay={0.16}>
           <div
-            className="blog-prose mt-12"
+            className="blog-prose mt-10"
             dangerouslySetInnerHTML={{ __html: post.body }}
           />
         </HeroIn>
 
-        <div className="mt-24 border-t border-white/15 pt-8">
-          <h2 className="font-display text-2xl font-medium tracking-tight text-white sm:text-3xl">
+        <div className="mt-16 rounded-3xl border border-gray-800 p-8 text-center">
+          <h2 className="font-display text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
             {d.ctaBand.title}
           </h2>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed text-gray-400">
+          <p className="mx-auto mt-2 max-w-sm text-sm text-gray-500 dark:text-gray-400">
             {d.ctaBand.body}
           </p>
           <Link
             href={lp("/contact")}
-            className="smk-link mt-6 inline-flex items-center gap-1.5 text-sm text-white"
+            className="mt-5 inline-flex h-11 items-center rounded-full bg-white px-6 text-sm font-medium text-gray-900 shadow-lg shadow-black/20 transition-colors hover:bg-gray-200"
           >
             {d.hero.quoteCta}
           </Link>
         </div>
 
-        <h2 className="mt-24 text-sm uppercase tracking-[0.14em] text-gray-500">
+        <h2 className="mt-16 font-display text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
           {d.blogPost.relatedLabel}
         </h2>
-        <ol className="mt-6 grid grid-cols-1 gap-x-[var(--gutter)] gap-y-8 sm:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {related.map((r) => (
-            <li key={r.slug}>
-              <Link
-                href={lp(`/blog/${r.slug}`)}
-                className="group block"
-              >
-                <span className="text-xs uppercase tracking-[0.12em] text-gray-500">
-                  {r.category}
-                </span>
-                <span className="mt-2 block text-sm font-medium text-white transition-colors group-hover:text-gray-200">
-                  {r.title}
-                </span>
-                <ArrowUpRight className="mt-3 h-4 w-4 text-gray-500 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />
-              </Link>
-            </li>
+            <Link
+              key={r.slug}
+              href={lp(`/blog/${r.slug}`)}
+              className="group rounded-2xl border border-gray-800 p-5 transition-colors hover:border-gray-600"
+            >
+              <span className="text-[11px] font-medium uppercase tracking-wider text-gray-500">
+                {r.category}
+              </span>
+              <span className="mt-2 block font-display text-sm font-semibold leading-snug text-gray-900 dark:text-white">
+                {r.title}
+              </span>
+              <ArrowUpRight className="mt-3 h-4 w-4 text-gray-600 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />
+            </Link>
           ))}
-        </ol>
+        </div>
       </article>
     </>
   )
