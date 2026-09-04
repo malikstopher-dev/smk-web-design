@@ -35,6 +35,7 @@ export const pt: Dict = {
     ctaBody: "Fale-me do seu negócio. Volto com um plano e uma primeira versão em 48 horas.",
   },
   viewLiveSite: "Ver site online",
+  viewProject: "Ver projeto",
   aboutPage: {
     metaTitle: "Sobre",
     metaDesc: "Stopher Malik é criador de sites e programador full-stack em Sandton, Joanesburgo, e fundador da SMK Web Design. Cria sites de alta conversão na África do Sul, RD Congo, Moçambique e Canadá.",

@@ -15,8 +15,8 @@ import { HeroIn, HoverButton } from "@/components/motion"
 import { CtaBand } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
 import { RevealHeading } from "@/components/text-reveal"
+import { WorkBoard } from "@/components/work-board"
 import { WordmarkBanner } from "@/components/wordmark-banner"
-import { ProjectCard } from "@/components/work-grid"
 import { HTML_LANG } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
 import { FEATURED_PROJECTS } from "@/lib/projects"
@@ -155,43 +155,18 @@ export default async function HomePage({
         </HeroIn>
       </section>
 
-      {/* ═══ FEATURED WORK — Editorial project grid ═══ */}
+      {/* ═══ FEATURED WORK — Draggable scattered board ═══ */}
       <section aria-labelledby="featured-heading" className="relative mx-auto max-w-6xl px-6 sm:px-10">
         <div className="editorial-divider mb-16" />
-        <Reveal>
-          <div className="flex items-end justify-between gap-6">
-            <div>
-              <p className="tech-label">
-                {d.home.featuredEyebrow}
-              </p>
-              <RevealHeading
-                id="featured-heading"
-                as="h2"
-                className="display-lg mt-4 text-white"
-              >
-                {d.home.featuredTitle}
-              </RevealHeading>
-            </div>
-            <Link
-              href={lp("/work")}
-              className="hidden shrink-0 items-center gap-1.5 text-sm font-medium text-white/60 underline-offset-4 transition-colors hover:text-white hover:underline sm:inline-flex"
-            >
-              {d.home.allProjects}
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </Reveal>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
-          {FEATURED_PROJECTS.map((p, i) => (
-            <Reveal
-              key={p.name}
-              delay={i * 0.09}
-              className={i === 0 ? "sm:col-span-2" : ""}
-            >
-              <ProjectCard p={p} wide={i === 0} locale={locale} dict={d} />
-            </Reveal>
-          ))}
-        </div>
+        <WorkBoard
+          projects={FEATURED_PROJECTS}
+          heading={d.home.featuredTitle}
+          eyebrow={d.home.featuredEyebrow}
+          allLabel={d.home.allProjects}
+          allHref={lp("/work")}
+          locale={locale}
+          dict={d}
+        />
       </section>
 
       <WordmarkBanner text={d.home.bannerText} className="mt-20" />

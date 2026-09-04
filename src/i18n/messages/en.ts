@@ -35,6 +35,7 @@ export const en: Dict = {
     ctaBody: "Tell me about your business. I'll come back with a plan and a first draft within 48 hours.",
   },
   viewLiveSite: "View live site",
+  viewProject: "View project",
   aboutPage: {
     metaTitle: "About",
     metaDesc: "Stopher Malik is a web designer and full-stack developer in Sandton, Johannesburg, and the founder of SMK Web Design. He builds high-converting websites across South Africa, DRC, Mozambique and Canada.",

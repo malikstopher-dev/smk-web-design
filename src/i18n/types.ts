@@ -38,6 +38,7 @@ export interface Dict {
     ctaBody: string
   }
   viewLiveSite: string
+  viewProject: string
   aboutPage: {
     metaTitle: string
     metaDesc: string
