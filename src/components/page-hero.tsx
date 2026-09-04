@@ -16,23 +16,23 @@ export function PageHero({
   lede?: string
 }) {
   return (
-    <div className="mx-auto max-w-6xl px-6 pb-10 pt-12 sm:px-10 sm:pt-24">
+    <div className="mx-auto max-w-6xl px-6 pb-10 pt-28 sm:px-10 sm:pt-36">
       <HeroIn>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+        <p className="tech-label">
           {eyebrow}
         </p>
       </HeroIn>
       <HeroIn delay={0.1}>
         <RevealHeading
           as="h1"
-          className="mt-4 max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-gray-900 sm:text-6xl dark:text-white"
+          className="display-lg mt-5 max-w-3xl text-white"
         >
           {title}
         </RevealHeading>
       </HeroIn>
       {lede && (
         <HeroIn delay={0.2}>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-gray-400">
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/50 sm:text-lg">
             {lede}
           </p>
         </HeroIn>
@@ -57,18 +57,19 @@ export function CtaBand({
   return (
     <section
       aria-labelledby="cta-heading"
-      className="mx-auto mt-24 max-w-6xl px-6 sm:px-10"
+      className="mx-auto mt-28 max-w-6xl px-6 sm:px-10"
     >
       <Reveal>
-        <div className="flex flex-col items-start justify-between gap-8 rounded-3xl border border-gray-200 p-8 sm:p-12 md:flex-row md:items-center dark:border-gray-800">
+        <div className="flex flex-col items-start justify-between gap-8 rounded-none border border-white/[0.06] p-8 sm:p-12 md:flex-row md:items-center">
           <div className="max-w-xl">
+            <p className="tech-label mb-4">Contact</p>
             <h2
               id="cta-heading"
-              className="font-display text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl dark:text-white"
+              className="display-md text-white"
             >
               {title}
             </h2>
-            <p className="mt-3 leading-relaxed text-gray-600 dark:text-gray-400">
+            <p className="mt-4 leading-relaxed text-white/45">
               {body}
             </p>
           </div>
@@ -77,7 +78,7 @@ export function CtaBand({
               href={SITE.whatsapp.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex h-12 items-center gap-2 rounded-full bg-white px-7 text-sm font-medium text-gray-900 shadow-lg shadow-black/20 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]"
+              className="group inline-flex h-12 items-center gap-2 rounded-full border border-white bg-white px-7 text-sm font-medium text-gray-900 shadow-lg shadow-white/10 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]"
             >
               <MessageCircle className="h-4 w-4" />
               {primaryLabel}
@@ -85,7 +86,7 @@ export function CtaBand({
             <Magnetic strength={0.25} maxShift={4}>
               <Link
                 href={secondaryHref}
-                className="inline-flex h-12 items-center gap-1.5 rounded-full border border-gray-300 px-7 text-sm font-medium text-gray-900 transition-colors hover:border-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 dark:border-gray-700 dark:text-white dark:hover:border-white dark:focus-visible:ring-white"
+                className="inline-flex h-12 items-center gap-1.5 rounded-full border border-white/15 px-7 text-sm font-medium text-white/70 transition-colors hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 {secondaryLabel}
                 <ArrowRight className="h-4 w-4" />

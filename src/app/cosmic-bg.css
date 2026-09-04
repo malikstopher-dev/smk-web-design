@@ -93,6 +93,13 @@ footer       { background: rgba(2, 4, 11, 0.55) !important; }
 /* ══════════════════════════════════════════
    MOON — refined, natural, softly luminous
    ══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   MOON — static fallback (reduced-motion / no-WebGL).
+   When the 3D solar scene initialises it sets
+   [data-solar3d] on <html> and owns the moon.
+   ══════════════════════════════════════════ */
+html[data-solar3d] #cosmic-moon { display: none; }
+
 #cosmic-moon {
   position: absolute;
   top: 7vh;
@@ -101,8 +108,6 @@ footer       { background: rgba(2, 4, 11, 0.55) !important; }
   height: clamp(72px, 9vw, 130px);
   border-radius: 50%;
   pointer-events: none;
-  will-change: transform;
-  animation: moonFloat 22s ease-in-out infinite;
 
   /* Multi-layer realistic moon surface */
   background:
@@ -171,236 +176,6 @@ footer       { background: rgba(2, 4, 11, 0.55) !important; }
   pointer-events: none;
 }
 
-@keyframes moonFloat {
-  0%   { transform: translateY(0px)   translateX(0px); }
-  20%  { transform: translateY(-9px)  translateX(3px); }
-  50%  { transform: translateY(-16px) translateX(0px); }
-  75%  { transform: translateY(-7px)  translateX(-4px); }
-  100% { transform: translateY(0px)   translateX(0px); }
-}
-
-/* ══════════════════════════════════════════
-   PLANET 1 — Gas giant (Jupiter-like)
-   Left screen edge, mid-height
-   Opacity raised to 0.55 so it's visible
-   ══════════════════════════════════════════ */
-#planet-1 {
-  position: absolute;
-  top: 28vh;
-  left: -80px;           /* starts partially off-screen */
-  width: clamp(70px, 8.5vw, 130px);
-  height: clamp(70px, 8.5vw, 130px);
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;            /* JS fades in after delay */
-  will-change: transform, opacity;
-
-  /* Gas giant: rich amber/brown banded atmosphere */
-  background:
-    radial-gradient(circle at 36% 30%, rgba(255,235,180,0.28) 0%, transparent 38%),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0%,      transparent 9%,
-      rgba(190,110,55,0.22) 9%,  rgba(190,110,55,0.22) 14%,
-      transparent 14%,     transparent 22%,
-      rgba(210,140,70,0.16) 22%, rgba(210,140,70,0.16) 27%,
-      transparent 27%,     transparent 36%,
-      rgba(170,85,40,0.24) 36%,  rgba(170,85,40,0.24) 42%,
-      transparent 42%,     transparent 52%,
-      rgba(200,120,62,0.18) 52%, rgba(200,120,62,0.18) 57%,
-      transparent 57%,     transparent 67%,
-      rgba(180,95,46,0.20) 67%,  rgba(180,95,46,0.20) 73%,
-      transparent 73%,     transparent 83%,
-      rgba(165,80,38,0.14) 83%,  rgba(165,80,38,0.14) 88%,
-      transparent 88%,     transparent 100%
-    ),
-    radial-gradient(circle at 40% 36%, #d48840 0%, #a85c20 30%, #743308 58%, #3e1604 80%, #180700 100%);
-
-  box-shadow:
-    inset -14px -10px 28px rgba(0,0,0,0.75),
-    inset  4px   4px 12px rgba(255,220,140,0.06),
-    0 0 30px 8px rgba(200,140,60,0.08);
-
-  animation: planet1Drift 100s linear infinite;
-}
-
-/* Specular highlight */
-#planet-1::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 28%, rgba(255,240,200,0.26) 0%, transparent 48%);
-}
-
-/* Ring system */
-#planet-1::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%) rotateX(70deg);
-  width: 200%; height: 200%;
-  border-radius: 50%;
-  border: none;
-  box-shadow:
-    0 0 0  7px rgba(210,170,90,0.22),
-    0 0 0 12px rgba(195,150,70,0.14),
-    0 0 0 17px rgba(180,130,55,0.09),
-    0 0 0 23px rgba(165,115,45,0.05),
-    0 0 0 30px rgba(150,100,40,0.03);
-  pointer-events: none;
-}
-
-@keyframes planet1Drift {
-  0%   { transform: translateX(0px)     translateY(0px); }
-  100% { transform: translateX(110vw)   translateY(-40px); }
-}
-
-/* ══════════════════════════════════════════
-   PLANET 2 — Ice / deep ocean world
-   Right screen, lower section
-   ══════════════════════════════════════════ */
-#planet-2 {
-  position: absolute;
-  top: 58vh;
-  right: -60px;
-  width: clamp(48px, 5.5vw, 85px);
-  height: clamp(48px, 5.5vw, 85px);
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;            /* JS fades in */
-  will-change: transform, opacity;
-  filter: blur(0.4px);   /* slight blur = distance/atmosphere */
-
-  background:
-    radial-gradient(circle at 32% 26%, rgba(160,240,255,0.30) 0%, transparent 32%),
-    radial-gradient(ellipse at 58% 52%, rgba(15,70,140,0.35) 0%, transparent 42%),
-    radial-gradient(ellipse at 28% 68%, rgba(8,45,110,0.40) 0%, transparent 38%),
-    radial-gradient(ellipse at 72% 35%, rgba(20,90,160,0.20) 0%, transparent 35%),
-    radial-gradient(circle at 46% 44%, #1464aa 0%, #0a3e7e 28%, #061e52 56%, #020c2e 80%, #010618 100%);
-
-  box-shadow:
-    inset -10px -7px 20px rgba(0,0,0,0.70),
-    inset  3px  3px  8px rgba(100,200,255,0.06),
-    0 0 22px 6px rgba(20,100,220,0.09),
-    0 0 50px 16px rgba(15,80,200,0.05);
-
-  animation: planet2Drift 130s linear infinite;
-}
-
-#planet-2::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 28% 28%, rgba(180,240,255,0.22) 0%, transparent 46%);
-}
-
-@keyframes planet2Drift {
-  0%   { transform: translateX(0px)    translateY(0px); }
-  100% { transform: translateX(-115vw) translateY(30px); }
-}
-
-/* ══════════════════════════════════════════
-   PLANET 3 — Emerald/teal gas giant
-   Upper-right region, slow diagonal drift
-   Smaller and blurred for deep-space depth
-   ══════════════════════════════════════════ */
-#planet-3 {
-  position: absolute;
-  top: 12vh;
-  left: -55px;
-  width: clamp(38px, 4.2vw, 64px);
-  height: clamp(38px, 4.2vw, 64px);
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;
-  will-change: transform, opacity;
-  filter: blur(0.6px);
-
-  background:
-    radial-gradient(circle at 30% 28%, rgba(140,255,200,0.28) 0%, transparent 30%),
-    radial-gradient(ellipse at 60% 55%, rgba(10,90,70,0.35) 0%, transparent 40%),
-    radial-gradient(ellipse at 30% 65%, rgba(5,60,45,0.40) 0%, transparent 38%),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0%, transparent 18%,
-      rgba(20,140,90,0.16) 18%, rgba(20,140,90,0.16) 26%,
-      transparent 26%, transparent 44%,
-      rgba(15,110,75,0.12) 44%, rgba(15,110,75,0.12) 52%,
-      transparent 52%, transparent 72%,
-      rgba(10,90,60,0.14) 72%, rgba(10,90,60,0.14) 80%,
-      transparent 80%, transparent 100%
-    ),
-    radial-gradient(circle at 40% 38%, #0e7a50 0%, #074d30 30%, #032a18 60%, #010e08 85%, #000400 100%);
-
-  box-shadow:
-    inset -8px -6px 16px rgba(0,0,0,0.72),
-    inset  2px  2px  6px rgba(80,220,140,0.05),
-    0 0 18px 5px rgba(20,180,100,0.08),
-    0 0 40px 12px rgba(10,140,70,0.04);
-
-  animation: planet3Drift 145s linear infinite;
-}
-
-#planet-3::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 28% 26%, rgba(160,255,200,0.20) 0%, transparent 44%);
-}
-
-@keyframes planet3Drift {
-  0%   { transform: translateX(0px)   translateY(0px); }
-  100% { transform: translateX(120vw) translateY(22px); }
-}
-
-/* ══════════════════════════════════════════
-   PLANET 4 — Violet/crimson distant world
-   Lower-left, slowest drift — furthest away
-   Very small, most blurred = maximum depth
-   ══════════════════════════════════════════ */
-#planet-4 {
-  position: absolute;
-  bottom: 22vh;
-  right: -45px;
-  width: clamp(28px, 3vw, 46px);
-  height: clamp(28px, 3vw, 46px);
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;
-  will-change: transform, opacity;
-  filter: blur(0.8px);
-
-  background:
-    radial-gradient(circle at 34% 30%, rgba(220,160,255,0.25) 0%, transparent 28%),
-    radial-gradient(ellipse at 55% 58%, rgba(80,20,120,0.38) 0%, transparent 42%),
-    radial-gradient(ellipse at 28% 70%, rgba(60,10,100,0.42) 0%, transparent 36%),
-    radial-gradient(circle at 44% 42%, #6b1e9e 0%, #44107a 28%, #260852 56%, #0e0222 82%, #040010 100%);
-
-  box-shadow:
-    inset -6px -4px 12px rgba(0,0,0,0.75),
-    inset  2px  2px  5px rgba(180,100,255,0.04),
-    0 0 14px 4px rgba(120,40,200,0.09),
-    0 0 32px 10px rgba(90,20,160,0.04);
-
-  animation: planet4Drift 170s linear infinite;
-}
-
-#planet-4::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 28%, rgba(230,180,255,0.18) 0%, transparent 42%);
-}
-
-@keyframes planet4Drift {
-  0%   { transform: translateX(0px)    translateY(0px); }
-  100% { transform: translateX(-120vw) translateY(-18px); }
-}
-
 /* ══════════════════════════════════════════
    NEBULA WISPS — ultra-subtle colour clouds
    for depth and richness (no images)
@@ -451,16 +226,8 @@ footer       { background: rgba(2, 4, 11, 0.55) !important; }
    ══════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
   #cosmic-moon,
-  #planet-1,
-  #planet-2,
-  #planet-3,
-  #planet-4,
   #cosmic-nebula-1,
   #cosmic-nebula-2 { animation: none !important; }
-  #planet-1 { opacity: 0.40; left: 5vw;   top: 28vh; transform: none; }
-  #planet-2 { opacity: 0.32; right: 5vw;  top: 58vh; transform: none; }
-  #planet-3 { opacity: 0.28; left: 10vw;  top: 12vh; transform: none; }
-  #planet-4 { opacity: 0.22; right: 8vw;  bottom: 22vh; transform: none; }
   #cosmic-moon { transform: none; }
 }
 
@@ -473,24 +240,6 @@ footer       { background: rgba(2, 4, 11, 0.55) !important; }
     height: clamp(52px, 15vw, 80px);
     top: 3.5vh;
     right: 4vw;
-  }
-  #planet-1 {
-    width: clamp(55px, 15vw, 85px);
-    height: clamp(55px, 15vw, 85px);
-    top: 30vh;
-  }
-  #planet-2 {
-    width: clamp(36px, 10vw, 58px);
-    height: clamp(36px, 10vw, 58px);
-    top: 62vh;
-  }
-  #planet-3 {
-    width: clamp(26px, 7vw, 44px);
-    height: clamp(26px, 7vw, 44px);
-  }
-  #planet-4 {
-    width: clamp(20px, 5vw, 34px);
-    height: clamp(20px, 5vw, 34px);
   }
   #cosmic-nebula-1,
   #cosmic-nebula-2 { display: none; } /* save GPU on small screens */

@@ -31,10 +31,10 @@ export function ServicesRail({ children }: { children: ReactNode }) {
     <div ref={ref} className="relative">
       <div
         aria-hidden
-        className="absolute left-0 top-0 hidden h-full w-px bg-white/10 md:block"
+        className="absolute left-0 top-0 hidden h-full w-px bg-white/[0.06] md:block"
       >
         <div
-          className="w-px bg-white/70"
+          className="w-px bg-white/50"
           style={{ height: `${progress * 100}%` }}
         />
       </div>
@@ -61,7 +61,7 @@ function AccordionItem({
   viewServiceLabel: string
 }) {
   return (
-    <li className="border-b border-gray-800 last:border-b-0">
+    <li className="border-b border-white/[0.04] last:border-b-0">
       <button
         type="button"
         onClick={onToggle}
@@ -78,13 +78,13 @@ function AccordionItem({
             }`}
           >
             <span className="overflow-hidden">
-              <span className="block pt-1 text-sm text-gray-400">{short}</span>
+              <span className="block pt-1 text-sm text-white/35">{short}</span>
             </span>
           </span>
         </span>
         <Plus
-          className={`h-5 w-5 shrink-0 text-gray-500 transition-transform duration-300 ${
-            open ? "rotate-45 text-white" : ""
+          className={`h-5 w-5 shrink-0 text-white/25 transition-transform duration-300 ${
+            open ? "rotate-45 text-white/60" : ""
           }`}
         />
       </button>
@@ -137,22 +137,22 @@ export function HomeServicesList({
         </ul>
       </div>
 
-      <ol className="mt-10 hidden divide-y divide-gray-100 overflow-hidden rounded-3xl border border-gray-200 md:block dark:divide-gray-800 dark:border-gray-800">
+      <ol className="mt-10 hidden divide-y divide-white/[0.04] overflow-hidden border border-white/[0.06] md:block">
         {items.map((s) => (
           <li key={s.slug}>
             <Link
               href={`/${locale}/services#${s.slug}`}
-              className="group flex items-center justify-between gap-4 p-6 transition-colors hover:bg-white/5 sm:p-7"
+              className="group flex items-center justify-between gap-4 p-6 transition-colors hover:bg-white/[0.02] sm:p-7"
             >
               <span className="min-w-0 flex-1">
-                <span className="block font-display text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                <span className="block font-display text-xl font-semibold tracking-tight text-white">
                   {s.title}
                 </span>
-                <span className="mt-1 block text-sm text-gray-500 dark:text-gray-400">
+                <span className="mt-1 block text-sm text-white/35">
                   {s.short}
                 </span>
               </span>
-              <ArrowUpRight className="h-5 w-5 shrink-0 text-gray-300 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gray-900 dark:text-gray-600 dark:group-hover:text-white" />
+              <ArrowUpRight className="h-5 w-5 shrink-0 text-white/20 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white/60" />
             </Link>
           </li>
         ))}

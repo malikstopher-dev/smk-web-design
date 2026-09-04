@@ -13,17 +13,17 @@ export default function LocaleNotFound() {
 
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-6xl flex-col items-center justify-center px-6 text-center">
-      <p className="font-mono text-sm text-gray-400">404</p>
-      <h1 className="mt-4 font-display text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl dark:text-white">
+      <p className="project-number text-lg">404</p>
+      <h1 className="display-lg mt-4 text-white">
         {d.notFound.title}
       </h1>
-      <p className="mt-4 max-w-md text-gray-600 dark:text-gray-400">
+      <p className="mt-4 max-w-md text-white/40">
         {d.notFound.body}
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link
           href={`/${locale}`}
-          className="inline-flex h-12 items-center rounded-full bg-gray-900 px-7 text-sm font-medium text-white transition-colors hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+          className="inline-flex h-12 items-center rounded-full border border-white bg-white px-7 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-200"
         >
           {d.notFound.home}
         </Link>
@@ -31,7 +31,7 @@ export default function LocaleNotFound() {
           href="https://wa.me/27825100050"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-12 items-center gap-2 rounded-full border border-gray-300 px-7 text-sm font-medium text-gray-900 transition-colors hover:border-gray-900 dark:border-gray-700 dark:text-white dark:hover:border-white"
+          className="inline-flex h-12 items-center gap-2 rounded-full border border-white/15 px-7 text-sm font-medium text-white/60 transition-colors hover:border-white/40 hover:text-white"
         >
           <MessageCircle className="h-4 w-4" />
           {d.notFound.whatsapp}

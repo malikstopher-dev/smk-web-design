@@ -13,6 +13,8 @@ const eslintConfig = defineConfig([
     "build/**",
     ".opencode/**",
     "next-env.d.ts",
+    // Local reference copy of the live site (not part of this build):
+    "MALIK CURRENT/**",
   ]),
 ]);
 

@@ -7,6 +7,12 @@ import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
 import { getDict } from "@/i18n/index"
 import { BLOG_POSTS, getBlogPost } from "@/lib/posts"
 
+// The root layout reads headers() (x-smk-locale) to set <html lang>,
+// which requires dynamic rendering. Prerendering these pages bails on
+// that header read and 500s at request time, so render on demand like
+// every other route on the site.
+export const dynamic = "force-dynamic"
+
 export async function generateStaticParams({
   params,
 }: {

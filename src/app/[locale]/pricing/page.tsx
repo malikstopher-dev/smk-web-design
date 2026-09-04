@@ -44,17 +44,18 @@ export default async function PricingPage({
       />
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">
+        <div className="editorial-divider mb-12" />
         <Reveal>
           <PricingCards pricing={d.pricingPage} />
         </Reveal>
         <Reveal delay={140}>
-          <p className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-8 text-center text-sm text-white/35">
             {d.pricingPage.notSurePrefix}{" "}
             <a
               href="https://wa.me/27825100050"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-gray-900 underline-offset-4 hover:underline dark:text-white"
+              className="font-medium text-white underline-offset-4 transition-colors hover:text-white/70 hover:underline"
             >
               +27 82 510 0050
             </a>{" "}

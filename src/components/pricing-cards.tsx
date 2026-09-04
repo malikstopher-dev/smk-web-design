@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Check } from "lucide-react"
 import { useMagnet } from "@/components/magnetic"
 import type { Dict } from "@/i18n/types"
 import { PRICING_PRICES, SITE } from "@/lib/site"
@@ -51,45 +50,45 @@ export function PricingCards({ pricing }: { pricing: Dict["pricingPage"] }) {
                 e.currentTarget.style.setProperty("--sx", `${e.clientX - r.left}px`)
                 e.currentTarget.style.setProperty("--sy", `${e.clientY - r.top}px`)
               }}
-              className={`spotlight-card relative flex flex-col rounded-3xl border p-7 text-left transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+              className={`spotlight-card relative flex flex-col border p-7 text-left transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                 selected
-                  ? "border-white bg-gray-900 shadow-2xl shadow-black/50"
-                  : "border-gray-800 bg-transparent hover:border-gray-600"
+                  ? "border-white/30 bg-white/[0.03] shadow-2xl shadow-black/50"
+                  : "border-white/[0.06] bg-transparent hover:border-white/[0.12]"
               }`}
             >
               {i === 1 && (
-                <span className="absolute -top-3 left-6 rounded-full bg-gray-900 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white dark:bg-white dark:text-gray-900">
+                <span className="absolute -top-3 left-6 border border-white/20 bg-[#03070f] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">
                   {pricing.popular}
                 </span>
               )}
               <span className="flex items-center justify-between">
-                <span className="text-sm font-medium uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
+                <span className="text-sm font-medium uppercase tracking-[0.14em] text-white/40">
                   {tier.eyebrow}
                 </span>
                 <span
                   aria-hidden
                   className={`inline-block h-4 w-4 rounded-full border-2 transition-all duration-200 ${
                     selected
-                      ? "border-[7px] border-gray-900 dark:border-white"
-                      : "border-gray-300 dark:border-gray-600"
+                      ? "border-[7px] border-white"
+                      : "border-white/30"
                   }`}
                 />
               </span>
-              <span className="mt-4 font-display text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">
+              <span className="mt-4 display-md text-white">
                 {PRICING_PRICES[i]}
               </span>
-              <span className="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+              <span className="mt-1.5 text-xs text-white/35">
                 {tier.terms}
               </span>
               <ul className="mt-6 flex flex-col gap-2.5">
                 {tier.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-gray-900 dark:text-white" />
-                    <span className="text-gray-700 dark:text-gray-300">{f}</span>
+                    <span className="mt-0.5 h-4 w-4 shrink-0 text-white/50">+</span>
+                    <span className="text-white/50">{f}</span>
                   </li>
                 ))}
               </ul>
-              <span className="mt-6 rounded-xl bg-gray-950 px-4 py-3 text-xs leading-relaxed text-gray-400">
+              <span className="mt-6 border border-white/[0.06] px-4 py-3 text-xs leading-relaxed text-white/35">
                 {pricing.bestForPrefix} {tier.bestFor}
               </span>
             </motion.button>
@@ -99,13 +98,13 @@ export function PricingCards({ pricing }: { pricing: Dict["pricingPage"] }) {
 
       <div
         aria-live="polite"
-        className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border border-gray-800 px-6 py-5 sm:flex-row"
+        className="mt-8 flex flex-col items-center justify-between gap-4 border border-white/[0.06] px-6 py-5 sm:flex-row"
       >
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          <span className="font-semibold text-gray-900 dark:text-white">
+        <p className="text-sm text-white/40">
+          <span className="font-semibold text-white">
             {active.eyebrow}
           </span>{" "}
-          <span aria-hidden className="text-gray-500">·</span>{" "}
+          <span aria-hidden className="text-white/20">·</span>{" "}
           {active.bestFor}
         </p>
         <motion.a
@@ -119,7 +118,7 @@ export function PricingCards({ pricing }: { pricing: Dict["pricingPage"] }) {
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.15, ease: "easeOut" }}
           {...magnet}
-          className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-white px-6 text-sm font-medium text-gray-900 shadow-lg shadow-black/20 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]"
+          className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full border border-white bg-white px-6 text-sm font-medium text-gray-900 shadow-lg shadow-white/10 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]"
         >
           {active.cta}
         </motion.a>

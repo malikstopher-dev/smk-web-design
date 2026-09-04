@@ -51,6 +51,8 @@ export interface Dict {
     locationCaption: string
     processHeading: string
     process: { title: string; body: string }[]
+    testimonialsHeading: string
+    testimonials: { quote: string; name: string; role: string }[]
     ctaTitle?: string
   }
   servicesPage: {
@@ -97,6 +99,25 @@ export interface Dict {
     whatsappCard: string
     studio: string
     payments: string
+    payment: {
+      heading: string
+      body: string
+      eftTitle: string
+      eftBody: string
+      bankLabel: string
+      bank: string
+      accountNameLabel: string
+      accountName: string
+      accountNumberLabel: string
+      accountNumber: string
+      branchLabel: string
+      branch: string
+      referenceLabel: string
+      reference: string
+      proof: string
+      alternativesHeading: string
+      alternatives: { title: string; body: string }[]
+    }
     form: {
       name: string
       namePlaceholder: string
@@ -140,6 +161,7 @@ export interface Dict {
     servicesCol: string
     contactCol: string
     fastestReply: string
+    followUs: string
     builtWith: string
   }
   ctaBand: {

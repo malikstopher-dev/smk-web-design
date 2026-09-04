@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { PlanetsScene } from "./planets-scene"
 
 export function CosmicBackground() {
   useEffect(() => {
@@ -13,13 +14,6 @@ export function CosmicBackground() {
     ) as HTMLCanvasElement | null
     if (!canvasMaybe) return
     const canvas: HTMLCanvasElement = canvasMaybe
-    const moon = document.getElementById("cosmic-moon")
-    const planet1 = document.getElementById("planet-1")
-    const planet2 = document.getElementById("planet-2")
-    const planet3 = document.getElementById("planet-3")
-    const planet4 = document.getElementById("planet-4")
-    if (!canvas) return
-
     const ctxMaybe = canvas.getContext("2d")
     if (!ctxMaybe) return
     const ctx: CanvasRenderingContext2D = ctxMaybe
@@ -28,7 +22,6 @@ export function CosmicBackground() {
     let H = 0
     let raf = 0
     let resizeTimer: ReturnType<typeof setTimeout> | undefined
-    const timers: ReturnType<typeof setTimeout>[] = []
 
     const STAR_CONFIG = [
       { count: 160, rMin: 0.4, rMax: 0.9, opMin: 0.35, opMax: 0.72, flickerSpeed: [0.003, 0.009], scrollFactor: 0.02, glowChance: 0.06, glowScale: 2.5, colors: ["200,220,255", "210,230,255", "220,240,255", "255,255,255"] },
@@ -231,11 +224,9 @@ export function CosmicBackground() {
     }
 
     let scrollY = 0
-    let moonScrollOffset = 0
 
     const onScroll = () => {
       scrollY = window.scrollY
-      moonScrollOffset = window.scrollY * 0.045
     }
 
     // Cursor-reactive starfield spotlight ("torch over the sky")
@@ -350,33 +341,7 @@ export function CosmicBackground() {
 
       ctx.globalAlpha = 1
 
-      if (moon && !prefersReduced) {
-        moon.style.transform = `translateY(${moonScrollOffset}px)`
-      }
-
       raf = requestAnimationFrame(render)
-    }
-
-    function fadePlanetIn(
-      el: HTMLElement | null,
-      delayMs: number,
-      targetOpacity: number,
-      animDelay: string,
-    ) {
-      if (!el) return
-      if (prefersReduced) {
-        el.style.opacity = String(targetOpacity)
-        el.style.animation = "none"
-        return
-      }
-      timers.push(
-        setTimeout(() => {
-          el.style.animationDelay = animDelay
-          el.style.animationPlayState = "running"
-          el.style.transition = "opacity 2.2s ease"
-          el.style.opacity = String(targetOpacity)
-        }, delayMs),
-      )
     }
 
     function setSize() {
@@ -388,27 +353,6 @@ export function CosmicBackground() {
     buildStars()
     scheduleBurst()
     raf = requestAnimationFrame(render)
-
-    if (planet1) {
-      planet1.style.animationPlayState = "paused"
-      planet1.style.left = "-80px"
-      fadePlanetIn(planet1, 1200, 0.55, "-15s")
-    }
-    if (planet2) {
-      planet2.style.animationPlayState = "paused"
-      planet2.style.right = "-60px"
-      fadePlanetIn(planet2, 2600, 0.42, "-60s")
-    }
-    if (planet3) {
-      planet3.style.animationPlayState = "paused"
-      planet3.style.left = "-55px"
-      fadePlanetIn(planet3, 3800, 0.38, "-35s")
-    }
-    if (planet4) {
-      planet4.style.animationPlayState = "paused"
-      planet4.style.right = "-45px"
-      fadePlanetIn(planet4, 5000, 0.3, "-85s")
-    }
 
     const onResize = () => {
       clearTimeout(resizeTimer)
@@ -425,7 +369,6 @@ export function CosmicBackground() {
     return () => {
       cancelAnimationFrame(raf)
       clearTimeout(resizeTimer)
-      timers.forEach(clearTimeout)
       window.removeEventListener("resize", onResize)
       window.removeEventListener("scroll", onScroll)
       window.removeEventListener("pointermove", onPointerMove)
@@ -438,19 +381,16 @@ export function CosmicBackground() {
     }
   }, [])
 
-  return (
-    <div id="cosmic-bg" aria-hidden>
-      <div id="cosmic-gradient" />
-      <div id="cosmic-vignette" />
-      <div id="cosmic-nebula-1" />
-      <div id="cosmic-nebula-2" />
-      <canvas id="cosmic-star-canvas" />
-      <div id="cosmic-moon" />
-      <div id="planet-1" />
-      <div id="planet-2" />
-      <div id="planet-3" />
-      <div id="planet-4" />
-      <div id="noise-overlay" aria-hidden />
-    </div>
-  )
-}
+    return (
+      <div id="cosmic-bg" aria-hidden>
+        <div id="cosmic-gradient" />
+        <div id="cosmic-vignette" />
+        <div id="cosmic-nebula-1" />
+        <div id="cosmic-nebula-2" />
+        <canvas id="cosmic-star-canvas" />
+        <div id="cosmic-moon" />
+        <PlanetsScene />
+        <div id="noise-overlay" aria-hidden />
+      </div>
+    )
+  }

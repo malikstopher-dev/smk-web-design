@@ -18,13 +18,17 @@ export const SITE = {
     label: "+27 82 510 0050",
     url: "https://wa.me/27825100050",
   },
-  phone: "+27825100050",
+  phone: "+27729998863",
+  phoneLabel: "+27 72 999 8863",
   email: "info@stopher-malik.co.za",
   hours: "Mon–Fri 08:00–18:00 · Sat 09:00–14:00",
   socials: [
-    { name: "Instagram", handle: "@stophermalik", url: "https://www.instagram.com/stophermalik" },
-    { name: "X", handle: "@stopher_malik", url: "https://x.com/stopher_malik" },
+    { name: "Facebook", handle: "SMK Web Design", url: "https://www.facebook.com/profile.php?id=61584357221305" },
+    { name: "Instagram", handle: "@stophermalik", url: "https://www.instagram.com/stophermalik/" },
     { name: "LinkedIn", handle: "/in/stophermalik", url: "https://www.linkedin.com/in/stophermalik/" },
+    { name: "X", handle: "@stopher_malik", url: "https://x.com/stopher_malik" },
+    { name: "TikTok", handle: "@stopher_malik", url: "https://www.tiktok.com/@stopher_malik" },
+    { name: "YouTube", handle: "Stopher Malik", url: "https://www.youtube.com/channel/UCh92kSW3JN6gLHXo1kenLWQ" },
   ],
 } as const
 

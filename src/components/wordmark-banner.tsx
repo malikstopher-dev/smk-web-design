@@ -20,7 +20,7 @@ export function WordmarkBanner({
         whileInView={{ opacity: 1, y: 0, scale: 1 }}
         viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.7, ease: EASE_OUT }}
-        className="whitespace-nowrap text-center font-display font-semibold uppercase leading-none tracking-tight text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.22)]"
+        className="whitespace-nowrap text-center font-display font-semibold uppercase leading-none tracking-tight text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.15)]"
         style={{ fontSize: "clamp(2.75rem, 10.5vw, 10rem)" }}
       >
         {text}

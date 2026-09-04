@@ -41,13 +41,14 @@ export default async function WorkPage({
       <PageHero eyebrow={d.nav.work} title={d.workPage.title} lede={d.workPage.lede} />
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">
+        <div className="editorial-divider mb-12" />
         <Reveal>
           <FilterableWorkGrid locale={locale} dict={d} />
         </Reveal>
 
         <Reveal delay={120}>
-          <p className="mt-16 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
-            <span className="font-semibold text-gray-900 dark:text-white">
+          <p className="mt-16 text-sm leading-relaxed text-white/40">
+            <span className="font-semibold text-white">
               {d.aboutPage.factLineLead}
             </span>{" "}
             {d.aboutPage.factLineRest}

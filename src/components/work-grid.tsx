@@ -21,7 +21,7 @@ import { projectDesc, tagLabel } from "@/i18n"
 import type { Dict } from "@/i18n/types"
 
 const cardCls =
-  "group relative flex h-full flex-col overflow-hidden rounded-3xl border border-gray-800 bg-[#050a14]/70 text-left transition-colors duration-300 hover:border-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+  "group relative flex h-full flex-col overflow-hidden border border-white/[0.06] bg-[#03070f]/60 text-left transition-colors duration-300 hover:border-white/[0.15] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
 
 function CardBody({
   p,
@@ -36,7 +36,7 @@ function CardBody({
 }) {
   return (
     <>
-      <div className={`depth-card-media relative overflow-hidden bg-gray-900 ${wide ? "aspect-[21/9]" : "aspect-[16/9]"}`}>
+      <div className={`depth-card-media relative overflow-hidden bg-white/[0.03] ${wide ? "aspect-[21/9]" : "aspect-[16/9]"}`}>
         <Image
           src={p.image}
           alt={dict.workPage.cardAlt.replace("{name}", p.name)}
@@ -44,7 +44,7 @@ function CardBody({
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
         />
-        <span className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-900/85 text-white opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100">
+        <span className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center bg-white/10 text-white opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:opacity-100">
           <ArrowUpRight className="h-4 w-4" />
         </span>
       </div>
@@ -53,20 +53,20 @@ function CardBody({
           {p.tags.map((t) => (
             <span
               key={t}
-              className="rounded-full border border-gray-200 px-2.5 py-0.5 text-[11px] font-medium text-gray-500 dark:border-gray-700 dark:text-gray-400"
+              className="border border-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/40"
             >
               {tagLabel(locale, t)}
             </span>
           ))}
         </div>
-        <h3 className="font-display text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+        <h3 className="font-display text-xl font-semibold tracking-tight text-white">
           {p.name}
         </h3>
-        <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="text-sm leading-relaxed text-white/40">
           {projectDesc(locale, p.slug, p.description)}
         </p>
         {p.url && (
-          <span className="mt-auto pt-3 text-sm font-medium text-gray-900 underline-offset-4 group-hover:underline dark:text-white">
+          <span className="mt-auto pt-3 text-sm font-medium text-white/60 underline-offset-4 transition-colors group-hover:text-white group-hover:underline">
             {dict.viewLiveSite}
             <ArrowUpRight className="ml-1 inline h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </span>
@@ -248,7 +248,7 @@ export function FilterableWorkGrid({
                 ? { duration: 0 }
                 : { type: "spring", stiffness: 420, damping: 34 }
             }
-            className="absolute left-0 top-0 rounded-full bg-gray-900 shadow-sm will-change-transform dark:bg-white"
+            className="absolute left-0 top-0 bg-white/90 will-change-transform"
           />
         )}
         {PROJECT_CATEGORIES.map((c) => {
@@ -263,10 +263,10 @@ export function FilterableWorkGrid({
                 if (el) tabRefs.current.set(c.id, el)
                 else tabRefs.current.delete(c.id)
               }}
-              className={`relative z-10 inline-flex h-9 shrink-0 items-center rounded-full border px-4 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-white ${
+              className={`relative z-10 inline-flex h-9 shrink-0 items-center border px-4 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                 activeFilter
-                  ? "border-transparent font-medium text-white dark:text-gray-900"
-                  : "border-gray-200 text-gray-600 hover:border-gray-400 hover:text-gray-900 dark:border-gray-700 dark:text-gray-400 dark:hover:border-gray-500 dark:hover:text-white"
+                  ? "border-white/30 font-medium text-white"
+                  : "border-white/10 text-white/35 hover:border-white/20 hover:text-white/60"
               }`}
             >
               {dict.workPage.filters[c.id]}
@@ -278,7 +278,7 @@ export function FilterableWorkGrid({
         </span>
       </div>
 
-      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+      <p className="mt-4 text-sm text-white/35">
         {countLine(visible.length)}
       </p>
 
@@ -304,7 +304,7 @@ export function FilterableWorkGrid({
             key={p.name}
             aria-hidden
             className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === activeDot ? "w-5 bg-white" : "w-1.5 bg-white/25"
+              i === activeDot ? "w-5 bg-white" : "w-1.5 bg-white/20"
             }`}
           />
         ))}

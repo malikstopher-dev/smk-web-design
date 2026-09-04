@@ -21,20 +21,20 @@ export function GlobeSection({ globe }: { globe: Dict["globe"] }) {
       <figcaption
         aria-live="polite"
         aria-label={globe.figAria}
-        className="mx-auto mt-6 flex min-h-[4.25rem] w-full max-w-md items-center justify-center rounded-2xl border border-gray-200 bg-white px-5 py-3 text-center dark:border-gray-800 dark:bg-gray-900/60"
+        className="mx-auto mt-6 flex min-h-[4.25rem] w-full max-w-md items-center justify-center border border-white/[0.06] bg-[#03070f]/60 px-5 py-3 text-center backdrop-blur-sm"
       >
         {active ? (
           <p key={active.id} className="text-sm">
-            <span className="font-semibold text-gray-900 dark:text-white">
+            <span className="font-semibold text-white">
               {active.country}
             </span>
-            <span className="text-gray-300 dark:text-gray-600"> · </span>
-            <span className="text-gray-600 dark:text-gray-400">
+            <span className="text-white/25"> · </span>
+            <span className="text-white/50">
               {active.work}
             </span>
           </p>
         ) : (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-white/35">
             {globe.captionIdle}
           </p>
         )}

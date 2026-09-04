@@ -100,50 +100,64 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
   return (
     <>
       <header
-        className={`sticky top-0 z-50 border-b bg-[#050a14]/80 backdrop-blur-md transition-colors duration-300 ${
-          scrolled ? "border-white/10" : "border-transparent"
+        className={`fixed top-0 z-50 w-full transition-all duration-500 ${
+          scrolled
+            ? "border-b border-white/[0.06] bg-[#03070f]/70 backdrop-blur-xl"
+            : "bg-transparent"
         }`}
       >
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6 sm:px-10">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-6 lg:px-10">
+          {/* Brand — left */}
           <Link
             href={lp("/")}
-            className="font-display text-lg font-semibold tracking-tight text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="group flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
-            Stopher Malik
-            <span className="ml-2 hidden text-xs font-medium uppercase tracking-[0.18em] text-gray-500 sm:inline">
-              SMK Web Design
+            <span className="font-display text-base font-semibold tracking-tight text-white">
+              {SITE.name}
+            </span>
+            <span className="hidden text-[10px] font-medium uppercase tracking-[0.2em] text-white/30 transition-colors group-hover:text-white/50 sm:inline">
+              {SITE.business}
             </span>
           </Link>
 
-          <nav aria-label="Primary" className="hidden items-center gap-6 md:flex">
+          {/* Nav — center */}
+          <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
             {items.map((item) => (
               <Link
                 key={item.href}
                 href={lp(item.href)}
                 aria-current={isActive(item.href) ? "page" : undefined}
-                className={`relative inline-block py-1 text-sm transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-px after:bg-white after:transition-all after:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                className={`relative px-3 py-1.5 text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                   isActive(item.href)
-                    ? "font-medium text-white after:w-full"
-                    : "text-gray-400 after:w-0 hover:text-white hover:after:w-full"
+                    ? "font-medium text-white"
+                    : "text-white/40 hover:text-white/80"
                 }`}
               >
                 {item.label}
+                {isActive(item.href) && (
+                  <span className="absolute bottom-0 left-3 right-3 h-px bg-white" />
+                )}
               </Link>
             ))}
+          </nav>
+
+          {/* Right section */}
+          <div className="hidden items-center gap-4 md:flex">
             <LanguageSwitcher locale={locale} ariaLabel={dict.langSwitcher.aria} />
             <Magnetic strength={0.25} maxShift={4}>
               <a
                 href={SITE.whatsapp.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-9 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-gray-900 transition-all duration-200 hover:-translate-y-px hover:bg-gray-200 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#050a14]"
+                className="inline-flex h-9 items-center gap-2 rounded-full border border-white/15 px-4 text-[13px] font-medium text-white/70 transition-all duration-200 hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]"
               >
-                <MessageCircle className="h-4 w-4" />
+                <MessageCircle className="h-3.5 w-3.5" />
                 {dict.nav.letsTalk}
               </a>
             </Magnetic>
-          </nav>
+          </div>
 
+          {/* Mobile toggle */}
           <button
             type="button"
             ref={toggleRef}
@@ -151,7 +165,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? dict.nav.closeMenu : dict.nav.openMenu}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-white/70 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:hidden"
           >
             {open ? (
               <X className="h-5 w-5" />
@@ -162,7 +176,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="1.8"
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 aria-hidden
               >
@@ -175,6 +189,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
         </div>
       </header>
 
+      {/* Mobile menu */}
       <div
         id="mobile-menu"
         ref={panelRef}
@@ -186,7 +201,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
         onClick={(e) => {
           if (e.target === e.currentTarget) close(false)
         }}
-        className={`fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col overflow-y-auto bg-[#050a14]/95 px-6 pb-10 pt-2 backdrop-blur-md transition-[opacity,transform] duration-300 ease-out md:hidden motion-reduce:transition-none ${
+        className={`fixed inset-x-0 bottom-0 top-16 z-40 flex flex-col overflow-y-auto bg-[#03070f]/98 px-6 pb-10 pt-4 backdrop-blur-xl transition-[opacity,transform] duration-300 ease-out md:hidden motion-reduce:transition-none ${
           open
             ? "visible translate-y-0 opacity-100"
             : "invisible -translate-y-3 opacity-0"
@@ -200,10 +215,10 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
               onClick={() => close(false)}
               aria-current={isActive(item.href) ? "page" : undefined}
               style={{ transitionDelay: open ? `${60 + i * 45}ms` : "0ms" }}
-              className={`border-b border-white/5 py-4 font-display text-3xl font-semibold tracking-tight transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none ${
+              className={`border-b border-white/[0.04] py-4 font-display text-3xl font-semibold tracking-tight transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none ${
                 isActive(item.href)
                   ? "text-white"
-                  : "text-gray-500 hover:text-white"
+                  : "text-white/30 hover:text-white"
               } ${
                 open
                   ? "translate-y-0 opacity-100"
@@ -220,7 +235,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
           rel="noopener noreferrer"
           onClick={() => close(false)}
           style={{ transitionDelay: open ? "320ms" : "0ms" }}
-          className={`mt-auto inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white text-sm font-medium text-gray-900 transition-all duration-500 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none dark:bg-white dark:text-gray-900 ${
+          className={`mt-auto inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/15 text-sm font-medium text-white/70 transition-all duration-500 hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none ${
             open
               ? "translate-y-0 opacity-100"
               : "translate-y-4 opacity-0 motion-reduce:translate-y-0 motion-reduce:opacity-100"

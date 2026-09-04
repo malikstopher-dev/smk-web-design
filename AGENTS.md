@@ -50,8 +50,8 @@ This site is the studio's most visible work. Clients see it. Recruiters see it. 
 
 ### 2.3 Code
 
-- **Never** import a library without checking that the project already uses it. The dependency list is fixed: `next`, `react`, `react-dom`, `framer-motion`, `cobe`, `lucide-react`, `clsx`, `tailwind-merge`, `class-variance-authority`. Do not add `three.js`, `gsap`, `lottie`, `react-spring`, or other animation libraries — the cosmic scene uses raw canvas + `cobe`.
-- **Never** add a "client component" wrapper where a server component would do. The split is intentional: server by default, `"use client"` only for components that genuinely need state/effects/handlers. Currently the only client components are: `cosmic-background`, `globe-markers`, `hero-depth-scene` is fine as a server component (it has no client logic), `motion` helpers, `magnetic`, `reveal`, `text-reveal`, `wordmark-banner`, `pricing-cards`, `contact-form`, `site-header`, `language-switcher`, `home-services-list`, `work-grid`, `spotlight-card` (server would be fine; it's a client component because it tracks mouse position).
+- **Never** import a library without checking that the project already uses it. The dependency list is fixed: `next`, `react`, `react-dom`, `framer-motion`, `cobe`, `lucide-react`, `clsx`, `tailwind-merge`, `class-variance-authority`, `three` (used only by `planets-scene` for the cosmic background). Do not add `gsap`, `lottie`, `react-spring`, or other animation libraries.
+- **Never** add a "client component" wrapper where a server component would do. The split is intentional: server by default, `"use client"` only for components that genuinely need state/effects/handlers. Currently the only client components are: `cosmic-background`, `planets-scene`, `globe-markers`, `hero-depth-scene` is fine as a server component (it has no client logic), `motion` helpers, `magnetic`, `reveal`, `text-reveal`, `wordmark-banner`, `pricing-cards`, `contact-form`, `site-header`, `language-switcher`, `home-services-list`, `work-grid`, `spotlight-card` (server would be fine; it's a client component because it tracks mouse position).
 - **Never** add a "JSON-LD" script tag inline in a page. Add a schema function to `src/components/json-ld.tsx` and call it.
 - **Never** add metadata in a `<head>` tag. Use `generateMetadata` in the page file. The pattern is consistent across all 7 page routes.
 - **Never** duplicate the proxy locale detection. The single source of truth is `src/proxy.ts`, which sets the `x-smk-locale` header. Pages read it via `headers()` if they need the locale, but the canonical pattern is to read `params.locale` from the segment.
@@ -104,6 +104,8 @@ Use these checks (the dev server runs at port 3000):
 ### 3.5 The dev server may be stale
 
 After many edits, the Turbopack dev server can hang on stale `.next/dev` caches. The fix is: stop the dev process, `Remove-Item -Recurse .next\dev`, restart `npm run dev`. This is rare but happens.
+
+On this machine, `next dev` with Turbopack can also return false 404s for valid locale routes (`/[locale]`, `/services`, `/work`, etc.) while `next build` still succeeds. If that happens, run webpack dev instead. The repo's `npm run dev` script is pinned to `next dev --webpack` for stability.
 
 ### 3.6 Git commits
 
@@ -175,7 +177,8 @@ C:\TINA\malik\
 
 | Component | Client? | Purpose | Notes |
 |---|---|---|---|
-| `cosmic-background` | yes | 300-star canvas + 4 planets + moon + nebulae | Singleton at body root. RAF pauses on hidden / out-of-viewport. |
+| `cosmic-background` | yes | 300-star canvas + moon + nebulae | Singleton at body root. RAF pauses on hidden / out-of-viewport. |
+| `planets-scene` | yes | 4 textured Three.js spheres (Jupiter, Saturn, Mars, Neptune) | Dynamic-imported, lazy inited. 2K albedo textures, directional light, Fresnel rim. `prefers-reduced-motion` skips entirely. |
 | `hero-depth-scene` | no | 3D planes + orbits on the home hero | Static CSS animation, no JS state. |
 | `globe-section` + `globe-markers` | yes | cobe 3D globe with client markers | Lazy-init on scroll into view. |
 | `home-services-list` | yes | Hairline list of 6 services | Plain list, no `01–06` numbers. |

@@ -12,7 +12,7 @@ const initial: ContactState = { status: "idle" }
 function FieldError({ msg }: { msg?: string }) {
   if (!msg) return null
   return (
-    <p role="alert" className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400">
+    <p role="alert" className="mt-1.5 text-xs font-medium text-red-400">
       {msg}
     </p>
   )
@@ -22,30 +22,32 @@ export function ContactForm({
   labels,
   locale,
   serviceOptions,
+  defaultService,
 }: {
   labels: Dict["contactPage"]["form"]
   locale: string
   serviceOptions: string[]
+  defaultService?: string
 }) {
   const [state, action, pending] = useActionState(submitContact, initial)
 
   if (state.status === "success") {
     return (
-      <div className="flex h-full min-h-[22rem] flex-col items-center justify-center gap-4 rounded-3xl border border-gray-200 p-10 text-center dark:border-gray-800">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-900 dark:bg-white">
-          <CheckCircle2 className="h-7 w-7 text-white dark:text-gray-900" />
+      <div className="flex h-full min-h-[22rem] flex-col items-center justify-center gap-4 border border-white/[0.06] p-10 text-center">
+        <span className="flex h-14 w-14 items-center justify-center border border-white/20 text-white/60">
+          <CheckCircle2 className="h-7 w-7" />
         </span>
-        <h3 className="font-display text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
+        <h3 className="display-md text-white">
           {labels.successTitle}
         </h3>
-        <p className="max-w-sm text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        <p className="max-w-sm text-sm leading-relaxed text-white/40">
           {labels.successBody}
         </p>
         <a
           href={SITE.whatsapp.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-flex h-11 items-center gap-2 rounded-full bg-gray-900 px-6 text-sm font-medium text-white transition-colors hover:bg-gray-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+          className="mt-2 inline-flex h-11 items-center gap-2 rounded-full border border-white bg-white px-6 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-200"
         >
           {labels.whatsappCta}
         </a>
@@ -57,12 +59,12 @@ export function ContactForm({
     <form
       action={action}
       noValidate
-      className="rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 dark:border-gray-800 dark:bg-gray-900/60"
+      className="border border-white/[0.06] bg-[#03070f]/60 p-6 sm:p-8 backdrop-blur-sm"
     >
       <input type="hidden" name="locale" value={locale} />
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label htmlFor="cf-name" className="mb-1.5 block text-sm font-medium text-gray-900 dark:text-white">
+          <label htmlFor="cf-name" className="mb-1.5 block text-sm font-medium text-white">
             {labels.name}
           </label>
           <input
@@ -78,7 +80,7 @@ export function ContactForm({
           <FieldError msg={state.errors?.name} />
         </div>
         <div>
-          <label htmlFor="cf-email" className="mb-1.5 block text-sm font-medium text-gray-900 dark:text-white">
+          <label htmlFor="cf-email" className="mb-1.5 block text-sm font-medium text-white">
             {labels.email}
           </label>
           <input
@@ -94,9 +96,9 @@ export function ContactForm({
           <FieldError msg={state.errors?.email} />
         </div>
         <div>
-          <label htmlFor="cf-phone" className="mb-1.5 block text-sm font-medium text-gray-900 dark:text-white">
+          <label htmlFor="cf-phone" className="mb-1.5 block text-sm font-medium text-white">
             {labels.phone}{" "}
-            <span className="font-normal text-gray-400">{labels.phoneOptional}</span>
+            <span className="font-normal text-white/40">{labels.phoneOptional}</span>
           </label>
           <input
             id="cf-phone"
@@ -108,10 +110,15 @@ export function ContactForm({
           />
         </div>
         <div>
-          <label htmlFor="cf-service" className="mb-1.5 block text-sm font-medium text-gray-900 dark:text-white">
+          <label htmlFor="cf-service" className="mb-1.5 block text-sm font-medium text-white">
             {labels.service}
           </label>
-          <select id="cf-service" name="service" className={inputCls} defaultValue="">
+          <select
+            id="cf-service"
+            name="service"
+            className={inputCls}
+            defaultValue={defaultService ?? ""}
+          >
             <option value="">{labels.servicePlaceholder}</option>
             {serviceOptions.map((s) => (
               <option key={s} value={s}>
@@ -121,7 +128,7 @@ export function ContactForm({
           </select>
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor="cf-message" className="mb-1.5 block text-sm font-medium text-gray-900 dark:text-white">
+          <label htmlFor="cf-message" className="mb-1.5 block text-sm font-medium text-white">
             {labels.message}
           </label>
           <textarea
@@ -131,7 +138,7 @@ export function ContactForm({
             rows={5}
             placeholder={labels.messagePlaceholder}
             aria-invalid={Boolean(state.errors?.message)}
-            className={`w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white dark:placeholder:text-gray-500 dark:focus:border-white dark:focus-visible:ring-white/20 ${
+            className={`w-full resize-y border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-white/25 focus:border-white/30 focus-visible:ring-2 focus-visible:ring-white/10 ${
               state.errors?.message ? "border-red-500 dark:border-red-500" : ""
             }`}
           />
@@ -149,7 +156,7 @@ export function ContactForm({
       />
 
       {state.status === "error" && state.message && (
-        <p role="alert" className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700 dark:bg-red-950/40 dark:text-red-300">
+        <p role="alert" className="mt-4 border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-400">
           {state.message}{" "}
           <a href={SITE.whatsapp.url} target="_blank" rel="noopener noreferrer" className="underline">
             {SITE.whatsapp.label}
@@ -163,7 +170,7 @@ export function ContactForm({
         whileHover={pending ? undefined : { scale: 1.03 }}
         whileTap={pending ? undefined : { scale: 0.98 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
-        className="group mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white px-8 text-sm font-medium text-gray-900 shadow-lg shadow-black/20 hover:bg-gray-200 disabled:opacity-60 sm:w-auto dark:bg-white dark:text-gray-900"
+        className="group mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white bg-white px-8 text-sm font-medium text-gray-900 shadow-lg shadow-white/10 hover:bg-gray-200 disabled:opacity-60 sm:w-auto"
       >
         {pending ? (
           <>
@@ -182,4 +189,4 @@ export function ContactForm({
 }
 
 const inputCls =
-  "h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-900 focus-visible:ring-2 focus-visible:ring-gray-900/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white dark:placeholder:text-gray-500 dark:focus:border-white dark:focus-visible:ring-white/20"
+  "h-11 w-full border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition-colors placeholder:text-white/25 focus:border-white/30 focus-visible:ring-2 focus-visible:ring-white/10"

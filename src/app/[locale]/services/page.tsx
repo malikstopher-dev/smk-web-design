@@ -49,6 +49,7 @@ export default async function ServicesPage({
       />
 
       <section className="mx-auto max-w-6xl px-6 pb-12 sm:px-10">
+        <div className="editorial-divider mb-12" />
         <div className="grid gap-6 lg:grid-cols-2">
           {SERVICES.map((s, i) => (
             <Reveal
@@ -57,33 +58,32 @@ export default async function ServicesPage({
               className={i % 2 === 1 ? "lg:mt-14" : ""}
             >
               <HoverLift className="h-full">
-                <SpotlightCard className="h-full rounded-3xl">
+                <SpotlightCard className="h-full">
                   <article
                     id={s.slug}
-                    className={`depth-card flex h-full scroll-mt-24 flex-col rounded-3xl border p-8 shadow-lg shadow-black/20 transition-shadow duration-150 hover:shadow-2xl hover:shadow-black/50 ${
-                      i === 0
-                        ? "border-gray-600 bg-[#0a1220]/85"
-                        : "border-gray-800 bg-[#050a14]/70"
-                    }`}
+                    className="flex h-full scroll-mt-24 flex-col border border-white/[0.06] p-8 transition-colors duration-300 hover:border-white/[0.12]"
                   >
-                    <span className="font-mono text-xs text-gray-400 dark:text-gray-600">
-                      0{i + 1}
-                    </span>
-                    <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                    <div className="flex items-start justify-between">
+                      <span className="project-number">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="tech-label">0{i + 1}_</span>
+                    </div>
+                    <h2 className="mt-5 display-md text-white">
                       {d.servicesPage.items[i].title}
                     </h2>
-                    <p className="mt-3 leading-relaxed text-gray-600 dark:text-gray-400">
+                    <p className="mt-4 leading-relaxed text-white/45">
                       {d.servicesPage.items[i].description}
                     </p>
                     <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
                       {d.servicesPage.items[i].points.map((p) => (
                         <li
                           key={p}
-                          className="flex items-start gap-2.5 text-sm text-gray-700 dark:text-gray-300"
+                          className="flex items-start gap-2.5 text-sm text-white/50"
                         >
                           <span
                             aria-hidden
-                            className="mt-px font-mono text-xs leading-5 text-gray-500 dark:text-gray-500"
+                            className="mt-px font-mono text-xs leading-5 text-white/25"
                           >
                             +
                           </span>
@@ -93,7 +93,7 @@ export default async function ServicesPage({
                     </ul>
                     <Link
                       href={`${lp("/contact")}?service=${encodeURIComponent(d.servicesPage.items[i].title)}`}
-                      className="group mt-auto inline-flex items-center gap-1.5 pt-7 text-sm font-medium text-gray-900 underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 dark:text-white dark:focus-visible:ring-white"
+                      className="group mt-auto inline-flex items-center gap-1.5 pt-7 text-sm font-medium text-white/60 underline-offset-4 transition-colors hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                     >
                       {d.servicesPage.discuss}
                       <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
