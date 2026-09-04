@@ -5,11 +5,11 @@ import { useEffect, useRef } from "react"
 /* ─────────────────────────────────────────────────────────────
    SOLAR SYSTEM SCENE
    Composition brief: spacious, intentional, depth-layered.
-   - Jupiter: large, far left edge, partially cropped (background)
-   - Saturn: right side, clear ring silhouette (background)
-   - Mars: small, upper-left area, deep background
+   - Jupiter: lower-left edge, partially cropped (background)
+   - Saturn: far right, clear ring silhouette (background)
+   - Mars: small, high centre, deep background
    - Moon: independent, upper-right, textured (foreground-mid)
-   - Sun: distant, upper-left corner, warm corona + light source
+   - Sun: distant, upper-left, flat disc + light source
    Bodies never enter the central column (hero title / nav safe).
    Textures: Solar System Scope (CC BY 4.0) + three.js examples
    moon_1024.jpg (NASA-derived). See public/planets/CREDITS.md.
@@ -19,8 +19,10 @@ type PlanetConfig = {
   id: string
   texture: string
   radius: number
+  compactRadius: number
   // NDC-ish scene coords; camera sits at z=11, fov 38.
   position: readonly [number, number, number]
+  compactPosition: readonly [number, number, number]
   atmosphereColor: readonly [number, number, number]
   atmosphereIntensity: number
   drift: readonly [number, number, number]
@@ -32,10 +34,12 @@ type PlanetConfig = {
 const PLANETS: PlanetConfig[] = [
   {
     id: "jupiter",
-    texture: "/planets/8k_jupiter.jpg",
-    radius: 2.35,
-    // Far left, half-cropped by the viewport edge. Background depth.
-    position: [-10.4, 0.1, -3.4],
+    texture: "/planets/jupiter-2k.jpg",
+    radius: 1.85,
+    compactRadius: 1.15,
+    // Lower-left, half-cropped by the viewport edge. Background depth.
+    position: [-10.0, -1.8, -5.6],
+    compactPosition: [-3.05, -3.2, -5.6],
     atmosphereColor: [0.97, 0.77, 0.52],
     atmosphereIntensity: 0.22,
     drift: [0.2, 0.1, 0.06],
@@ -44,10 +48,12 @@ const PLANETS: PlanetConfig[] = [
   },
   {
     id: "saturn",
-    texture: "/planets/8k_saturn.jpg",
-    radius: 1.5,
-    // Right side, rings visible, deep background.
-    position: [9.6, 1.9, -5.2],
+    texture: "/planets/saturn-2k.jpg",
+    radius: 1.15,
+    compactRadius: 0.72,
+    // Far right, rings visible, deep background.
+    position: [11.3, 1.2, -7.2],
+    compactPosition: [2.85, 1.0, -7.2],
     atmosphereColor: [0.93, 0.84, 0.62],
     atmosphereIntensity: 0.18,
     drift: [0.14, 0.09, 0.05],
@@ -57,10 +63,12 @@ const PLANETS: PlanetConfig[] = [
   },
   {
     id: "mars",
-    texture: "/planets/8k_mars.jpg",
-    radius: 0.34,
-    // Small, upper-left, far away.
-    position: [-6.6, 3.4, -6.8],
+    texture: "/planets/mars-2k.jpg",
+    radius: 0.28,
+    compactRadius: 0.2,
+    // High centre, far from the sun and headline.
+    position: [0.8, 3.8, -8.2],
+    compactPosition: [2.2, 4.15, -8.2],
     atmosphereColor: [0.9, 0.42, 0.22],
     atmosphereIntensity: 0.12,
     drift: [0.1, 0.08, 0.1],
@@ -69,10 +77,12 @@ const PLANETS: PlanetConfig[] = [
   },
   {
     id: "venus",
-    texture: "/planets/8k_venus_surface.jpg",
-    radius: 0.4,
-    // Low right, distant — balances Mars diagonally.
-    position: [7.0, -3.3, -7.6],
+    texture: "/planets/venus-2k.jpg",
+    radius: 0.32,
+    compactRadius: 0.24,
+    // Low right, distant - balances Mars diagonally.
+    position: [5.4, -3.8, -9.0],
+    compactPosition: [1.75, -4.8, -9.0],
     atmosphereColor: [0.96, 0.7, 0.38],
     atmosphereIntensity: 0.14,
     drift: [0.09, 0.07, 0.08],
@@ -110,8 +120,12 @@ const PLANET_FRAGMENT = `
 
     float sunDot = dot(normal, lightDir);
     float diffuse = smoothstep(-0.35, 0.65, sunDot);
-    float rimShadow = pow(max(dot(viewDir, normal), 0.0), 0.82);
-    float lighting = mix(0.16, 1.0, diffuse) * rimShadow;
+    float limb = mix(
+      0.42,
+      1.0,
+      pow(max(dot(viewDir, normal), 0.0), 0.82)
+    );
+    float lighting = mix(0.24, 1.0, diffuse) * limb;
 
     vec3 halfVec = normalize(lightDir + viewDir);
     float spec = pow(max(dot(normal, halfVec), 0.0), 48.0) * diffuse * 0.08;
@@ -233,58 +247,25 @@ const MOON_FRAGMENT = `
   }
 `
 
-/* ── SUN — layered sprite: core, surface grain, corona ── */
+/* ── SUN - a shaded disc with a hard boundary and no bloom ── */
 const SUN_CORE_FRAGMENT = `
-  uniform float uTime;
   varying vec2 vUv;
 
   void main() {
-    vec2 p = vUv - 0.5;
-    float r = length(p) * 2.0;
+    vec2 p = (vUv - 0.5) * 2.0;
+    float r = length(p);
+    if (r > 1.0) discard;
 
-    // Warm white core → yellow → orange edge.
-    vec3 core = vec3(1.0, 0.97, 0.88);
-    vec3 mid = vec3(1.0, 0.86, 0.62);
-    vec3 edge = vec3(0.99, 0.62, 0.32);
+    vec3 centre = vec3(1.0, 0.91, 0.7);
+    vec3 edge = vec3(0.92, 0.5, 0.2);
+    vec3 col = mix(centre, edge, smoothstep(0.12, 1.0, r));
 
-    float surface =
-      0.03 * sin(vUv.x * 46.0 + uTime * 0.7) +
-      0.03 * sin(vUv.y * 52.0 - uTime * 0.5) +
-      0.02 * sin((vUv.x + vUv.y) * 38.0 + uTime * 0.9);
-    float n = clamp(0.5 + surface, 0.0, 1.0);
+    // Directional shading keeps the disc dimensional without a halo.
+    float light = 1.0 - distance(p, vec2(-0.22, 0.2)) * 0.12;
+    col *= clamp(light, 0.82, 1.02);
 
-    vec3 col = mix(core, mid, smoothstep(0.0, 0.55, r));
-    col = mix(col, edge, smoothstep(0.5, 1.0, r));
-    col *= 0.92 + 0.16 * n;
-
-    float alpha = 1.0 - smoothstep(0.85, 1.0, r);
+    float alpha = 1.0 - smoothstep(0.965, 1.0, r);
     gl_FragColor = vec4(col, alpha);
-  }
-`
-
-const SUN_CORONA_FRAGMENT = `
-  uniform float uTime;
-  varying vec2 vUv;
-
-  void main() {
-    vec2 p = vUv - 0.5;
-    float r = length(p) * 2.0;
-
-    // Slow breathing corona rays.
-    float ray =
-      0.5 + 0.5 * sin(atan(p.y, p.x) * 8.0 + uTime * 0.35);
-    float ray2 =
-      0.5 + 0.5 * sin(atan(p.y, p.x) * 13.0 - uTime * 0.22 + 2.0);
-
-    float glow = exp(-r * 2.4);
-    float streaks = glow * (0.55 + 0.45 * ray * ray2);
-
-    vec3 warmInner = vec3(1.0, 0.84, 0.55);
-    vec3 warmOuter = vec3(0.95, 0.55, 0.28);
-
-    vec3 col = mix(warmInner, warmOuter, smoothstep(0.2, 1.0, r));
-    float alpha = streaks * 0.5;
-    gl_FragColor = vec4(col * streaks, alpha);
   }
 `
 
@@ -300,6 +281,14 @@ const SPRITE_VERTEX = `
 function isMobileViewport() {
   return window.innerWidth < 768
 }
+
+function usesCompactComposition() {
+  return isMobileViewport() || window.innerWidth / window.innerHeight < 0.8
+}
+
+const DESKTOP_SUN_POSITION = [-11.3, 4.3, -9.2] as const
+const COMPACT_SUN_POSITION = [0.25, 6.0, -9.2] as const
+const MOON_POSITION = [6.4, 3.1, -2.6] as const
 
 export function PlanetsScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -326,11 +315,14 @@ export function PlanetsScene() {
       if (destroyed) return
 
       const mobile = isMobileViewport()
+      const compact = usesCompactComposition()
+      const viewportWidth = canvas.clientWidth || window.innerWidth
+      const viewportHeight = canvas.clientHeight || window.innerHeight
 
       const scene = new T.Scene()
       const camera = new T.PerspectiveCamera(
         38,
-        window.innerWidth / window.innerHeight,
+        viewportWidth / viewportHeight,
         0.1,
         200,
       )
@@ -342,7 +334,7 @@ export function PlanetsScene() {
         antialias: !mobile,
         powerPreference: "high-performance",
       })
-      renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.setSize(viewportWidth, viewportHeight)
       // Cap DPR: 2 desktop, 1.5 mobile.
       renderer.setPixelRatio(
         Math.min(window.devicePixelRatio, mobile ? 1.5 : 2),
@@ -355,12 +347,13 @@ export function PlanetsScene() {
       // 3D scene owns the moon; hide the CSS fallback moon.
       document.documentElement.dataset.solar3d = "true"
 
-      /* Sun sits far upper-left; its direction is the scene's light.
-         Match SUN_POSITION so the planets are lit from the sun's side. */
-      const SUN_POSITION = new T.Vector3(-8.6, 4.4, -9.2)
-      const sunDirection = SUN_POSITION.clone().normalize()
+      const initialSunPosition = compact
+        ? COMPACT_SUN_POSITION
+        : DESKTOP_SUN_POSITION
+      const sunPosition = new T.Vector3(...initialSunPosition)
+      const sunDirection = sunPosition.clone().normalize()
       const sunLight = new T.DirectionalLight(0xfff3df, 3.2)
-      sunLight.position.copy(SUN_POSITION.clone().multiplyScalar(2))
+      sunLight.position.copy(sunPosition).multiplyScalar(2)
       scene.add(sunLight)
       scene.add(new T.AmbientLight(0xffffff, 0.05))
 
@@ -372,9 +365,10 @@ export function PlanetsScene() {
       const clock = new T.Clock()
 
       type RuntimeBody = {
+        config: PlanetConfig
         anchor: InstanceType<typeof T.Group>
         spin: InstanceType<typeof T.Group>
-        basePosition: readonly [number, number, number]
+        basePosition: [number, number, number]
         drift: readonly [number, number, number]
         spinSpeed: number
         ring?: InstanceType<typeof T.Mesh>
@@ -383,6 +377,7 @@ export function PlanetsScene() {
       const bodies: RuntimeBody[] = []
 
       for (const cfg of PLANETS) {
+        const placement = compact ? cfg.compactPosition : cfg.position
         const texture = loader.load(cfg.texture)
         texture.colorSpace = T.SRGBColorSpace
         texture.anisotropy = renderer.capabilities.getMaxAnisotropy()
@@ -424,7 +419,7 @@ export function PlanetsScene() {
 
         spin.add(planetMesh)
         spin.add(atmosphereMesh)
-        spin.scale.setScalar(cfg.radius)
+        spin.scale.setScalar(compact ? cfg.compactRadius : cfg.radius)
         spin.rotation.x = cfg.tilt[0]
         spin.rotation.z = cfg.tilt[1]
 
@@ -447,14 +442,15 @@ export function PlanetsScene() {
           spin.add(ring)
         }
 
-        anchor.position.set(cfg.position[0], cfg.position[1], cfg.position[2])
+        anchor.position.set(placement[0], placement[1], placement[2])
         anchor.add(spin)
         scene.add(anchor)
 
         bodies.push({
+          config: cfg,
           anchor,
           spin,
-          basePosition: cfg.position,
+          basePosition: [placement[0], placement[1], placement[2]],
           drift: cfg.drift,
           spinSpeed: cfg.spinSpeed,
           ring,
@@ -482,38 +478,59 @@ export function PlanetsScene() {
       moonSpin.scale.setScalar(0.52)
       // Slight axial tilt for a natural look.
       moonSpin.rotation.z = 0.12
-      moonAnchor.position.set(6.4, 3.1, -2.6)
+      moonAnchor.position.set(...MOON_POSITION)
       moonAnchor.add(moonSpin)
       scene.add(moonAnchor)
+      const moonBasePosition: [number, number, number] = [
+        MOON_POSITION[0],
+        MOON_POSITION[1],
+        MOON_POSITION[2],
+      ]
 
-      /* ── SUN — sprite stack at SUN_POSITION ── */
+      /* ── SUN - flat disc, deliberately without a corona ── */
       const sunGroup = new T.Group()
-      sunGroup.position.copy(SUN_POSITION)
 
       const coreMaterial = new T.ShaderMaterial({
-        uniforms: { uTime: { value: 0 } },
         vertexShader: SPRITE_VERTEX,
         fragmentShader: SUN_CORE_FRAGMENT,
         transparent: true,
         depthWrite: false,
       })
       const coreMesh = new T.Mesh(planeGeometry, coreMaterial)
-      coreMesh.scale.setScalar(2.1)
       sunGroup.add(coreMesh)
-
-      const coronaMaterial = new T.ShaderMaterial({
-        uniforms: { uTime: { value: 0 } },
-        vertexShader: SPRITE_VERTEX,
-        fragmentShader: SUN_CORONA_FRAGMENT,
-        transparent: true,
-        depthWrite: false,
-        blending: T.AdditiveBlending,
-      })
-      const coronaMesh = new T.Mesh(planeGeometry, coronaMaterial)
-      coronaMesh.scale.setScalar(5.4)
-      sunGroup.add(coronaMesh)
-
       scene.add(sunGroup)
+
+      const applySceneLayout = () => {
+        const useCompactLayout = usesCompactComposition()
+
+        for (const body of bodies) {
+          const placement = useCompactLayout
+            ? body.config.compactPosition
+            : body.config.position
+          body.basePosition = [placement[0], placement[1], placement[2]]
+          body.anchor.position.set(placement[0], placement[1], placement[2])
+          body.spin.scale.setScalar(
+            useCompactLayout
+              ? body.config.compactRadius
+              : body.config.radius,
+          )
+        }
+
+        const nextSunPosition = useCompactLayout
+          ? COMPACT_SUN_POSITION
+          : DESKTOP_SUN_POSITION
+        sunPosition.set(
+          nextSunPosition[0],
+          nextSunPosition[1],
+          nextSunPosition[2],
+        )
+        sunGroup.position.copy(sunPosition)
+        coreMesh.scale.setScalar(useCompactLayout ? 0.85 : 2.0)
+        sunLight.position.copy(sunPosition).multiplyScalar(2)
+        sunDirection.copy(sunPosition).normalize()
+      }
+
+      applySceneLayout()
 
       let pointerX = 0
       let pointerY = 0
@@ -532,9 +549,12 @@ export function PlanetsScene() {
       }
 
       const onResize = () => {
-        camera.aspect = window.innerWidth / window.innerHeight
+        const width = canvas.clientWidth || window.innerWidth
+        const height = canvas.clientHeight || window.innerHeight
+        camera.aspect = width / height
         camera.updateProjectionMatrix()
-        renderer.setSize(window.innerWidth, window.innerHeight)
+        renderer.setSize(width, height)
+        applySceneLayout()
       }
 
       const onVisibility = () => {
@@ -586,12 +606,10 @@ export function PlanetsScene() {
 
         // Moon: slow spin + gentle independent drift.
         moonSpin.rotation.y += dt * 0.02
-        moonAnchor.position.x = 6.4 + Math.sin(elapsed * 0.05) * 0.18
-        moonAnchor.position.y = 3.1 + Math.cos(elapsed * 0.04) * 0.12
-
-        // Sun surface shimmer.
-        coreMaterial.uniforms.uTime.value = elapsed
-        coronaMaterial.uniforms.uTime.value = elapsed
+        moonAnchor.position.x =
+          moonBasePosition[0] + Math.sin(elapsed * 0.05) * 0.18
+        moonAnchor.position.y =
+          moonBasePosition[1] + Math.cos(elapsed * 0.04) * 0.12
 
         // Camera parallax + slow drift downward on scroll (bodies
         // recede subtly as the visitor reads — solar depth cue).
@@ -618,8 +636,6 @@ export function PlanetsScene() {
         atmosphereGeometry.dispose()
         ringGeometry.dispose()
         planeGeometry.dispose()
-        coreMaterial.dispose()
-        coronaMaterial.dispose()
         moonTexture.dispose()
 
         const disposeTree = (group: InstanceType<typeof T.Group>) => {
