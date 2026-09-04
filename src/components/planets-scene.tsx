@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react"
    - Saturn: far right, clear ring silhouette (background)
    - Mars: small, high centre, deep background
    - Moon: independent, upper-right, textured (foreground-mid)
-   - Sun: distant, upper-left, flat disc + light source
+   - Sun: distant, upper-left, star-like pinpoint + light source
    Bodies never enter the central column (hero title / nav safe).
    Textures: Solar System Scope (CC BY 4.0) + three.js examples
    moon_1024.jpg (NASA-derived). See public/planets/CREDITS.md.
@@ -247,25 +247,23 @@ const MOON_FRAGMENT = `
   }
 `
 
-/* ── SUN - a shaded disc with a hard boundary and no bloom ── */
+/* ── SUN - distant star: hot pinpoint core inside a soft glow ── */
 const SUN_CORE_FRAGMENT = `
   varying vec2 vUv;
 
   void main() {
     vec2 p = (vUv - 0.5) * 2.0;
     float r = length(p);
-    if (r > 1.0) discard;
 
-    vec3 centre = vec3(1.0, 0.91, 0.7);
-    vec3 edge = vec3(0.92, 0.5, 0.2);
-    vec3 col = mix(centre, edge, smoothstep(0.12, 1.0, r));
+    // Hot white-gold core, warm amber falloff - a star, not a disc.
+    vec3 core = vec3(1.0, 0.98, 0.92);
+    vec3 halo = vec3(1.0, 0.78, 0.45);
+    vec3 col = mix(core, halo, smoothstep(0.0, 0.28, r));
 
-    // Directional shading keeps the disc dimensional without a halo.
-    float light = 1.0 - distance(p, vec2(-0.22, 0.2)) * 0.12;
-    col *= clamp(light, 0.82, 1.02);
+    float glow = pow(max(1.0 - r, 0.0), 3.2);
+    float alpha = clamp(glow, 0.0, 1.0);
 
-    float alpha = 1.0 - smoothstep(0.965, 1.0, r);
-    gl_FragColor = vec4(col, alpha);
+    gl_FragColor = vec4(col * (0.9 + glow * 0.5), alpha);
   }
 `
 
@@ -286,8 +284,8 @@ function usesCompactComposition() {
   return isMobileViewport() || window.innerWidth / window.innerHeight < 0.8
 }
 
-const DESKTOP_SUN_POSITION = [-11.3, 4.3, -9.2] as const
-const COMPACT_SUN_POSITION = [0.25, 6.0, -9.2] as const
+const DESKTOP_SUN_POSITION = [-10.3, 4.2, -9.2] as const
+const COMPACT_SUN_POSITION = [0.25, 5.2, -9.2] as const
 const MOON_POSITION = [6.4, 3.1, -2.6] as const
 
 export function PlanetsScene() {
@@ -495,6 +493,7 @@ export function PlanetsScene() {
         fragmentShader: SUN_CORE_FRAGMENT,
         transparent: true,
         depthWrite: false,
+        blending: T.AdditiveBlending,
       })
       const coreMesh = new T.Mesh(planeGeometry, coreMaterial)
       sunGroup.add(coreMesh)
@@ -525,7 +524,7 @@ export function PlanetsScene() {
           nextSunPosition[2],
         )
         sunGroup.position.copy(sunPosition)
-        coreMesh.scale.setScalar(useCompactLayout ? 0.85 : 2.0)
+        coreMesh.scale.setScalar(useCompactLayout ? 0.45 : 0.9)
         sunLight.position.copy(sunPosition).multiplyScalar(2)
         sunDirection.copy(sunPosition).normalize()
       }
