@@ -13,8 +13,7 @@ import {
 } from "@/components/json-ld"
 import { HeroIn, HoverButton } from "@/components/motion"
 import { CtaBand } from "@/components/page-hero"
-import { Reveal } from "@/components/reveal"
-import { RevealHeading } from "@/components/text-reveal"
+import { SplitHeading } from "@/components/split-heading"
 import { WorkBoard } from "@/components/work-board"
 import { WordmarkBanner } from "@/components/wordmark-banner"
 import { HTML_LANG } from "@/i18n/config"
@@ -174,27 +173,22 @@ export default async function HomePage({
       {/* ═══ SERVICES — Hairline list ═══ */}
       <section aria-labelledby="services-heading" className="mx-auto max-w-6xl px-6 sm:px-10">
         <div className="editorial-divider mb-16" />
-        <Reveal>
-          <p className="tech-label">
-            {d.home.servicesEyebrow}
-          </p>
-          <RevealHeading
-            id="services-heading"
-            as="h2"
-            className="display-lg mt-4 text-white"
-          >
-            {d.home.servicesTitle}
-          </RevealHeading>
-        </Reveal>
-        <Reveal delay={0.12}>
-          <div className="md:pl-0">
-            <HomeServicesList
-              items={serviceItems}
-              viewServiceLabel={d.servicesPage.discuss}
-              locale={locale}
-            />
-          </div>
-        </Reveal>
+        <p className="tech-label">
+          {d.home.servicesEyebrow}
+        </p>
+        <SplitHeading
+          id="services-heading"
+          as="h2"
+          className="display-lg mt-4 text-[#e8b04b]"
+          text={d.home.servicesTitle}
+        />
+        <div className="md:pl-0">
+          <HomeServicesList
+            items={serviceItems}
+            viewServiceLabel={d.servicesPage.discuss}
+            locale={locale}
+          />
+        </div>
       </section>
 
       <CtaBand
