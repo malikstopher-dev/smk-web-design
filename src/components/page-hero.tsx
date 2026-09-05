@@ -5,15 +5,18 @@ import { HeroIn, HoverButton } from "@/components/motion"
 import { Magnetic } from "@/components/magnetic"
 import { RevealHeading } from "@/components/text-reveal"
 import { Reveal } from "@/components/reveal"
+import { TypewriterLede } from "@/components/contact-anim"
 
 export function PageHero({
   eyebrow,
   title,
   lede,
+  ledeAsTypewriter = false,
 }: {
   eyebrow: string
   title: string
   lede?: string
+  ledeAsTypewriter?: boolean
 }) {
   return (
     <div className="mx-auto max-w-6xl px-6 pb-10 pt-28 sm:px-10 sm:pt-36">
@@ -30,7 +33,12 @@ export function PageHero({
           {title}
         </RevealHeading>
       </HeroIn>
-      {lede && (
+      {lede && ledeAsTypewriter && (
+        <HeroIn delay={0.2}>
+          <TypewriterLede text={lede} />
+        </HeroIn>
+      )}
+      {lede && !ledeAsTypewriter && (
         <HeroIn delay={0.2}>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/50 sm:text-lg">
             {lede}

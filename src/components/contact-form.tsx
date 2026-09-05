@@ -1,9 +1,9 @@
 "use client"
 
 import { useActionState } from "react"
-import { motion } from "framer-motion"
 import { CheckCircle2, Loader2, Send } from "lucide-react"
 import { submitContact, type ContactState } from "@/app/actions/contact"
+import { MagneticCta } from "@/components/contact-anim"
 import type { Dict } from "@/i18n/types"
 import { SITE } from "@/lib/site"
 
@@ -164,13 +164,10 @@ export function ContactForm({
         </p>
       )}
 
-      <motion.button
+      <MagneticCta
         type="submit"
         disabled={pending}
-        whileHover={pending ? undefined : { scale: 1.03 }}
-        whileTap={pending ? undefined : { scale: 0.98 }}
-        transition={{ duration: 0.15, ease: "easeOut" }}
-        className="group mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white bg-white px-8 text-sm font-medium text-gray-900 shadow-lg shadow-white/10 hover:bg-gray-200 disabled:opacity-60 sm:w-auto"
+        className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-full border border-white bg-white px-8 text-sm font-medium text-gray-900 shadow-lg shadow-white/10 hover:border-[#e8b04b] disabled:opacity-60 sm:w-auto"
       >
         {pending ? (
           <>
@@ -183,7 +180,7 @@ export function ContactForm({
             <Send className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </>
         )}
-      </motion.button>
+      </MagneticCta>
     </form>
   )
 }

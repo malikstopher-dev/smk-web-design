@@ -13,6 +13,7 @@ import {
   Youtube,
 } from "lucide-react"
 import { ContactForm } from "@/components/contact-form"
+import { ContactCursor, ContactMesh } from "@/components/contact-anim"
 import { JsonLd, SITE_URL, breadcrumbSchema, localBusinessSchema } from "@/components/json-ld"
 import { PageHero } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
@@ -76,6 +77,8 @@ export default async function ContactPage({
 
   return (
     <>
+      <ContactMesh />
+      <ContactCursor />
       <JsonLd data={localBusinessSchema(d.jsonld.businessDesc)} />
       <JsonLd
         data={breadcrumbSchema([
@@ -88,6 +91,7 @@ export default async function ContactPage({
         eyebrow={d.nav.contact}
         title={d.contactPage.title}
         lede={d.contactPage.lede}
+        ledeAsTypewriter
       />
 
       <section className="mx-auto grid max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-[1.15fr_0.85fr]">
