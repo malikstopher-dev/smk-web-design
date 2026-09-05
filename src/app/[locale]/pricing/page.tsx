@@ -41,6 +41,7 @@ export default async function PricingPage({
         eyebrow={d.nav.pricing}
         heading={d.pricingPage.title}
         subtext={d.pricingPage.lede}
+        centerpiece="growth"
       />
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">

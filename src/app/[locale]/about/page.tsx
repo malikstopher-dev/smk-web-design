@@ -47,6 +47,7 @@ export default async function AboutPage({
         eyebrow={d.nav.about}
         heading={d.aboutPage.title}
         subtext={d.aboutPage.lede}
+        centerpiece="globe-africa"
       />
 
       <section className="mx-auto grid max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">

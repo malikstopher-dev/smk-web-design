@@ -43,6 +43,7 @@ export default async function ServicesPage({
         eyebrow={d.nav.services}
         heading={d.servicesPage.title}
         subtext={d.servicesPage.lede}
+        centerpiece="gear-cluster"
       />
 
       <section className="mx-auto max-w-6xl px-6 pb-12 sm:px-10">
