@@ -49,10 +49,23 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
   ]
 
   return (
-    <footer className="relative mt-20 border-t border-white/[0.06]">
-      <WordmarkBanner text="Stopher Malik" className="pb-2 pt-14 sm:pt-20" />
+    <footer className="relative mt-20 overflow-hidden border-t border-white/[0.06]">
+      {/* Decorative SMK wordmark behind the columns */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-display font-semibold tracking-tight text-white"
+        style={{
+          fontSize: "clamp(11rem, 22vw, 220px)",
+          lineHeight: 1,
+          opacity: 0.035,
+        }}
+      >
+        SMK
+      </span>
 
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 pb-14 pt-8 sm:px-10 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+      <WordmarkBanner text="Stopher Malik" className="relative pb-2 pt-14 sm:pt-20" />
+
+      <div className="relative mx-auto grid max-w-6xl gap-10 px-6 pb-14 pt-8 sm:px-10 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
         <div>
           <p className="font-display text-base font-semibold tracking-tight text-white">
             {SITE.business}
@@ -175,7 +188,7 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
         </div>
       </div>
 
-      <div className="border-t border-white/[0.06]">
+      <div className="relative border-t border-white/[0.06]">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 text-xs text-white/25 sm:flex-row sm:px-10">
           <p>
             © {new Date().getFullYear()} {SITE.business} · {SITE.name}
