@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
-import { CtaBand, PageHero } from "@/components/page-hero"
+import { CtaBand } from "@/components/page-hero"
+import { InnerHero } from "@/components/inner-hero"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
 import { FilterableWorkGrid } from "@/components/work-grid"
@@ -38,7 +39,7 @@ export default async function WorkPage({
         ])}
       />
 
-      <PageHero eyebrow={d.nav.work} title={d.workPage.title} lede={d.workPage.lede} />
+      <InnerHero eyebrow={d.nav.work} heading={d.workPage.title} subtext={d.workPage.lede} />
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">
         <div className="editorial-divider mb-12" />

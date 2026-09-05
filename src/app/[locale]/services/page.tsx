@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
-import { CtaBand, PageHero } from "@/components/page-hero"
+import { CtaBand } from "@/components/page-hero"
+import { InnerHero } from "@/components/inner-hero"
 import { ServicesBoard } from "@/components/services-board"
 import { getDict } from "@/i18n/index"
 import { SERVICES } from "@/lib/site"
@@ -38,10 +39,10 @@ export default async function ServicesPage({
         ])}
       />
 
-      <PageHero
+      <InnerHero
         eyebrow={d.nav.services}
-        title={d.servicesPage.title}
-        lede={d.servicesPage.lede}
+        heading={d.servicesPage.title}
+        subtext={d.servicesPage.lede}
       />
 
       <section className="mx-auto max-w-6xl px-6 pb-12 sm:px-10">

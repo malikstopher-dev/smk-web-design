@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react"
 import { FadeIn } from "@/components/motion"
 import { Magnetic } from "@/components/magnetic"
 import { JsonLd, SITE_URL, breadcrumbSchema, websiteSchema } from "@/components/json-ld"
-import { PageHero } from "@/components/page-hero"
+import { InnerHero } from "@/components/inner-hero"
 import { Reveal } from "@/components/reveal"
 import { HTML_LANG } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
@@ -46,7 +46,7 @@ export default async function BlogPage({
         ])}
       />
 
-      <PageHero eyebrow={d.nav.blog} title={d.blogPage.title} lede={d.blogPage.lede} />
+      <InnerHero eyebrow={d.nav.blog} heading={d.blogPage.title} subtext={d.blogPage.lede} />
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">
         <div className="editorial-divider mb-12" />

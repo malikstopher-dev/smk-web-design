@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
-import { PageHero } from "@/components/page-hero"
+import { InnerHero } from "@/components/inner-hero"
 import { Reveal } from "@/components/reveal"
 import { PricingCards } from "@/components/pricing-cards"
 import { getDict } from "@/i18n/index"
@@ -37,10 +37,10 @@ export default async function PricingPage({
         ])}
       />
 
-      <PageHero
+      <InnerHero
         eyebrow={d.nav.pricing}
-        title={d.pricingPage.title}
-        lede={d.pricingPage.lede}
+        heading={d.pricingPage.title}
+        subtext={d.pricingPage.lede}
       />
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">

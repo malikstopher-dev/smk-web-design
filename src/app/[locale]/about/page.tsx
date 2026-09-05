@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import { JsonLd, SITE_URL, breadcrumbSchema, personSchema } from "@/components/json-ld"
-import { CtaBand, PageHero } from "@/components/page-hero"
+import { CtaBand } from "@/components/page-hero"
+import { InnerHero } from "@/components/inner-hero"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
 
@@ -42,7 +43,11 @@ export default async function AboutPage({
         ])}
       />
 
-      <PageHero eyebrow={d.nav.about} title={d.aboutPage.title} lede={d.aboutPage.lede} />
+      <InnerHero
+        eyebrow={d.nav.about}
+        heading={d.aboutPage.title}
+        subtext={d.aboutPage.lede}
+      />
 
       <section className="mx-auto grid max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <Reveal>
