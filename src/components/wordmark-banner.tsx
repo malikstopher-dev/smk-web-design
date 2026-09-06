@@ -21,7 +21,7 @@ export function WordmarkBanner({
         viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.7, ease: EASE_OUT }}
         className="whitespace-nowrap text-center font-display font-semibold uppercase leading-none tracking-tight text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.15)]"
-        style={{ fontSize: "clamp(2.75rem, 10.5vw, 10rem)" }}
+        style={{ fontSize: "clamp(2rem, 8.5vw, 10rem)" }}
       >
         {text}
       </motion.p>

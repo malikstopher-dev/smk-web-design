@@ -55,7 +55,7 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-display font-semibold tracking-tight text-white"
         style={{
-          fontSize: "clamp(11rem, 22vw, 220px)",
+          fontSize: "clamp(3.25rem, 22vw, 220px)",
           lineHeight: 1,
           opacity: 0.035,
         }}

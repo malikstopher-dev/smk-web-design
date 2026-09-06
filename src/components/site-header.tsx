@@ -35,6 +35,20 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
     }
   }, [])
 
+  /* Route change closes the menu (link clicks call close, but
+     browser back/forward and locale switches can bypass). */
+  useEffect(() => {
+    close(false)
+  }, [close, pathname])
+
+  /* Never leak the scroll lock if the header unmounts mid-menu
+     (e.g. during a locale switch remount). */
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [])
+
   const openMenu = useCallback(() => {
     openRef.current = true
     setOpen(true)

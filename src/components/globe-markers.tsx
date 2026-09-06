@@ -339,7 +339,8 @@ export function GlobeMarkers({
             cursor: "grab",
             opacity: 0,
             transition: "opacity 1s ease",
-            touchAction: "none",
+            // Horizontal globe drag, vertical page scroll still works.
+            touchAction: "pan-y",
           }}
         />
         {(markers ?? []).map((m, i) => {

@@ -25,21 +25,26 @@ const MOBILE_QUERY = "(max-width: 699px)"
 type Placed = {
   project: Project
   rotation: number
-  top: number // percent
-  left: number // percent
+  top: number // percent of board height
+  left: number // percent of board width
   width: number // percent
+  height: number // percent of board height
   phase: number
   zIndex: number
+  recede: number // 1 front; lower = further back
 }
 
-/* Fixed placements — a loose board, not aligned columns.
-   Card 1 sits highest; the others overlap it like scattered
-   prints on a desk. Values are stable across renders. */
+/* Fixed placements — a loose board with a consistent corner
+   tuck: each back card slides under its neighbour by roughly
+   15-20% of its width, vertical offsets keep the rest clear.
+   Card 1 (featured) sits front and fully readable; the back
+   cards recede with a slight opacity drop. Heights are fixed
+   so the board contains every card — nothing spills. */
 const PLACEMENTS: Omit<Placed, "project">[] = [
-  { rotation: -2.4, top: 0, left: 4, width: 46, phase: 0.0, zIndex: 1 },
-  { rotation: 1.8, top: 13, left: 34, width: 42, phase: 1.9, zIndex: 2 },
-  { rotation: -1.2, top: 32, left: 8, width: 40, phase: 3.7, zIndex: 3 },
-  { rotation: 2.6, top: 44, left: 46, width: 44, phase: 5.1, zIndex: 4 },
+  { rotation: -2.4, top: 0, left: 3, width: 45, height: 46, phase: 0.0, zIndex: 4, recede: 1 },
+  { rotation: 1.8, top: 16, left: 41, width: 42, height: 45, phase: 1.9, zIndex: 3, recede: 0.95 },
+  { rotation: -1.2, top: 49, left: 5, width: 40, height: 44, phase: 3.7, zIndex: 2, recede: 0.92 },
+  { rotation: 2.6, top: 56, left: 58, width: 42, height: 44, phase: 5.1, zIndex: 1, recede: 0.9 },
 ]
 
 type DragState = {
@@ -260,22 +265,25 @@ function BoardCard({
         top: isMobile ? undefined : `${placed.top}%`,
         left: isMobile ? undefined : `${placed.left}%`,
         width: isMobile ? "100%" : `${placed.width}%`,
+        height: isMobile ? undefined : `${placed.height}%`,
         zIndex: isMobile ? undefined : dragging ? 50 : placed.zIndex,
         transform: !entered
           ? `${composeTransform({ y: 60 })}`
           : interactive
             ? undefined
             : composeTransform({}),
-        opacity: entered ? 1 : 0,
+        opacity: entered ? placed.recede : 0,
         transition: entered
           ? undefined
           : `opacity 650ms cubic-bezier(0.2, 1.4, 0.3, 1) ${index * 110}ms, transform 650ms cubic-bezier(0.2, 1.4, 0.3, 1) ${index * 110}ms`,
         transformStyle: "preserve-3d",
-        touchAction: "none",
+        // Only block native touch when drag is actually active
+        // (desktop/fine-pointer). Mobile cards must scroll normally.
+        touchAction: interactive ? "none" : "auto",
       }}
-      className={`group relative overflow-hidden border border-white/[0.06] bg-[#03070f]/60 text-left will-change-transform hover:border-white/[0.15] ${dragging ? "cursor-grabbing" : interactive ? "cursor-grab" : ""}`}
+      className={`group relative flex flex-col overflow-hidden border border-white/[0.06] bg-[#03070f]/60 text-left will-change-transform hover:border-white/[0.15] ${dragging ? "cursor-grabbing" : interactive ? "cursor-grab" : ""}`}
     >
-      <div className="relative aspect-[16/10] overflow-hidden bg-white/[0.03]">
+      <div className={`relative overflow-hidden bg-white/[0.03] ${isMobile ? "aspect-[16/10]" : "min-h-0 flex-1"}`}>
         <Image
           src={p.image}
           alt={dict.workPage.cardAlt.replace("{name}", p.name)}
@@ -284,7 +292,7 @@ function BoardCard({
           className="object-cover"
         />
       </div>
-      <div className="flex flex-col gap-2 p-5">
+      <div className="flex shrink-0 flex-col gap-2 p-5">
         <div className="flex flex-wrap gap-1.5">
           {p.tags.map((t) => (
             <span
@@ -384,8 +392,7 @@ export function WorkBoard({
       </div>
       <div
         ref={boardRef}
-        className="relative mt-12"
-        style={{ minHeight: 620 }}
+        className="relative mt-12 md:min-h-[620px]"
       >
         {placed.map((placedCard, i) => (
           <BoardCard
