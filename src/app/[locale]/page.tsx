@@ -3,7 +3,6 @@ import Link from "next/link"
 import { ArrowUpRight, MessageCircle } from "lucide-react"
 import { GlobeSection } from "@/components/globe-section"
 import { Magnetic } from "@/components/magnetic"
-import { HomeServicesList } from "@/components/home-services-list"
 import {
   JsonLd,
   localBusinessSchema,
@@ -14,6 +13,7 @@ import {
 import { HeroIn, HoverButton } from "@/components/motion"
 import { CtaBand } from "@/components/page-hero"
 import { SplitHeading } from "@/components/split-heading"
+import { HomeServicesGrid } from "@/components/home-services-grid"
 import { WorkBoard } from "@/components/work-board"
 import { WordmarkBanner } from "@/components/wordmark-banner"
 import { HTML_LANG } from "@/i18n/config"
@@ -182,10 +182,10 @@ export default async function HomePage({
           className="display-lg mt-4 text-[#e8b04b]"
           text={d.home.servicesTitle}
         />
-        <div className="md:pl-0">
-          <HomeServicesList
+        <div className="mt-12">
+          <HomeServicesGrid
             items={serviceItems}
-            viewServiceLabel={d.servicesPage.discuss}
+            viewLabel={d.servicesPage.discuss}
             locale={locale}
           />
         </div>
