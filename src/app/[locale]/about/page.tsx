@@ -4,6 +4,7 @@ import { JsonLd, SITE_URL, breadcrumbSchema, personSchema } from "@/components/j
 import { CtaBand } from "@/components/page-hero"
 import { InnerHero } from "@/components/inner-hero"
 import { ProcessTimeline } from "@/components/process-timeline"
+import { TestimonialCarousel } from "@/components/testimonial-carousel"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
 
@@ -103,23 +104,8 @@ export default async function AboutPage({
             <Reveal>
               <p className="tech-label mb-4">{d.aboutPage.testimonialsHeading}</p>
             </Reveal>
-            <div className="mt-6 space-y-6">
-              {d.aboutPage.testimonials.map((t, i) => (
-                <Reveal key={t.name} delay={i * 80}>
-                  <blockquote className="border-l-2 border-white/10 pl-5">
-                    <p className="text-sm leading-relaxed text-white/50">
-                      &ldquo;{t.quote}&rdquo;
-                    </p>
-                    <footer className="mt-3">
-                      <span className="text-xs font-semibold text-white/70">
-                        {t.name}
-                      </span>
-                      <span className="mx-1.5 text-white/20">&middot;</span>
-                      <span className="text-xs text-white/35">{t.role}</span>
-                    </footer>
-                  </blockquote>
-                </Reveal>
-              ))}
+            <div className="mt-6">
+              <TestimonialCarousel testimonials={d.aboutPage.testimonials} />
             </div>
           </div>
         </div>
