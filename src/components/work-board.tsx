@@ -20,7 +20,11 @@ import { SplitHeading } from "@/components/split-heading"
 
 const RETURN_EASE = "cubic-bezier(0.34, 1.56, 0.64, 1)"
 const MAX_TILT = 4
-const MOBILE_QUERY = "(max-width: 699px)"
+/* Touch detection is pointer-based, not width-based: coarse
+   pointers get the stacked mobile board no matter the width,
+   and narrow desktop windows keep the full experience. */
+const TOUCH_QUERY = "(hover: none) and (pointer: coarse)"
+const MOBILE_QUERY = `${TOUCH_QUERY}, (max-width: 699px)`
 
 type Placed = {
   project: Project
@@ -281,7 +285,7 @@ function BoardCard({
         // (desktop/fine-pointer). Mobile cards must scroll normally.
         touchAction: interactive ? "none" : "auto",
       }}
-      className={`group relative flex flex-col overflow-hidden border border-white/[0.06] bg-[#03070f]/60 text-left will-change-transform hover:border-white/[0.15] ${dragging ? "cursor-grabbing" : interactive ? "cursor-grab" : ""}`}
+      className={`group relative flex flex-col overflow-hidden border border-white/[0.06] bg-[#03070f]/60 text-left will-change-transform hover:border-white/[0.15] ${dragging ? "cursor-grabbing" : interactive ? "cursor-grab" : ""} ${isMobile ? "transition-transform duration-150 ease-out active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100" : ""}`}
     >
       <div className={`relative overflow-hidden bg-white/[0.03] ${isMobile ? "aspect-[16/10]" : "min-h-0 flex-1"}`}>
         <Image

@@ -82,6 +82,9 @@ function Card({
   function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
     const el = tiltRef.current
     if (!el) return
+    // Tilt is a fine-pointer (mouse) treatment; touch gets the
+    // active-state scale feedback in CSS instead.
+    if (e.pointerType !== "mouse") return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
     const r = el.getBoundingClientRect()
     const px = (e.clientX - r.left) / r.width - 0.5
@@ -114,7 +117,7 @@ function Card({
         ref={tiltRef}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
-        className="group flex h-full flex-col border border-white/[0.06] bg-[#03070f]/60 p-6 transition-[transform,border-color,box-shadow] duration-[250ms] ease-out will-change-transform motion-reduce:transition-none"
+        className="group flex h-full flex-col border border-white/[0.06] bg-[#03070f]/60 p-6 transition-[transform,border-color,box-shadow] duration-[250ms] ease-out will-change-transform motion-reduce:transition-none active:scale-[0.98] [@media(hover:hover)]:active:scale-100 motion-reduce:active:scale-100"
       >
         <div className="flex items-start justify-between">
           <span className="project-number">

@@ -48,6 +48,9 @@ function ServiceCard({
   function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
     const el = tiltRef.current
     if (!el) return
+    // Tilt is mouse-only; touch cards keep native scroll and
+    // get the active-state scale feedback below.
+    if (e.pointerType !== "mouse") return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
     const r = el.getBoundingClientRect()
     const px = (e.clientX - r.left) / r.width - 0.5
@@ -80,7 +83,7 @@ function ServiceCard({
         ref={tiltRef}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
-        className="flex h-full flex-col border border-white/[0.06] bg-[#03070f]/60 p-8 transition-[transform,border-color,box-shadow] duration-[250ms] ease-out will-change-transform motion-reduce:transition-none"
+        className="flex h-full flex-col border border-white/[0.06] bg-[#03070f]/60 p-8 transition-[transform,border-color,box-shadow] duration-[250ms] ease-out will-change-transform motion-reduce:transition-none active:scale-[0.98] [@media(hover:hover)]:active:scale-100 motion-reduce:active:scale-100"
       >
         <div className="flex items-start justify-between">
           <span className="project-number">
