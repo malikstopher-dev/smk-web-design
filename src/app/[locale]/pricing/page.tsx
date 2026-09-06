@@ -46,11 +46,9 @@ export default async function PricingPage({
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">
         <div className="editorial-divider mb-12" />
-        <Reveal>
-          <PricingCards pricing={d.pricingPage} />
-        </Reveal>
+        <PricingCards pricing={d.pricingPage} />
         <Reveal delay={140}>
-          <p className="mt-8 text-center text-sm text-white/35">
+          <p className="mt-8 text-center text-sm text-white">
             {d.pricingPage.notSurePrefix}{" "}
             <a
               href="https://wa.me/27825100050"
