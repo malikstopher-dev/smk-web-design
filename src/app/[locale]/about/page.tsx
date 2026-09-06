@@ -3,6 +3,7 @@ import Image from "next/image"
 import { JsonLd, SITE_URL, breadcrumbSchema, personSchema } from "@/components/json-ld"
 import { CtaBand } from "@/components/page-hero"
 import { InnerHero } from "@/components/inner-hero"
+import { ProcessTimeline } from "@/components/process-timeline"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
 
@@ -95,27 +96,7 @@ export default async function AboutPage({
                 {d.aboutPage.processHeading}
               </h2>
             </Reveal>
-            <ol className="mt-8 divide-y divide-white/[0.06]">
-              {d.aboutPage.process.map((step, i) => (
-                <li key={step.title}>
-                  <Reveal delay={i * 80}>
-                    <div className="grid gap-2 py-5 sm:grid-cols-[8rem_1fr] sm:gap-8">
-                      <span className="project-number">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div>
-                        <h3 className="font-semibold text-white">
-                          {step.title}
-                        </h3>
-                        <p className="mt-1.5 max-w-md text-sm leading-relaxed text-white/40">
-                          {step.body}
-                        </p>
-                      </div>
-                    </div>
-                  </Reveal>
-                </li>
-              ))}
-            </ol>
+            <ProcessTimeline steps={d.aboutPage.process} />
           </div>
 
           <div className="mt-16">
