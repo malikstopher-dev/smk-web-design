@@ -13,8 +13,14 @@ import {
   AboutGlobeScene,
   type AboutGlobeController,
 } from "@/components/hero-scenes/about-globe-scene"
+import {
+  BlogGlobeScene,
+  type BlogGlobeController,
+} from "@/components/hero-scenes/blog-globe-scene"
 
-export type InnerHeroSceneName = "about"
+export type InnerHeroSceneName = "about" | "blog"
+
+type SceneController = AboutGlobeController & BlogGlobeController
 
 type PointerSession = {
   pointerDown: boolean
@@ -42,6 +48,72 @@ const initialPointerSession = (): PointerSession => ({
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
+}
+
+/* Blog data labels — post counts layered over the globe.
+   Static positions, no per-frame DOM writes. */
+const BLOG_LABELS = [
+  { count: "16", label: "SEO" },
+  { count: "17", label: "Web Design" },
+  { count: "12", label: "Growth" },
+  { count: "50", label: "Posts" },
+]
+
+function BlogSceneFallback({ hidden = false }: { hidden?: boolean }) {
+  return (
+    <div
+      data-scene-fallback
+      className={`absolute inset-0 transition-opacity duration-700 ${hidden ? "opacity-0" : "opacity-100"}`}
+    >
+      <div className="absolute inset-0 flex items-center justify-end md:pr-[7vw]">
+        <div className="relative aspect-square w-[min(90vw,24rem)] md:w-[min(44vw,30rem)]">
+          <div className="absolute inset-[6%] rounded-full border border-sky-200/15 bg-[radial-gradient(circle_at_36%_28%,rgba(255,255,255,0.1),transparent_36%),radial-gradient(circle_at_66%_74%,rgba(56,160,238,0.14),transparent_46%),rgba(4,14,28,0.4)] shadow-[0_0_90px_rgba(56,160,238,0.12)]" />
+          <div
+            className="absolute inset-[8%] rounded-full opacity-6"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, rgba(214,234,255,0.66) 0 1px, transparent 1.25px)",
+              backgroundSize: "9px 9px",
+              maskImage:
+                "radial-gradient(circle, black 0%, rgba(0,0,0,0.9) 60%, transparent 95%)",
+              WebkitMaskImage:
+                "radial-gradient(circle, black 0%, rgba(0,0,0,0.9) 60%, transparent 95%)",
+            }}
+          />
+          <div className="absolute left-[36%] top-[30%] h-2 w-2 rounded-full bg-[#7dd3fc] shadow-[0_0_12px_rgba(125,211,252,0.8)]" />
+          <div className="absolute left-[62%] top-[58%] h-1.5 w-1.5 rounded-full bg-[#fbbf24] shadow-[0_0_10px_rgba(251,191,36,0.7)]" />
+          <div className="absolute left-[58%] top-[44%] h-1 w-1 rounded-full bg-white/80 shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
+          <div className="absolute inset-[2%] rotate-[12deg] rounded-full border border-sky-200/10" />
+        </div>
+      </div>
+      <BlogLabels />
+    </div>
+  )
+}
+
+function BlogLabels() {
+  return (
+    <div className="absolute bottom-[12%] right-[6vw] hidden flex-col gap-2 md:flex">
+      {BLOG_LABELS.map((item, index) => (
+        <div
+          key={item.label}
+          className="flex items-center gap-2.5 border border-white/10 bg-[#050a14]/70 px-3 py-1.5 backdrop-blur-sm"
+          style={{ marginRight: index % 2 === 0 ? 0 : "1.5rem" }}
+        >
+          <span
+            className={`font-display text-lg leading-none ${
+              item.label === "Posts" ? "text-[#e8b04b]" : "text-white"
+            }`}
+          >
+            {item.count}
+          </span>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-white/40">
+            {item.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 function AboutSceneFallback({ hidden = false }: { hidden?: boolean }) {
@@ -107,7 +179,7 @@ type OrientationConstructor = typeof DeviceOrientationEvent & {
 
 export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
   const wrapRef = useRef<HTMLDivElement>(null)
-  const globeController = useRef<AboutGlobeController>(null)
+  const globeController = useRef<SceneController>(null)
   const pointerSession = useRef<PointerSession>(initialPointerSession())
   const alive = useRef(true)
   const orientationStarted = useRef(false)
@@ -310,7 +382,13 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
       onPointerCancel={endDrag}
       onPointerLeave={onPointerLeave}
     >
-      <AboutSceneFallback hidden={ready && !reduced} />
+      {scene === "about" && <AboutSceneFallback hidden={ready && !reduced} />}
+      {scene === "blog" && <BlogSceneFallback hidden={ready && !reduced} />}
+      {scene === "blog" && ready && !reduced && (
+        <div className="pointer-events-none absolute inset-0 transition-opacity duration-700">
+          <BlogLabels />
+        </div>
+      )}
 
       {showCanvas && (
         <SceneBoundary onError={() => setReady(false)}>
@@ -340,6 +418,13 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
                 mobile={mobile}
               />
             )}
+            {scene === "blog" && (
+              <BlogGlobeScene
+                ref={globeController}
+                active={active}
+                mobile={mobile}
+              />
+            )}
           </Canvas>
         </SceneBoundary>
       )}
@@ -348,10 +433,15 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(90deg, rgba(3,7,15,0.98) 0%, rgba(3,7,15,0.93) 34%, rgba(3,7,15,0.48) 62%, rgba(3,7,15,0.18) 100%)",
+            scene === "blog"
+              ? "linear-gradient(90deg, rgba(3,7,15,0.99) 0%, rgba(3,7,15,0.94) 38%, rgba(3,7,15,0.55) 64%, rgba(3,7,15,0.26) 100%)"
+              : "linear-gradient(90deg, rgba(3,7,15,0.98) 0%, rgba(3,7,15,0.93) 34%, rgba(3,7,15,0.48) 62%, rgba(3,7,15,0.18) 100%)",
         }}
       />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(3,7,15,0.58)_100%)] md:hidden" />
+      {scene === "blog" && (
+        <div className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_at_62%_44%,transparent_30%,rgba(3,7,15,0.5)_78%,rgba(3,7,15,0.82)_100%)] md:block" />
+      )}
     </div>
   )
 }

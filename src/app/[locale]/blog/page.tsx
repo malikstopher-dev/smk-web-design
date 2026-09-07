@@ -46,7 +46,7 @@ export default async function BlogPage({
         ])}
       />
 
-      <InnerHero eyebrow={d.nav.blog} heading={d.blogPage.title} subtext={d.blogPage.lede} centerpiece="signal" />
+      <InnerHero eyebrow={d.nav.blog} heading={d.blogPage.title} subtext={d.blogPage.lede} scene="blog" />
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">
         <div className="editorial-divider mb-12" />
