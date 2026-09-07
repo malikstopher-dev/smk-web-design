@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic"
 import { useReducedMotion } from "framer-motion"
 import { useEffect, useRef, useState, type CSSProperties } from "react"
-import { Centerpiece } from "@/components/centerpiece"
 import type { InnerHeroSceneName } from "@/components/inner-hero-scene"
 
 const InteractiveHeroScene = dynamic(
@@ -41,32 +40,18 @@ export function InnerHero({
   heading,
   subtext,
   id,
-  centerpiece,
   scene,
 }: {
   eyebrow: string
   heading: string
   subtext: string
   id?: string
-  centerpiece?: "globe-africa" | "gear-cluster" | "network" | "growth" | "signal"
   scene?: InnerHeroSceneName
 }) {
   const heroRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const reduced = useReducedMotion() ?? false
-  const [isDesktop, setIsDesktop] = useState(false)
   const [triggered, setTriggered] = useState(false)
-
-  /* One centerpiece, one breakpoint — the desktop and mobile
-     wrappers never mount together, so only one canvas and
-     shape module exist at a time. */
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)")
-    const apply = () => setIsDesktop(mq.matches)
-    apply()
-    mq.addEventListener("change", apply)
-    return () => mq.removeEventListener("change", apply)
-  }, [])
 
   /* Entrance observer — same pattern as SplitHeading. */
   useEffect(() => {
@@ -176,39 +161,6 @@ export function InnerHero({
           scene ? "pointer-events-none" : ""
         }`}
       >
-      {/* Centerpiece — dot-stipple object behind the heading,
-          legibility shielded by a radial dark gradient. */}
-      {centerpiece && !scene && isDesktop && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 md:block"
-        >
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Centerpiece shape={centerpiece} className="max-w-[26rem]" />
-          </div>
-          {/* Gradient shield on the text side */}
-          <div
-            className="absolute inset-y-0 left-0 w-1/3"
-            style={{
-              background:
-                "linear-gradient(90deg, #03070f 0%, rgba(3, 7, 15, 0.75) 55%, transparent 100%)",
-            }}
-          />
-        </div>
-      )}
-      {/* Mobile: smaller, faint, centered behind text — mounted
-          only below md so the desktop canvas never coexists. */}
-      {centerpiece && !scene && !isDesktop && (
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-40 md:hidden"
-        >
-          <div className="absolute left-1/2 top-1/2 w-64 -translate-x-1/2 -translate-y-1/2">
-            <Centerpiece shape={centerpiece} />
-          </div>
-        </div>
-      )}
-
       {/* Eyebrow — pulsing gold dot + label, first in */}
       <p
         className="relative flex items-center gap-2.5"
