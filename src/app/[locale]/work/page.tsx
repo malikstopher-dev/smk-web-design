@@ -39,7 +39,7 @@ export default async function WorkPage({
         ])}
       />
 
-      <InnerHero eyebrow={d.nav.work} heading={d.workPage.title} subtext={d.workPage.lede} centerpiece="network" />
+      <InnerHero eyebrow={d.nav.work} heading={d.workPage.title} subtext={d.workPage.lede} scene="work" />
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">
         <div className="editorial-divider mb-12" />

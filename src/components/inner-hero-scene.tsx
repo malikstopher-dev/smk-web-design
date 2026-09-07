@@ -25,13 +25,18 @@ import {
   RingScene,
   type RingSceneController,
 } from "@/components/hero-scenes/ring-scene"
+import {
+  StreamScene,
+  type StreamSceneController,
+} from "@/components/hero-scenes/stream-scene"
 
-export type InnerHeroSceneName = "about" | "blog" | "services" | "pricing"
+export type InnerHeroSceneName = "about" | "blog" | "services" | "pricing" | "work"
 
 type SceneController = AboutGlobeController &
   BlogGlobeController &
   WaveTerrainController &
-  RingSceneController
+  RingSceneController &
+  StreamSceneController
 
 type PointerSession = {
   pointerDown: boolean
@@ -199,6 +204,46 @@ function PricingSceneFallback({ hidden = false }: { hidden?: boolean }) {
           {/* Faint inner counter-ring */}
           <div className="absolute inset-[22%] rounded-full border border-slate-300/15" />
           <div className="absolute inset-[24%] rounded-full bg-[radial-gradient(circle,transparent_60%,rgba(120,150,210,0.12)_100%)]" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* Work fallback — a CSS spiral vortex of dots. */
+function WorkSceneFallback({ hidden = false }: { hidden?: boolean }) {
+  return (
+    <div
+      data-scene-fallback
+      className={`absolute inset-0 transition-opacity duration-700 ${hidden ? "opacity-0" : "opacity-100"}`}
+    >
+      <div className="absolute inset-0 flex items-center justify-end md:pr-[8vw]">
+        <div
+          className="relative aspect-square w-[min(84vw,23rem)] md:w-[min(42vw,30rem)]"
+          style={{ transform: "perspective(1100px) rotateX(52deg)" }}
+        >
+          {[0, 1, 2, 3].map((ring) => (
+            <div
+              key={ring}
+              className="absolute left-1/2 top-1/2 rounded-full"
+              style={{
+                width: `${96 - ring * 22}%`,
+                height: `${96 - ring * 22}%`,
+                transform: "translate(-50%, -50%)",
+                backgroundImage: `radial-gradient(circle, rgba(${168 - ring * 14},${196 - ring * 12},${232 - ring * 10}, ${0.5 - ring * 0.09}) 0 1px, transparent 1.3px)`,
+                backgroundSize: `${11 + ring * 3}px ${11 + ring * 3}px`,
+                maskImage:
+                  "radial-gradient(circle, transparent 52%, black 62%, black 94%, transparent)",
+                WebkitMaskImage:
+                  "radial-gradient(circle, transparent 52%, black 62%, black 94%, transparent)",
+              }}
+            />
+          ))}
+          {/* Core */}
+          <div className="absolute left-1/2 top-1/2 h-[7%] w-[7%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(3,7,15,0.95)_30%,rgba(88,110,168,0.4)_78%,transparent_100%)] shadow-[0_0_34px_rgba(88,110,168,0.35)]" />
+          {/* Gold sparks */}
+          <div className="absolute left-[38%] top-[42%] h-1.5 w-1.5 rounded-full bg-[#f4d03c] shadow-[0_0_10px_rgba(244,208,60,0.8)]" />
+          <div className="absolute left-[62%] top-[58%] h-1 w-1 rounded-full bg-[#f4d03c]/80 shadow-[0_0_8px_rgba(244,208,60,0.6)]" />
         </div>
       </div>
     </div>
@@ -479,6 +524,7 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
       {scene === "pricing" && (
         <PricingSceneFallback hidden={ready && !reduced} />
       )}
+      {scene === "work" && <WorkSceneFallback hidden={ready && !reduced} />}
       {scene === "blog" && ready && !reduced && (
         <div className="pointer-events-none absolute inset-0 transition-opacity duration-700">
           <BlogLabels />
@@ -529,6 +575,13 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
             )}
             {scene === "pricing" && (
               <RingScene
+                ref={globeController}
+                active={active}
+                mobile={mobile}
+              />
+            )}
+            {scene === "work" && (
+              <StreamScene
                 ref={globeController}
                 active={active}
                 mobile={mobile}
