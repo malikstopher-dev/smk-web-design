@@ -21,12 +21,17 @@ import {
   WaveTerrainScene,
   type WaveTerrainController,
 } from "@/components/hero-scenes/wave-terrain-scene"
+import {
+  RingScene,
+  type RingSceneController,
+} from "@/components/hero-scenes/ring-scene"
 
-export type InnerHeroSceneName = "about" | "blog" | "services"
+export type InnerHeroSceneName = "about" | "blog" | "services" | "pricing"
 
 type SceneController = AboutGlobeController &
   BlogGlobeController &
-  WaveTerrainController
+  WaveTerrainController &
+  RingSceneController
 
 type PointerSession = {
   pointerDown: boolean
@@ -148,6 +153,54 @@ function ServicesSceneFallback({ hidden = false }: { hidden?: boolean }) {
         />
       ))}
       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(180deg,transparent,rgba(3,7,15,0.7))]" />
+    </div>
+  )
+}
+
+/* Pricing fallback — a CSS ring with a gold arc segment. */
+function PricingSceneFallback({ hidden = false }: { hidden?: boolean }) {
+  return (
+    <div
+      data-scene-fallback
+      className={`absolute inset-0 transition-opacity duration-700 ${hidden ? "opacity-0" : "opacity-100"}`}
+    >
+      <div className="absolute inset-0 flex items-center justify-end md:pr-[8vw]">
+        <div
+          className="relative aspect-square w-[min(80vw,22rem)] rotate-[24deg] md:w-[min(40vw,30rem)]"
+          style={{ transform: "perspective(1000px) rotateX(56deg) rotateZ(6deg)" }}
+        >
+          {/* Track */}
+          <div className="absolute inset-0 rounded-full border border-slate-300/25" />
+          {/* Dotted texture on the track */}
+          <div
+            className="absolute inset-[2%] rounded-full opacity-50"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, rgba(190,205,235,0.6) 0 1px, transparent 1.3px)",
+              backgroundSize: "12px 12px",
+              maskImage:
+                "radial-gradient(circle, transparent 54%, black 60%, black 92%, transparent 96%)",
+              WebkitMaskImage:
+                "radial-gradient(circle, transparent 54%, black 60%, black 92%, transparent 96%)",
+            }}
+          />
+          {/* Gold arc */}
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background:
+                "conic-gradient(from 100deg, transparent 0deg, rgba(232,176,75,0) 8deg, rgba(232,176,75,0.85) 52deg, rgba(252,211,77,0.95) 62deg, rgba(232,176,75,0) 70deg, transparent 70deg)",
+              maskImage:
+                "radial-gradient(circle, transparent 54%, black 60%, black 92%, transparent 96%)",
+              WebkitMaskImage:
+                "radial-gradient(circle, transparent 54%, black 60%, black 92%, transparent 96%)",
+            }}
+          />
+          {/* Faint inner counter-ring */}
+          <div className="absolute inset-[22%] rounded-full border border-slate-300/15" />
+          <div className="absolute inset-[24%] rounded-full bg-[radial-gradient(circle,transparent_60%,rgba(120,150,210,0.12)_100%)]" />
+        </div>
+      </div>
     </div>
   )
 }
@@ -423,6 +476,9 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
       {scene === "services" && (
         <ServicesSceneFallback hidden={ready && !reduced} />
       )}
+      {scene === "pricing" && (
+        <PricingSceneFallback hidden={ready && !reduced} />
+      )}
       {scene === "blog" && ready && !reduced && (
         <div className="pointer-events-none absolute inset-0 transition-opacity duration-700">
           <BlogLabels />
@@ -466,6 +522,13 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
             )}
             {scene === "services" && (
               <WaveTerrainScene
+                ref={globeController}
+                active={active}
+                mobile={mobile}
+              />
+            )}
+            {scene === "pricing" && (
+              <RingScene
                 ref={globeController}
                 active={active}
                 mobile={mobile}
