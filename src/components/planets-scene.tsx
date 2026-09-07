@@ -588,7 +588,12 @@ export function PlanetsScene() {
       }
 
       const animate = () => {
-        if (!visible || !inView) {
+        if (
+          !visible ||
+          !inView ||
+          document.documentElement.dataset.innerHeroScene
+        ) {
+          clock.getDelta()
           raf = requestAnimationFrame(animate)
           return
         }

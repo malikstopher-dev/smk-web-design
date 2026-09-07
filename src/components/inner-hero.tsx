@@ -1,7 +1,18 @@
 "use client"
 
+import dynamic from "next/dynamic"
+import { useReducedMotion } from "framer-motion"
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import { Centerpiece } from "@/components/centerpiece"
+import type { InnerHeroSceneName } from "@/components/inner-hero-scene"
+
+const InteractiveHeroScene = dynamic(
+  () =>
+    import("@/components/inner-hero-scene").then(
+      (module) => module.InnerHeroScene,
+    ),
+  { ssr: false },
+)
 
 /* ═══════════════════════════════════════════════════════
    INNER HERO — shared template for all five inner pages
@@ -31,26 +42,20 @@ export function InnerHero({
   subtext,
   id,
   centerpiece,
+  scene,
 }: {
   eyebrow: string
   heading: string
   subtext: string
   id?: string
   centerpiece?: "globe-africa" | "gear-cluster" | "network" | "growth" | "signal"
+  scene?: InnerHeroSceneName
 }) {
   const heroRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
-  const [reduced] = useState(() =>
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  )
+  const reduced = useReducedMotion() ?? false
   const [isDesktop, setIsDesktop] = useState(false)
-  const [triggered, setTriggered] = useState(() =>
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? true
-      : false,
-  )
+  const [triggered, setTriggered] = useState(false)
 
   /* One centerpiece, one breakpoint — the desktop and mobile
      wrappers never mount together, so only one canvas and
@@ -66,7 +71,7 @@ export function InnerHero({
   /* Entrance observer — same pattern as SplitHeading. */
   useEffect(() => {
     const el = headingRef.current
-    if (!el || triggered) return
+    if (!el || triggered || reduced) return
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
@@ -78,7 +83,7 @@ export function InnerHero({
     )
     io.observe(el)
     return () => io.disconnect()
-  }, [triggered])
+  }, [reduced, triggered])
 
   /* Settle detection: entrance is done when the last word has
      finished. Only then does the parallax arm. */
@@ -89,7 +94,7 @@ export function InnerHero({
   /* Mouse parallax on the settled heading — spring back on leave.
      Arms only after the entrance animation has fully completed. */
   useEffect(() => {
-    if (reduced || !triggered) return
+    if (reduced || !triggered || scene) return
     const hero = heroRef.current
     const heading = headingRef.current
     if (!hero || !heading) return
@@ -134,7 +139,7 @@ export function InnerHero({
       hero.removeEventListener("pointermove", onMove)
       hero.removeEventListener("pointerleave", onLeave)
     }
-  }, [reduced, triggered, entranceEndsMs])
+  }, [reduced, triggered, entranceEndsMs, scene])
 
   const wordStyle = (i: number): CSSProperties => {
     const side = i % 2 === 0 ? -1 : 1
@@ -163,11 +168,17 @@ export function InnerHero({
   return (
     <div
       ref={heroRef}
-      className="relative mx-auto max-w-6xl px-6 pb-10 pt-28 sm:px-10 sm:pt-36"
+      className="relative isolate overflow-hidden"
     >
+      {scene && <InteractiveHeroScene scene={scene} />}
+      <div
+        className={`relative z-10 mx-auto max-w-6xl px-6 pb-10 pt-28 sm:px-10 sm:pt-36 ${
+          scene ? "pointer-events-none" : ""
+        }`}
+      >
       {/* Centerpiece — dot-stipple object behind the heading,
           legibility shielded by a radial dark gradient. */}
-      {centerpiece && isDesktop && (
+      {centerpiece && !scene && isDesktop && (
         <div
           aria-hidden
           className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 md:block"
@@ -187,7 +198,7 @@ export function InnerHero({
       )}
       {/* Mobile: smaller, faint, centered behind text — mounted
           only below md so the desktop canvas never coexists. */}
-      {centerpiece && !isDesktop && (
+      {centerpiece && !scene && !isDesktop && (
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-40 md:hidden"
@@ -208,7 +219,7 @@ export function InnerHero({
       >
         <span
           aria-hidden
-          className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[#e8b04b]"
+          className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[#e8b04b] motion-reduce:animate-none"
           style={{ animationDuration: "2.4s" }}
         />
         <span className="tech-label">{eyebrow}</span>
@@ -247,6 +258,7 @@ export function InnerHero({
       >
         {subtext}
       </p>
+      </div>
     </div>
   )
 }
