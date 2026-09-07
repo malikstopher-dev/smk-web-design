@@ -17,10 +17,16 @@ import {
   BlogGlobeScene,
   type BlogGlobeController,
 } from "@/components/hero-scenes/blog-globe-scene"
+import {
+  WaveTerrainScene,
+  type WaveTerrainController,
+} from "@/components/hero-scenes/wave-terrain-scene"
 
-export type InnerHeroSceneName = "about" | "blog"
+export type InnerHeroSceneName = "about" | "blog" | "services"
 
-type SceneController = AboutGlobeController & BlogGlobeController
+type SceneController = AboutGlobeController &
+  BlogGlobeController &
+  WaveTerrainController
 
 type PointerSession = {
   pointerDown: boolean
@@ -112,6 +118,36 @@ function BlogLabels() {
           </span>
         </div>
       ))}
+    </div>
+  )
+}
+
+/* Services fallback — layered dot-wave rows in pure CSS. */
+function ServicesSceneFallback({ hidden = false }: { hidden?: boolean }) {
+  return (
+    <div
+      data-scene-fallback
+      className={`absolute inset-0 transition-opacity duration-700 ${hidden ? "opacity-0" : "opacity-100"}`}
+    >
+      {[0, 1, 2].map((layer) => (
+        <div
+          key={layer}
+          className="absolute left-1/2"
+          style={{
+            bottom: `${4 + layer * 9}%`,
+            width: `${140 - layer * 24}vw`,
+            height: "26%",
+            transform: "translateX(-50%)",
+            backgroundImage: `radial-gradient(circle, rgba(${190 - layer * 30},${210 - layer * 30},${240 - layer * 25}, ${0.55 - layer * 0.14}) 0 1.1px, transparent 1.4px)`,
+            backgroundSize: `${14 + layer * 4}px ${14 + layer * 4}px`,
+            maskImage:
+              "linear-gradient(90deg, transparent, black 18%, black 82%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(90deg, transparent, black 18%, black 82%, transparent)",
+          }}
+        />
+      ))}
+      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(180deg,transparent,rgba(3,7,15,0.7))]" />
     </div>
   )
 }
@@ -384,6 +420,9 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
     >
       {scene === "about" && <AboutSceneFallback hidden={ready && !reduced} />}
       {scene === "blog" && <BlogSceneFallback hidden={ready && !reduced} />}
+      {scene === "services" && (
+        <ServicesSceneFallback hidden={ready && !reduced} />
+      )}
       {scene === "blog" && ready && !reduced && (
         <div className="pointer-events-none absolute inset-0 transition-opacity duration-700">
           <BlogLabels />
@@ -425,6 +464,13 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
                 mobile={mobile}
               />
             )}
+            {scene === "services" && (
+              <WaveTerrainScene
+                ref={globeController}
+                active={active}
+                mobile={mobile}
+              />
+            )}
           </Canvas>
         </SceneBoundary>
       )}
@@ -435,7 +481,9 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
           background:
             scene === "blog"
               ? "linear-gradient(90deg, rgba(3,7,15,0.99) 0%, rgba(3,7,15,0.94) 38%, rgba(3,7,15,0.55) 64%, rgba(3,7,15,0.26) 100%)"
-              : "linear-gradient(90deg, rgba(3,7,15,0.98) 0%, rgba(3,7,15,0.93) 34%, rgba(3,7,15,0.48) 62%, rgba(3,7,15,0.18) 100%)",
+              : scene === "services"
+                ? "linear-gradient(180deg, rgba(3,7,15,0.9) 0%, rgba(3,7,15,0.36) 46%, rgba(3,7,15,0.2) 72%, rgba(3,7,15,0.72) 100%), linear-gradient(90deg, rgba(3,7,15,0.98) 0%, rgba(3,7,15,0.82) 40%, transparent 75%)"
+                : "linear-gradient(90deg, rgba(3,7,15,0.98) 0%, rgba(3,7,15,0.93) 34%, rgba(3,7,15,0.48) 62%, rgba(3,7,15,0.18) 100%)",
         }}
       />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(3,7,15,0.58)_100%)] md:hidden" />
