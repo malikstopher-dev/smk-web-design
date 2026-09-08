@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
-import Image from "next/image"
 import { JsonLd, SITE_URL, breadcrumbSchema, personSchema } from "@/components/json-ld"
 import { CtaBand } from "@/components/page-hero"
 import { InnerHero } from "@/components/inner-hero"
+import { PortraitCard } from "@/components/portrait-card"
 import { ProcessTimeline } from "@/components/process-timeline"
 import { TestimonialCarousel } from "@/components/testimonial-carousel"
 import { Reveal } from "@/components/reveal"
@@ -53,22 +53,13 @@ export default async function AboutPage({
       />
 
       <section className="mx-auto grid max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-        <Reveal>
-          <div className="relative overflow-hidden border border-white/[0.06]">
-            <Image
-              src="/stopher-portrait.png"
-              alt={d.aboutPage.portraitAlt}
-              width={640}
-              height={800}
-              className="h-auto w-full object-cover"
-              priority
-            />
-          </div>
-          <p className="mt-4 flex items-center gap-2 text-sm text-white/30">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-white/50" />
-            Paulshof, Sandton
-          </p>
-        </Reveal>
+        <PortraitCard
+          src="/stopher-portrait.png"
+          alt={d.aboutPage.portraitAlt}
+          width={640}
+          height={800}
+          caption="Paulshof, Sandton"
+        />
 
         <div>
           <Reveal>
