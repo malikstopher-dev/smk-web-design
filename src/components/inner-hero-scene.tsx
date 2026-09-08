@@ -75,11 +75,11 @@ const BLOG_LABELS = [
   { count: "50", label: "Posts" },
 ]
 
-function BlogSceneFallback({ hidden = false }: { hidden?: boolean }) {
+function BlogSceneFallback() {
   return (
     <div
       data-scene-fallback
-      className={`absolute inset-0 transition-opacity duration-700 ${hidden ? "opacity-0" : "opacity-100"}`}
+      className="absolute inset-0"
     >
       <div className="absolute inset-0 flex items-center justify-end md:pr-[7vw]">
         <div className="relative aspect-square w-[min(90vw,24rem)] md:w-[min(44vw,30rem)]">
@@ -133,11 +133,11 @@ function BlogLabels() {
 }
 
 /* Services fallback — layered dot-wave rows in pure CSS. */
-function ServicesSceneFallback({ hidden = false }: { hidden?: boolean }) {
+function ServicesSceneFallback() {
   return (
     <div
       data-scene-fallback
-      className={`absolute inset-0 transition-opacity duration-700 ${hidden ? "opacity-0" : "opacity-100"}`}
+      className="absolute inset-0"
     >
       {[0, 1, 2].map((layer) => (
         <div
@@ -163,11 +163,11 @@ function ServicesSceneFallback({ hidden = false }: { hidden?: boolean }) {
 }
 
 /* Pricing fallback — a CSS ring with a gold arc segment. */
-function PricingSceneFallback({ hidden = false }: { hidden?: boolean }) {
+function PricingSceneFallback() {
   return (
     <div
       data-scene-fallback
-      className={`absolute inset-0 transition-opacity duration-700 ${hidden ? "opacity-0" : "opacity-100"}`}
+      className="absolute inset-0"
     >
       <div className="absolute inset-0 flex items-center justify-end md:pr-[8vw]">
         <div
@@ -211,11 +211,11 @@ function PricingSceneFallback({ hidden = false }: { hidden?: boolean }) {
 }
 
 /* Work fallback — a CSS spiral vortex of dots. */
-function WorkSceneFallback({ hidden = false }: { hidden?: boolean }) {
+function WorkSceneFallback() {
   return (
     <div
       data-scene-fallback
-      className={`absolute inset-0 transition-opacity duration-700 ${hidden ? "opacity-0" : "opacity-100"}`}
+      className="absolute inset-0"
     >
       <div className="absolute inset-0 flex items-center justify-end md:pr-[8vw]">
         <div
@@ -250,13 +250,11 @@ function WorkSceneFallback({ hidden = false }: { hidden?: boolean }) {
   )
 }
 
-function AboutSceneFallback({ hidden = false }: { hidden?: boolean }) {
+function AboutSceneFallback() {
   return (
     <div
       data-scene-fallback
-      className={`absolute inset-0 flex items-center justify-center transition-opacity duration-700 md:justify-end md:pr-[8vw] ${
-        hidden ? "opacity-0" : "opacity-100"
-      }`}
+      className="absolute inset-0 flex items-center justify-center md:justify-end md:pr-[8vw]"
     >
       <div className="relative aspect-square w-[min(82vw,25rem)] md:w-[min(42vw,31rem)]">
         <div className="absolute inset-[7%] rounded-full border border-cyan-100/15 bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.11),transparent_34%),radial-gradient(circle_at_68%_72%,rgba(34,211,238,0.13),transparent_48%),rgba(4,12,25,0.42)] shadow-[0_0_80px_rgba(34,211,238,0.10)]" />
@@ -498,7 +496,15 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
     globeController.current?.resetPointer()
   }
 
+  /* The canvas mounts only when the hero is in view, WebGL
+     is confirmed, and motion is allowed. The CSS fallback is
+     the permanent object ONLY when the canvas will never
+     come (no-WebGL / reduced motion) — it never renders
+     alongside or ahead of a working canvas, so the globe is
+     one single continuous object: the WebGL globe and its
+     own scatter-convergence entrance, from its first frame. */
   const showCanvas = shouldMount && canUseWebGL === true && !reduced
+  const showFallback = !showCanvas && canUseWebGL !== null
 
   return (
     <div
@@ -516,17 +522,15 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
       onPointerCancel={endDrag}
       onPointerLeave={onPointerLeave}
     >
-      {scene === "about" && <AboutSceneFallback hidden={ready && !reduced} />}
-      {scene === "blog" && <BlogSceneFallback hidden={ready && !reduced} />}
-      {scene === "services" && (
-        <ServicesSceneFallback hidden={ready && !reduced} />
+      {scene === "about" && showFallback && <AboutSceneFallback />}
+      {scene === "blog" && showFallback && <BlogSceneFallback />}
+      {scene === "services" && showFallback && (
+        <ServicesSceneFallback />
       )}
-      {scene === "pricing" && (
-        <PricingSceneFallback hidden={ready && !reduced} />
-      )}
-      {scene === "work" && <WorkSceneFallback hidden={ready && !reduced} />}
-      {scene === "blog" && ready && !reduced && (
-        <div className="pointer-events-none absolute inset-0 transition-opacity duration-700">
+      {scene === "pricing" && showFallback && <PricingSceneFallback />}
+      {scene === "work" && showFallback && <WorkSceneFallback />}
+      {scene === "blog" && showCanvas && (
+        <div className="pointer-events-none absolute inset-0">
           <BlogLabels />
         </div>
       )}

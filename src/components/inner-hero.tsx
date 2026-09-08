@@ -18,13 +18,13 @@ const InteractiveHeroScene = dynamic(
    Eyebrow (pulsing gold dot) fades in first, then the
    heading types out character by character (34ms/char)
    with the Contact-page gold caret (900ms step-end
-   blink). The caret fades out ~1.5s after the last
-   character, then subtext rises in. Once the caret is
-   gone, the heading mouse-parallaxes ±3deg within the
-   hero. Reduced motion: full text everywhere, no caret,
-   no retype on re-entry. The h1 keeps its full text for
-   SSR, SEO, and screen readers; the typed layer is
-   purely visual.
+   blink). The caret vanishes ~1.5s after the last
+   character; only then does the subtext rise in, and the
+   hero scene mounts — so no heavy WebGL initialisation
+   ever runs inside the typing window. Reduced motion:
+   full text everywhere, no caret, no retype on re-entry.
+   The h1 keeps its full text for SSR, SEO, and screen
+   readers; the typed layer is purely visual.
    ═══════════════════════════════════════════════════════ */
 
 const ENTER_EASE = "cubic-bezier(0.16, 1, 0.3, 1)"
@@ -129,10 +129,33 @@ export function InnerHero({
     }
   }, [reduced, heading])
 
+  /* showAll gates the eyebrow only. The subtext now waits
+     for the caret to fully vanish (typed > heading.length)
+     — an actual completion state, not a clock — so a slow
+     type or a stalled frame can never leak it early. */
   const showAll = armed || reduced
   const typing = typed > 0 && typed <= heading.length
+  const caretFading = typed === heading.length
   const settled = typed > heading.length
-  const subtextDelay = EYEBROW_LEAD_MS + heading.length * TYPE_MS + 240
+  /* The hero scene mounts only after the caret is gone:
+     three.js eval, particle build, and shader compile are
+     heavy main-thread work that would otherwise stall the
+     typewriter mid-sentence. */
+  const sceneReady = settled || reduced
+
+  /* Belt-and-suspenders: if sceneReady is true but the scene
+     DOM element is absent 1s later (e.g. React concurrent
+     render bailed after a main-thread stall), force a
+     re-render to mount it. */
+  useEffect(() => {
+    if (!sceneReady || !scene) return
+    const id = setTimeout(() => {
+      if (!document.querySelector('[data-hero-scene]')) {
+        setTyped((t) => t) // force re-render
+      }
+    }, 1000)
+    return () => clearTimeout(id)
+  }, [sceneReady, scene])
 
   /* Mouse parallax on the settled heading — arms only once
      the caret has fully faded. */
@@ -181,7 +204,7 @@ export function InnerHero({
       ref={heroRef}
       className="relative isolate overflow-hidden"
     >
-      {scene && <InteractiveHeroScene scene={scene} />}
+      {scene && sceneReady && <InteractiveHeroScene scene={scene} />}
       <div
         className={`relative z-10 mx-auto max-w-6xl px-6 pb-10 pt-28 sm:px-10 sm:pt-36 ${
           scene ? "pointer-events-none" : ""
@@ -228,7 +251,7 @@ export function InnerHero({
               className="ml-0.5 inline-block h-[1.05em] w-[9px] translate-y-[0.15em] bg-[#e8b04b]"
               style={{
                 animation: "caretBlink 900ms step-end infinite",
-                opacity: typing ? 1 : 0,
+                opacity: typing || caretFading ? 1 : 0,
                 transition: "opacity 500ms ease",
               }}
             />
@@ -236,14 +259,15 @@ export function InnerHero({
         )}
       </h1>
 
-      {/* Subtext — fades and rises after the heading completes */}
+      {/* Subtext — waits for the caret to fully vanish
+          (the completion state), then fades and rises. */}
       <p
         className="relative mt-6 max-w-2xl text-base leading-relaxed text-white sm:text-lg"
         style={{
-          opacity: showAll ? 1 : 0,
-          transform: showAll ? "none" : "translateY(16px)",
-          transition: showAll
-            ? `opacity ${SUBTEXT_MS}ms ${ENTER_EASE} ${subtextDelay}ms, transform ${SUBTEXT_MS}ms ${ENTER_EASE} ${subtextDelay}ms`
+          opacity: settled ? 1 : 0,
+          transform: settled ? "none" : "translateY(16px)",
+          transition: settled
+            ? `opacity ${SUBTEXT_MS}ms ${ENTER_EASE}, transform ${SUBTEXT_MS}ms ${ENTER_EASE}`
             : "none",
         }}
       >

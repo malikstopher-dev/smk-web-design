@@ -1,9 +1,63 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { PlanetsScene } from "./planets-scene"
 
 export function CosmicBackground() {
+  /* Defer the solar-scene (three.js planets + textures) until
+     the browser is idle AND the page is visible.  This prevents
+     chunk-eval + texture-load + shader-compile from stalling
+     the hero typewriter on inner pages. */
+  const [solarReady, setSolarReady] = useState(false)
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches
+
+    if (prefersReduced) {
+      queueMicrotask(() => setSolarReady(true))
+      return
+    }
+
+    let idleId: number | undefined
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) mount()
+      },
+      { rootMargin: "200px 0px 0px 0px" },
+    )
+    let cancelled = false
+
+    const mount = () => {
+      if (cancelled) return
+      setSolarReady(true)
+    }
+
+    /* Wait for browser idle (or 4s ceiling) then mount. */
+    const ric = (window as { requestIdleCallback?: (cb: IdleRequestCallback, opts?: { timeout?: number }) => number }).requestIdleCallback
+    const cic = (window as { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback
+    const scheduleIdle = () => {
+      const cb: IdleRequestCallback = () => mount()
+      idleId = ric ? ric(cb, { timeout: 4000 }) : setTimeout(cb, 4000) as unknown as number
+    }
+
+    /* Also mount when the viewport scrolls to the hero area
+       (within 200px of top) — user is past the hero typing. */
+    io.observe(document.documentElement)
+
+    scheduleIdle()
+
+    return () => {
+      cancelled = true
+      if (idleId != null) {
+        cic?.(idleId)
+        clearTimeout(idleId)
+      }
+      io.disconnect()
+    }
+  }, [])
+
   useEffect(() => {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -389,7 +443,7 @@ export function CosmicBackground() {
         <div id="cosmic-nebula-2" />
         <canvas id="cosmic-star-canvas" />
         <div id="cosmic-moon" />
-        <PlanetsScene />
+        {solarReady && <PlanetsScene />}
         <div id="noise-overlay" aria-hidden />
       </div>
     )
