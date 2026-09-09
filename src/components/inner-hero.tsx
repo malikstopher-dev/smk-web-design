@@ -202,7 +202,7 @@ export function InnerHero({
   return (
     <div
       ref={heroRef}
-      className="relative isolate overflow-hidden"
+      className="relative isolate"
     >
       {scene && sceneReady && <InteractiveHeroScene scene={scene} />}
       <div
