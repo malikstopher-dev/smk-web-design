@@ -235,7 +235,7 @@ export const PROJECTS: Project[] = [
       "Chef and catering website using premium food-service branding and simple enquiry flow.",
     image: "/work/chefsbuxaba.png",
   },
-  {
+{
     name: "Marché LT Eben-Ezer",
     slug: "marche",
     category: "ecommerce",
@@ -245,6 +245,16 @@ export const PROJECTS: Project[] = [
     image: "/work/marche.jpg",
     url: "https://marchelteben-ezer.com",
   },
+  {
+    name: "AK Global Trading",
+    slug: "ak-global-trading",
+    category: "business",
+    tags: ["Trading", "Import/Export"],
+    description:
+      "International trading company website showcasing import/export services, product catalogue, and global logistics solutions.",
+    image: "/work/akglobaltrading.png",
+    url: "https://ak-globaltrading.com/",
+  }
 ]
 
 export const FEATURED_PROJECTS = [
