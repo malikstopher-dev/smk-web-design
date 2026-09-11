@@ -28,6 +28,16 @@ export const PROJECT_CATEGORIES: { id: ProjectCategory | "all"; label: string }[
 
 export const PROJECTS: Project[] = [
   {
+    name: "AK Global Trading",
+    slug: "ak-global-trading",
+    category: "business",
+    tags: ["Trading", "Import/Export"],
+    description:
+      "International trading company website showcasing import/export services, product catalogue, and global logistics solutions.",
+    image: "/work/akglobaltrading.png",
+    url: "https://ak-globaltrading.com/",
+  },
+  {
     name: "Salem Home Innovation",
     slug: "salem",
     category: "business",
@@ -58,6 +68,26 @@ export const PROJECTS: Project[] = [
     url: "https://www.selrahcarchitects.com/",
   },
   {
+    name: "Chez Gaby",
+    slug: "chez-gaby",
+    category: "restaurant",
+    tags: ["Fine Dining", "FR"],
+    description:
+      "Luxury French restaurant site in the heart of Kinshasa: reservations, menu and online ordering wrapped in an elegant gold-on-dark experience.",
+    image: "/work/chez-gaby.jpg",
+    url: "https://chez-gaby.vercel.app/",
+  },
+  {
+    name: "Le Centre",
+    slug: "le-centre",
+    category: "restaurant",
+    tags: ["Lounge / Restaurant"],
+    description:
+      "Premium restaurant and lounge in Kinshasa. International cuisine, panoramic terrace, and late-night ambiance until 4am.",
+    image: "/work/lecentre.jpg",
+    url: "https://lecentre-kin.pages.dev/",
+  },
+  {
     name: "JMOTO Electrical",
     slug: "jmoto",
     category: "business",
@@ -68,16 +98,6 @@ export const PROJECTS: Project[] = [
     url: "https://jmoto-website.vercel.app/",
   },
   {
-    name: "JKJ SolarTech",
-    slug: "jkj",
-    category: "business",
-    tags: ["Solar / CCTV", "Security"],
-    description:
-      "Solar, electrical, CCTV and security services website for clients across South Africa.",
-    image: "/work/jk.jpg",
-    url: "https://jkjsolatech.co.za/",
-  },
-  {
     name: "Cleanisa Solutions",
     slug: "cleanisa",
     category: "business",
@@ -86,6 +106,26 @@ export const PROJECTS: Project[] = [
       "Cleaning services website with service cards, trust-building layout, and contact conversion flow.",
     image: "/work/cleaningsa.png",
     url: "https://cleanisa-solutions.pages.dev/",
+  },
+  {
+    name: "Chicken Fiestas",
+    slug: "fiestas",
+    category: "restaurant",
+    tags: ["Fast Food", "Hospitality"],
+    description:
+      "A vibrant fast food restaurant website with online ordering, menu showcase, and location finder for customers.",
+    image: "/work/fiestas-chicken.png",
+    url: "https://chicken-fiestas2.malikstopher.workers.dev/",
+  },
+  {
+    name: "JKJ SolarTech",
+    slug: "jkj",
+    category: "business",
+    tags: ["Solar / CCTV", "Security"],
+    description:
+      "Solar, electrical, CCTV and security services website for clients across South Africa.",
+    image: "/work/jk.jpg",
+    url: "https://jkjsolatech.co.za/",
   },
   {
     name: "B.E. Mhlanga Services",
@@ -108,16 +148,6 @@ export const PROJECTS: Project[] = [
     url: "https://tomy-global-services.pages.dev/",
   },
   {
-    name: "Chicken Fiestas",
-    slug: "fiestas",
-    category: "restaurant",
-    tags: ["Fast Food", "Hospitality"],
-    description:
-      "A vibrant fast food restaurant website with online ordering, menu showcase, and location finder for customers.",
-    image: "/work/fiestas-chicken.png",
-    url: "https://chicken-fiestas2.malikstopher.workers.dev/",
-  },
-  {
     name: "Electrolight",
     slug: "electrolight",
     category: "business",
@@ -135,26 +165,6 @@ export const PROJECTS: Project[] = [
       "A credibility-building website for a DRC-based construction firm. Showcases completed projects and services in French, establishing trust with enterprise clients.",
     image: "/work/uzapa.jpg",
     url: "https://uzapardc.pages.dev/",
-  },
-  {
-    name: "Le Centre",
-    slug: "le-centre",
-    category: "restaurant",
-    tags: ["Lounge / Restaurant"],
-    description:
-      "Premium restaurant and lounge in Kinshasa. International cuisine, panoramic terrace, and late-night ambiance until 4am.",
-    image: "/work/lecentre.jpg",
-    url: "https://lecentre-kin.pages.dev/",
-  },
-  {
-    name: "Chez Gaby",
-    slug: "chez-gaby",
-    category: "restaurant",
-    tags: ["Fine Dining", "FR"],
-    description:
-      "Luxury French restaurant site in the heart of Kinshasa: reservations, menu and online ordering wrapped in an elegant gold-on-dark experience.",
-    image: "/work/chez-gaby.jpg",
-    url: "https://chez-gaby.vercel.app/",
   },
   {
     name: "101 On Fraser",
@@ -227,15 +237,6 @@ export const PROJECTS: Project[] = [
     url: "https://babooshka-catering.pages.dev/",
   },
   {
-    name: "Chefs Buxaba",
-    slug: "buxaba",
-    category: "restaurant",
-    tags: ["Chef / Catering", "Branding"],
-    description:
-      "Chef and catering website using premium food-service branding and simple enquiry flow.",
-    image: "/work/chefsbuxaba.png",
-  },
-{
     name: "Marché LT Eben-Ezer",
     slug: "marche",
     category: "ecommerce",
@@ -245,16 +246,6 @@ export const PROJECTS: Project[] = [
     image: "/work/marche.jpg",
     url: "https://marchelteben-ezer.com",
   },
-  {
-    name: "AK Global Trading",
-    slug: "ak-global-trading",
-    category: "business",
-    tags: ["Trading", "Import/Export"],
-    description:
-      "International trading company website showcasing import/export services, product catalogue, and global logistics solutions.",
-    image: "/work/akglobaltrading.png",
-    url: "https://ak-globaltrading.com/",
-  }
 ]
 
 export const FEATURED_PROJECTS = [
