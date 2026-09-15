@@ -274,7 +274,7 @@ export const fr: Dict = {
   },
   contactPage: {
     metaTitle: "Contact",
-    metaDesc: "Demandez un devis gratuit à SMK Web Design. WhatsApp +27 82 510 0050, email info@stopher-malik.co.za, ou formulaire de projet. Réponse sous 24 heures.",
+    metaDesc: "Demandez un devis gratuit à SMK Web Design. WhatsApp +27 72 999 8863, email info@stopher-malik.com, ou formulaire de projet. Réponse sous 24 heures.",
     title: "Parlons de votre projet.",
     lede: "Envoyez le formulaire ci-dessous, ou passez directement par WhatsApp, c'est là que je réponds le plus vite.",
     whatsappCard: "WhatsApp · réponse la plus rapide",
@@ -295,7 +295,7 @@ export const fr: Dict = {
       branch: "678910",
       referenceLabel: "Référence",
       reference: "Votre nom + service",
-      proof: "Envoyez la preuve de paiement à info@stopher-malik.co.za ou sur WhatsApp.",
+      proof: "Envoyez la preuve de paiement à info@stopher-malik.com ou sur WhatsApp.",
       alternativesHeading: "Autres moyens de paiement",
       alternatives: [
         {
@@ -329,6 +329,13 @@ export const fr: Dict = {
       successTitle: "Message envoyé",
       successBody: "Merci pour votre message. Je reviens vers vous sous 24 heures. Plus rapide ? WhatsApp.",
       whatsappCta: "M'écrire sur WhatsApp",
+      legalNotice: {
+        prefix: "En envoyant ce formulaire, vous acceptez les ",
+        terms: "Conditions générales",
+        middle: " et reconnaissez avoir lu la ",
+        privacy: "Politique de confidentialité",
+        suffix: ".",
+      },
       errors: {
         name: "Veuillez saisir votre nom.",
         email: "Veuillez saisir une adresse email valide.",
@@ -355,6 +362,244 @@ export const fr: Dict = {
     backLabel: "Tous les articles",
     relatedLabel: "Poursuivre la lecture",
   },
+  legal: {
+    label: "Informations juridiques",
+    effectiveLabel: "Date d'entrée en vigueur",
+    effectiveDate: "15 septembre 2026",
+    documents: {
+      terms: {
+        metaTitle: "Conditions générales",
+        metaDesc: "Conditions applicables aux services web ponctuels et récurrents fournis par SMK Web Design en Afrique du Sud.",
+        title: "Conditions générales",
+        lede: "Ces conditions régissent les projets et services récurrents fournis par SMK Web Design.",
+        sections: [
+          {
+            heading: "1. Champ d'application",
+            paragraphs: [
+              "SMK Web Design est exploité par Stopher Malik à Johannesburg, Gauteng, Afrique du Sud. Ces conditions s'appliquent lorsque vous demandez, approuvez ou payez nos services de web design, développement, identité visuelle, SEO, maintenance ou support.",
+              "Votre devis, proposition, facture ou contrat de service accepté fait partie de ces conditions. En cas de contradiction, l'accord écrit propre au service concerné prévaut.",
+            ],
+          },
+          {
+            heading: "2. Étendue des services et modifications",
+            paragraphs: [
+              "L'étendue convenue précise les livrables, les étapes, les révisions incluses, le prix et le calendrier prévu. Tout travail supplémentaire doit être approuvé par écrit et peut faire l'objet d'un devis distinct.",
+              "Nous pouvons recommander des modifications techniques nécessaires à la sécurité, l'accessibilité, la performance ou la compatibilité. Toute modification importante reste soumise à votre accord.",
+            ],
+          },
+          {
+            heading: "3. Prix et paiement",
+            paragraphs: [
+              "Les prix, acomptes, étapes et échéances figurent sur le devis ou la facture. Sauf indication contraire, les montants sont en rands sud-africains. Le travail peut commencer uniquement après réception du paiement ou de l'acompte convenu.",
+              "Les paiements peuvent être effectués par EFT, SnapScan, PayPal ou un prestataire de carte tel que PayFast lorsqu'il est proposé. Chaque prestataire applique ses propres conditions. SMK Web Design ne reçoit ni ne conserve les données complètes de votre carte.",
+              "Nous pouvons suspendre le travail ou retenir les livrables non publiés tant qu'une facture est en retard. Les travaux approuvés déjà réalisés et les coûts engagés pour votre projet restent dus.",
+            ],
+          },
+          {
+            heading: "4. Vos responsabilités",
+            paragraphs: [
+              "Vous devez fournir des instructions exactes, du contenu licite, les accès, les retours et les validations nécessaires. Vous confirmez avoir le droit d'utiliser chaque logo, image, marque et texte que vous fournissez.",
+              "Un retard de contenu, de retour, d'accès ou de validation peut reporter la livraison. Nous ne répondons pas des retards causés par des éléments client manquants ou un service tiers indisponible.",
+            ],
+          },
+          {
+            heading: "5. Vérification, révisions et acceptation",
+            paragraphs: [
+              "Vous devez vérifier chaque étape remise et signaler rapidement les erreurs ou changements demandés. Les révisions sont limitées à celles prévues dans l'étendue convenue. Une nouvelle direction ou une demande après validation peut nécessiter un nouveau devis.",
+              "Un livrable est accepté lorsque vous le validez par écrit, le publiez ou l'utilisez, ou réglez la facture finale sans signaler de défaut important.",
+            ],
+          },
+          {
+            heading: "6. Propriété et présentation du travail",
+            paragraphs: [
+              "Jusqu'au paiement intégral des factures concernées, les fichiers de travail et livrables non publiés restent la propriété de SMK Web Design. Après paiement complet, vous recevez les droits prévus dans la proposition sur les livrables personnalisés finaux.",
+              "Les polices, images de stock, logiciels, thèmes, extensions et plateformes tiers restent soumis à leurs licences. Sauf confidentialité convenue par écrit, nous pouvons vous identifier comme client et présenter le travail terminé dans notre portfolio et notre communication.",
+            ],
+          },
+          {
+            heading: "7. Domaines, hébergement et services tiers",
+            paragraphs: [
+              "Les domaines, l'hébergement, l'email, les passerelles de paiement, les extensions et plateformes externes dépendent des conditions, tarifs et disponibilités de leurs fournisseurs. Vous êtes responsable des comptes et renouvellements enregistrés à votre nom, sauf accord contraire.",
+              "Nous ne répondons pas d'une panne, modification de politique, suspension ou faille de sécurité d'un tiers hors de notre contrôle raisonnable. Nous vous assisterons dans la limite du support acheté.",
+            ],
+          },
+          {
+            heading: "8. Services ponctuels et récurrents",
+            paragraphs: [
+              "Un site ou un projet de design est ponctuel sauf si la proposition ou le contrat accepté prévoit expressément une facturation récurrente. La maintenance, l'hébergement, le support, le SEO ou un forfait récurrent sont facturés uniquement à la fréquence et au prix convenus par écrit.",
+              "Vous pouvez résilier un service récurrent par écrit selon le préavis prévu dans son contrat. Sans préavis indiqué, la résiliation arrête le service futur après la période déjà payée. Le travail réalisé, la période en cours et les montants échus restent dus.",
+            ],
+          },
+          {
+            heading: "9. Résiliation et remboursements",
+            paragraphs: [
+              "Chaque partie peut mettre fin au service si l'autre commet un manquement important et ne le corrige pas après un délai écrit raisonnable. Nous pouvons suspendre ou arrêter immédiatement le travail en cas d'instruction illégale, d'abus, de risque de sécurité ou de non-paiement.",
+              "Les annulations et demandes de remboursement du client suivent notre Politique de remboursement. Le travail terminé, le temps de production réservé et les frais tiers non remboursables restent dus.",
+            ],
+          },
+          {
+            heading: "10. Résultats, garanties et responsabilité",
+            paragraphs: [
+              "Nous fournissons nos services avec un soin et une compétence raisonnables. Les classements de recherche, demandes, ventes, validations de plateformes et la disponibilité continue de services tiers dépendent de facteurs hors de notre contrôle et ne sont pas garantis.",
+              "Dans les limites permises par le droit sud-africain, aucune partie ne répond des pertes indirectes ou consécutives. Notre responsabilité totale est limitée au montant payé pour le service concerné. Rien dans ces conditions n'exclut un droit ou une responsabilité que la loi interdit d'exclure.",
+            ],
+          },
+          {
+            heading: "11. Droit sud-africain et contact",
+            paragraphs: [
+              "Ces conditions sont régies par le droit sud-africain. Avant toute procédure, les deux parties doivent tenter de bonne foi de résoudre le différend par écrit. Les tribunaux sud-africains sont compétents si aucun accord n'est trouvé.",
+              "Nous pouvons modifier ces conditions pour les services futurs. La version acceptée avec un projet existant continue de s'appliquer, sauf modification convenue par écrit. Utilisez les coordonnées ci-dessous pour toute question ou notification.",
+            ],
+          },
+        ],
+      },
+      privacy: {
+        metaTitle: "Politique de confidentialité",
+        metaDesc: "Traitement, utilisation, conservation et partage des données personnelles par SMK Web Design selon le droit sud-africain.",
+        title: "Politique de confidentialité",
+        lede: "Cette politique décrit les données personnelles que nous traitons et leur utilisation.",
+        sections: [
+          {
+            heading: "1. Responsable du traitement",
+            paragraphs: [
+              "SMK Web Design, exploité par Stopher Malik à Johannesburg, Gauteng, Afrique du Sud, est responsable des données personnelles décrites ici. Nous traitons les données conformément au Protection of Personal Information Act, 2013 (POPIA) et aux autres lois applicables.",
+            ],
+          },
+          {
+            heading: "2. Données collectées",
+            paragraphs: ["Nous recueillons les informations que vous fournissez et les données techniques limitées nécessaires au fonctionnement et à la sécurité du site."],
+            items: [
+              "Nom, adresse email, numéro de téléphone ou WhatsApp, service choisi et détails du projet envoyés par le formulaire de contact.",
+              "Messages, propositions, validations, contrats, factures et échanges de support.",
+              "Statut, montant, référence et données de transaction du prestataire de paiement, sans le numéro complet ni le code de sécurité de votre carte.",
+              "Adresse IP, navigateur et données de requête que les fournisseurs d'hébergement ou de sécurité peuvent traiter dans leurs journaux.",
+            ],
+          },
+          {
+            heading: "3. Utilisation des données",
+            paragraphs: ["Nous utilisons les données personnelles uniquement pour :"],
+            items: [
+              "Répondre aux demandes et préparer des devis.",
+              "Fournir, gérer et soutenir les services convenus.",
+              "Émettre les factures, confirmer les paiements et conserver les documents commerciaux requis.",
+              "Protéger le site, prévenir les abus et résoudre les problèmes techniques.",
+              "Respecter nos obligations légales et établir ou défendre des droits.",
+            ],
+          },
+          {
+            heading: "4. Formulaire de contact et paiements",
+            paragraphs: [
+              "Les demandes du formulaire passent par Web3Forms afin que nous puissions les recevoir. Si vous choisissez un moyen de paiement externe, son fournisseur, notamment PayFast, SnapScan, PayPal ou votre banque, traite les données selon sa propre politique de confidentialité.",
+              "SMK Web Design ne recueille ni ne conserve les données complètes de carte. Les confirmations de paiement sont gardées uniquement le temps nécessaire à la comptabilité, au support et aux obligations légales.",
+            ],
+          },
+          {
+            heading: "5. Partage et prestataires",
+            paragraphs: [
+              "Nous ne vendons pas les données personnelles. Nous partageons uniquement les informations nécessaires avec les prestataires de formulaire, hébergement, sécurité, email, comptabilité et paiement, ou avec une autorité lorsque la loi l'exige.",
+              "Ces prestataires agissent selon leurs conditions ou nos instructions et peuvent traiter les données hors d'Afrique du Sud. Nous prenons des mesures raisonnables pour choisir des prestataires qui protègent correctement les données.",
+            ],
+          },
+          {
+            heading: "6. Cookies et suivi",
+            paragraphs: [
+              "Ce site utilise le cookie fonctionnel smk-lang pour mémoriser votre langue pendant un an maximum. À la date d'entrée en vigueur ci-dessus, ce site n'utilise aucun cookie publicitaire, cookie d'analyse ni pixel de suivi comportemental.",
+              "Les sites externes et prestataires de paiement peuvent déposer leurs propres cookies après que vous suivez un lien. Leurs notices s'appliquent à ces cookies.",
+            ],
+          },
+          {
+            heading: "7. Conservation et sécurité",
+            paragraphs: [
+              "Nous conservons les données uniquement pendant la durée nécessaire à leur objectif, à la relation client, aux obligations fiscales et comptables, au traitement d'un litige ou à une autre exigence légale. Elles sont ensuite supprimées, anonymisées ou archivées de manière appropriée.",
+              "Nous appliquons des protections administratives et techniques raisonnables. Aucune transmission ni conservation sur internet n'est totalement sûre; une sécurité absolue ne peut donc pas être garantie.",
+            ],
+          },
+          {
+            heading: "8. Vos droits",
+            paragraphs: [
+              "Sous réserve de POPIA, vous pouvez demander si nous détenons vos données et en demander l'accès, la correction ou la suppression. Vous pouvez vous opposer à certains traitements, retirer votre consentement lorsque celui-ci sert de base, ou saisir l'Information Regulator d'Afrique du Sud.",
+              "Envoyez votre demande aux coordonnées ci-dessous. Nous pouvons devoir vérifier votre identité et conserver certaines données lorsque la loi l'impose.",
+            ],
+          },
+          {
+            heading: "9. Enfants, liens et modifications",
+            paragraphs: [
+              "Nos services sont destinés aux clients professionnels et ne ciblent pas les enfants. Ce site peut renvoyer vers des sites externes qui gèrent leurs propres pratiques de confidentialité.",
+              "Nous pouvons mettre à jour cette politique si nos services, prestataires ou obligations changent. La date d'entrée en vigueur identifie la dernière version publiée. Contactez-nous ci-dessous pour toute question ou demande liée à la confidentialité.",
+            ],
+          },
+        ],
+      },
+      "refund-policy": {
+        metaTitle: "Politique de remboursement",
+        metaDesc: "Règles d'annulation et de remboursement des projets ponctuels et services récurrents de SMK Web Design.",
+        title: "Politique de remboursement",
+        lede: "Cette politique explique comment nous évaluons les annulations et remboursements.",
+        sections: [
+          {
+            heading: "1. Champ d'application",
+            paragraphs: [
+              "Cette politique s'applique aux paiements effectués directement à SMK Web Design pour un projet ponctuel ou un service récurrent expressément convenu. Votre devis ou contrat accepté peut prévoir des conditions propres au service; elles prévalent lorsqu'elles sont licites.",
+            ],
+          },
+          {
+            heading: "2. Annulation avant le début du travail",
+            paragraphs: [
+              "Si vous annulez avant le début du travail, faites la demande par écrit. Nous remboursons le montant payé après déduction des frais non remboursables du prestataire de paiement et des achats tiers déjà engagés avec votre accord.",
+              "Le travail commence dès le début de la recherche, planification, création, programmation, rédaction, configuration ou de toute autre tâche de production convenue, et non uniquement lors de la présentation d'une maquette.",
+            ],
+          },
+          {
+            heading: "3. Annulation après le début du travail",
+            paragraphs: [
+              "Si vous annulez après le début, nous calculons la valeur du travail réalisé, du temps de production réservé et des engagements tiers approuvés. Le solde prépayé restant est remboursé. Si le travail réalisé dépasse le paiement reçu, la différence reste due.",
+              "Un acompte n'est pas automatiquement perdu, mais il est affecté en priorité au travail réalisé et aux coûts engagés. Le remboursement dépend du solde inutilisé après ce calcul.",
+            ],
+          },
+          {
+            heading: "4. Travail validé ou livré",
+            paragraphs: [
+              "Les paiements pour des étapes validées, des services terminés et des fichiers numériques livrés ne sont généralement pas remboursables une fois fournis comme convenu. Nous corrigerons d'abord tout défaut vérifié compris dans l'étendue convenue.",
+              "Un changement de préférence, d'orientation commerciale ou de plateforme après validation ne rend pas le travail défectueux. Cela ne limite pas les droits accordés par le droit sud-africain de la consommation.",
+            ],
+          },
+          {
+            heading: "5. Services récurrents",
+            paragraphs: [
+              "La maintenance, l'hébergement, le support, le SEO ou les forfaits sont récurrents uniquement si cela a été convenu par écrit. La résiliation arrête les prochaines facturations selon le préavis contractuel, ou après la période payée en cours si aucun préavis n'est indiqué.",
+              "La période en cours n'est pas remboursable lorsque le travail ou la disponibilité réservée a commencé. Si nous vous facturons après la prise d'effet d'une résiliation, nous remboursons le débit incorrect.",
+            ],
+          },
+          {
+            heading: "6. Frais tiers et frais de paiement",
+            paragraphs: [
+              "Les domaines, hébergements, licences, images de stock, extensions et autres achats tiers sont remboursables uniquement si leur fournisseur nous rembourse. Les frais de transaction ou de change conservés par PayFast, PayPal, une banque ou un autre prestataire peuvent être déduits lorsque la loi le permet.",
+            ],
+          },
+          {
+            heading: "7. Demander un remboursement",
+            paragraphs: [
+              "Envoyez votre demande par email avec votre nom, le numéro de facture, le service et le motif. Nous l'accusons réception sous deux jours ouvrables et rendons normalement une décision écrite sous sept jours ouvrables après réception des informations nécessaires.",
+              "Un remboursement approuvé est envoyé, si possible, au moyen de paiement d'origine dans les dix jours ouvrables suivant l'accord. La banque ou le prestataire peut prendre plus de temps pour afficher les fonds. Nous confirmons l'envoi du remboursement.",
+            ],
+          },
+          {
+            heading: "8. Paiement en double ou incorrect",
+            paragraphs: [
+              "Prévenez-nous rapidement si vous avez payé deux fois, versé un montant incorrect ou ne reconnaissez pas un débit. Un paiement en double ou incorrect confirmé est remboursé intégralement, sous réserve d'une correction imposée par la loi ou le prestataire.",
+            ],
+          },
+          {
+            heading: "9. Litiges et droits légaux",
+            paragraphs: [
+              "Contactez-nous d'abord afin que nous examinions le dossier du projet et du paiement. Cette démarche ne supprime pas votre droit de contacter votre prestataire de paiement ou d'exercer un recours prévu par le droit sud-africain.",
+              "Utilisez les coordonnées ci-dessous pour une annulation, une demande de remboursement ou une question sur cette politique.",
+            ],
+          },
+        ],
+      },
+    },
+  },
   footer: {
     blurb: "Des sites performants pour des entreprises en Afrique du Sud et ailleurs.",
     pages: "Pages",
@@ -363,6 +608,10 @@ export const fr: Dict = {
     fastestReply: "Réponse la plus rapide",
     followUs: "Suivez-moi",
     builtWith: "Construit avec Next.js · Déployé sur Cloudflare",
+    legal: "Mentions légales",
+    terms: "Conditions",
+    privacy: "Confidentialité",
+    refunds: "Remboursements",
   },
   ctaBand: {
     title: "Un projet en tête ?",

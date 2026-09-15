@@ -5,6 +5,7 @@ import { useParams } from "next/navigation"
 import { MessageCircle } from "lucide-react"
 import { isLocale } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
+import { SITE } from "@/lib/site"
 
 export default function LocaleNotFound() {
   const rawLocale = useParams<{ locale?: string }>().locale
@@ -28,7 +29,7 @@ export default function LocaleNotFound() {
           {d.notFound.home}
         </Link>
         <a
-          href="https://wa.me/27825100050"
+          href={SITE.whatsapp.url}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex h-12 items-center gap-2 rounded-full border border-white/15 px-7 text-sm font-medium text-white/60 transition-colors hover:border-white/40 hover:text-white"

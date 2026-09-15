@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { isLocale, type Locale } from "@/i18n/config"
 
+const LEGAL_PATHS = new Set(["/terms", "/privacy", "/refund-policy"])
+
 function detectLocale(req: NextRequest): Locale {
   const cookie = req.cookies.get("smk-lang")?.value
   if (cookie && isLocale(cookie)) return cookie
@@ -19,6 +21,14 @@ function detectLocale(req: NextRequest): Locale {
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl
+  const cleanPathname = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname
+
+  if (LEGAL_PATHS.has(cleanPathname)) {
+    const url = req.nextUrl.clone()
+    url.pathname = `/en${cleanPathname}`
+    return NextResponse.redirect(url, 308)
+  }
+
   const seg = pathname.split("/")[1]
 
   if (isLocale(seg)) {

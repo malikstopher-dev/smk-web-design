@@ -4,6 +4,7 @@ import { InnerHero } from "@/components/inner-hero"
 import { Reveal } from "@/components/reveal"
 import { PricingCards } from "@/components/pricing-cards"
 import { getDict } from "@/i18n/index"
+import { SITE } from "@/lib/site"
 
 export async function generateMetadata({
   params,
@@ -51,12 +52,12 @@ export default async function PricingPage({
           <p className="mt-8 text-center text-sm text-white">
             {d.pricingPage.notSurePrefix}{" "}
             <a
-              href="https://wa.me/27825100050"
+              href={SITE.whatsapp.url}
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-white underline-offset-4 transition-colors hover:text-white/70 hover:underline"
             >
-              +27 82 510 0050
+              {SITE.whatsapp.label}
             </a>{" "}
             {d.pricingPage.notSureSuffix}
           </p>

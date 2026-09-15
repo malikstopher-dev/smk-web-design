@@ -3,6 +3,20 @@ export interface ProjectCopy {
   tags: Record<string, string>
 }
 
+export type LegalSlug = "terms" | "privacy" | "refund-policy"
+
+export interface LegalDocument {
+  metaTitle: string
+  metaDesc: string
+  title: string
+  lede: string
+  sections: {
+    heading: string
+    paragraphs: string[]
+    items?: string[]
+  }[]
+}
+
 export interface Dict {
   nav: {
     home: string
@@ -136,6 +150,13 @@ export interface Dict {
       successTitle: string
       successBody: string
       whatsappCta: string
+      legalNotice: {
+        prefix: string
+        terms: string
+        middle: string
+        privacy: string
+        suffix: string
+      }
       errors: { name: string; email: string; message: string; send: string; network: string }
     }
   }
@@ -156,6 +177,12 @@ export interface Dict {
     backLabel: string
     relatedLabel: string
   }
+  legal: {
+    label: string
+    effectiveLabel: string
+    effectiveDate: string
+    documents: Record<LegalSlug, LegalDocument>
+  }
   footer: {
     blurb: string
     pages: string
@@ -164,6 +191,10 @@ export interface Dict {
     fastestReply: string
     followUs: string
     builtWith: string
+    legal: string
+    terms: string
+    privacy: string
+    refunds: string
   }
   ctaBand: {
     title: string

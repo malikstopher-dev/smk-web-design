@@ -1,4 +1,6 @@
-export const SITE_URL = "https://www.stopher-malik.co.za"
+import { SITE } from "@/lib/site"
+
+export const SITE_URL = SITE.url
 
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
@@ -40,8 +42,8 @@ export function personSchema(description?: string) {
       addressRegion: "Gauteng",
       addressCountry: "ZA",
     },
-    telephone: "+27825100050",
-    email: "info@stopher-malik.co.za",
+    telephone: SITE.phone,
+    email: SITE.email,
     worksFor: {
       "@type": "Organization",
       name: "SMK Web Design",
@@ -76,18 +78,16 @@ export function localBusinessSchema(description?: string) {
     alternateName: "Stopher Malik Web Design",
     url: SITE_URL,
     image: `${SITE_URL}/stopher-portrait.png`,
-    telephone: "+27825100050",
-    email: "info@stopher-malik.co.za",
+    telephone: SITE.phone,
+    email: SITE.email,
     description:
       description ??
       "SMK Web Design is a professional web design studio in Johannesburg, South Africa. We build high-converting, performance-optimised websites that help businesses attract more clients and grow online.",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "6 Wroxham Rd, Paulshof",
-      addressLocality: "Sandton",
-      addressRegion: "Gauteng",
-      postalCode: "2191",
-      addressCountry: "ZA",
+      addressLocality: SITE.location.city,
+      addressRegion: SITE.location.region,
+      addressCountry: SITE.location.country,
     },
     geo: { "@type": "GeoCoordinates", latitude: -26.05, longitude: 28.05 },
     areaServed: [
@@ -118,9 +118,9 @@ export function localBusinessSchema(description?: string) {
     paymentAccepted: "EFT, SnapScan, Card",
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+27825100050",
+      telephone: SITE.whatsapp.number,
       contactType: "WhatsApp",
-      url: "https://wa.me/27825100050",
+      url: SITE.whatsapp.url,
     },
   }
 }

@@ -11,6 +11,9 @@ const PATHS: { path: string; priority: number; freq: "monthly" | "yearly" | "wee
   { path: "/pricing", priority: 0.8, freq: "yearly" },
   { path: "/blog", priority: 0.9, freq: "weekly" },
   { path: "/contact", priority: 0.8, freq: "yearly" },
+  { path: "/terms", priority: 0.3, freq: "yearly" },
+  { path: "/privacy", priority: 0.3, freq: "yearly" },
+  { path: "/refund-policy", priority: 0.3, freq: "yearly" },
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {

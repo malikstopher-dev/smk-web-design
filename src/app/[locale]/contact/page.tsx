@@ -166,8 +166,7 @@ export default async function ContactPage({
               <ul className="mt-3 space-y-2.5 text-sm text-white/40">
                 <li className="flex items-start gap-2.5">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-                  {SITE.location.street}, {SITE.location.city}{" "}
-                  {SITE.location.postalCode}
+                  {SITE.location.label}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Clock className="mt-0.5 h-4 w-4 shrink-0" />

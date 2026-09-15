@@ -143,9 +143,7 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
           <ul className="mt-4 space-y-3 text-sm text-white/35">
             <li className="flex items-start gap-2.5">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-              <span>
-                {SITE.location.street}, {SITE.location.city}
-              </span>
+              <span>{SITE.location.label}</span>
             </li>
             <li>
               <a
@@ -189,10 +187,29 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
       </div>
 
       <div className="relative border-t border-white/[0.06]">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-5 text-xs text-white/25 sm:flex-row sm:px-10">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-5 text-xs text-white/25 sm:px-10 lg:flex-row">
           <p>
             © {new Date().getFullYear()} {SITE.business} · {SITE.name}
           </p>
+          <nav aria-label={dict.footer.legal}>
+            <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2">
+              <li>
+                <Link className="transition-colors hover:text-white/60" href={lp("/terms")}>
+                  {dict.footer.terms}
+                </Link>
+              </li>
+              <li>
+                <Link className="transition-colors hover:text-white/60" href={lp("/privacy")}>
+                  {dict.footer.privacy}
+                </Link>
+              </li>
+              <li>
+                <Link className="transition-colors hover:text-white/60" href={lp("/refund-policy")}>
+                  {dict.footer.refunds}
+                </Link>
+              </li>
+            </ul>
+          </nav>
           <p>{dict.footer.builtWith}</p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { useActionState } from "react"
+import Link from "next/link"
 import { CheckCircle2, Loader2, Send } from "lucide-react"
 import { submitContact, type ContactState } from "@/app/actions/contact"
 import { MagneticCta } from "@/components/contact-anim"
@@ -181,6 +182,23 @@ export function ContactForm({
           </>
         )}
       </MagneticCta>
+      <p className="mt-4 max-w-xl text-xs leading-5 text-white/35">
+        {labels.legalNotice.prefix}
+        <Link
+          href={`/${locale}/terms`}
+          className="underline underline-offset-4 transition-colors hover:text-white/70"
+        >
+          {labels.legalNotice.terms}
+        </Link>
+        {labels.legalNotice.middle}
+        <Link
+          href={`/${locale}/privacy`}
+          className="underline underline-offset-4 transition-colors hover:text-white/70"
+        >
+          {labels.legalNotice.privacy}
+        </Link>
+        {labels.legalNotice.suffix}
+      </p>
     </form>
   )
 }
