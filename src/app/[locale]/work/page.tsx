@@ -1,10 +1,11 @@
 import type { Metadata } from "next"
-import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
+import { JsonLd, breadcrumbSchema } from "@/components/json-ld"
 import { CtaBand } from "@/components/page-hero"
 import { InnerHero } from "@/components/inner-hero"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
 import { FilterableWorkGrid } from "@/components/work-grid"
+import { siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -17,7 +18,7 @@ export async function generateMetadata({
     title: d.workPage.metaTitle,
     description: d.workPage.metaDesc,
     alternates: { canonical: `/${locale}/work` },
-    openGraph: { url: `${SITE_URL}/${locale}/work` },
+    openGraph: siteOpenGraph({ locale, path: `/${locale}/work` }),
   }
 }
 

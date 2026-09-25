@@ -2,6 +2,7 @@ import postsJson from "./blog-posts.json"
 
 export interface BlogPost {
   slug: string
+  date: string
   title: string
   category: string
   description: string

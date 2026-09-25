@@ -1,10 +1,11 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
+import { JsonLd, breadcrumbSchema } from "@/components/json-ld"
 import { LOCALES } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
 import type { LegalSlug } from "@/i18n/types"
 import { SITE } from "@/lib/site"
+import { siteOpenGraph } from "@/lib/seo"
 
 const LEGAL_SLUGS: LegalSlug[] = ["terms", "privacy", "refund-policy"]
 
@@ -36,11 +37,12 @@ export async function generateMetadata({
         LOCALES.map((language) => [language, `/${language}/${legal}`]),
       ),
     },
-    openGraph: {
+    openGraph: siteOpenGraph({
+      locale,
+      path,
       title: document.metaTitle,
       description: document.metaDesc,
-      url: `${SITE_URL}${path}`,
-    },
+    }),
   }
 }
 

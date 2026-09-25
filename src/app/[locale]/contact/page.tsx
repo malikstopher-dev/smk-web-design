@@ -14,11 +14,12 @@ import {
 } from "lucide-react"
 import { ContactForm } from "@/components/contact-form"
 import { ContactCursor, ContactMesh } from "@/components/contact-anim"
-import { JsonLd, SITE_URL, breadcrumbSchema, localBusinessSchema } from "@/components/json-ld"
+import { JsonLd, breadcrumbSchema, localBusinessSchema } from "@/components/json-ld"
 import { PageHero } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
 import { SERVICES, SITE } from "@/lib/site"
+import { siteOpenGraph } from "@/lib/seo"
 
 function TikTokIcon({ className = "" }: { className?: string }) {
   return (
@@ -53,7 +54,7 @@ export async function generateMetadata({
     title: d.contactPage.metaTitle,
     description: d.contactPage.metaDesc,
     alternates: { canonical: `/${locale}/contact` },
-    openGraph: { url: `${SITE_URL}/${locale}/contact` },
+    openGraph: siteOpenGraph({ locale, path: `/${locale}/contact` }),
   }
 }
 

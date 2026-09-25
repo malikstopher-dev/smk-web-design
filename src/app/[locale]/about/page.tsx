@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { JsonLd, SITE_URL, breadcrumbSchema, personSchema } from "@/components/json-ld"
+import { JsonLd, breadcrumbSchema, personSchema } from "@/components/json-ld"
 import { CtaBand } from "@/components/page-hero"
 import { InnerHero } from "@/components/inner-hero"
 import { PortraitCard } from "@/components/portrait-card"
@@ -7,6 +7,7 @@ import { ProcessTimeline } from "@/components/process-timeline"
 import { TestimonialCarousel } from "@/components/testimonial-carousel"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
+import { siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -19,7 +20,7 @@ export async function generateMetadata({
     title: d.aboutPage.metaTitle,
     description: d.aboutPage.metaDesc,
     alternates: { canonical: `/${locale}/about` },
-    openGraph: { url: `${SITE_URL}/${locale}/about` },
+    openGraph: siteOpenGraph({ locale, path: `/${locale}/about` }),
   }
 }
 

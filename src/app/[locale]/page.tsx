@@ -7,7 +7,6 @@ import {
   JsonLd,
   localBusinessSchema,
   personSchema,
-  SITE_URL,
   websiteSchema,
 } from "@/components/json-ld"
 import { HeroIn, HoverButton } from "@/components/motion"
@@ -20,6 +19,7 @@ import { HTML_LANG } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
 import { FEATURED_PROJECTS } from "@/lib/projects"
 import { SERVICES, SITE } from "@/lib/site"
+import { siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -32,7 +32,7 @@ export async function generateMetadata({
     title: { absolute: d.meta.homeTitle },
     description: d.meta.homeDesc,
     alternates: { canonical: `/${locale}` },
-    openGraph: { url: `${SITE_URL}/${locale}` },
+    openGraph: siteOpenGraph({ locale, path: `/${locale}` }),
   }
 }
 

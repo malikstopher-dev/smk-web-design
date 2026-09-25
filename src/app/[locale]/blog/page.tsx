@@ -3,12 +3,13 @@ import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { FadeIn } from "@/components/motion"
 import { Magnetic } from "@/components/magnetic"
-import { JsonLd, SITE_URL, breadcrumbSchema, websiteSchema } from "@/components/json-ld"
+import { JsonLd, breadcrumbSchema, websiteSchema } from "@/components/json-ld"
 import { InnerHero } from "@/components/inner-hero"
 import { Reveal } from "@/components/reveal"
 import { HTML_LANG } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
 import { BLOG_POSTS } from "@/lib/posts"
+import { siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -21,7 +22,7 @@ export async function generateMetadata({
     title: d.blogPage.metaTitle,
     description: d.blogPage.metaDesc,
     alternates: { canonical: `/${locale}/blog` },
-    openGraph: { url: `${SITE_URL}/${locale}/blog` },
+    openGraph: siteOpenGraph({ locale, path: `/${locale}/blog` }),
   }
 }
 

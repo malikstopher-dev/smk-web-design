@@ -6,6 +6,7 @@ import { HeroIn } from "@/components/motion"
 import { JsonLd, SITE_URL, breadcrumbSchema } from "@/components/json-ld"
 import { getDict } from "@/i18n/index"
 import { BLOG_POSTS, getBlogPost } from "@/lib/posts"
+import { siteOpenGraph } from "@/lib/seo"
 
 // The root layout reads headers() (x-smk-locale) to set <html lang>,
 // which requires dynamic rendering. Prerendering these pages bails on
@@ -35,12 +36,15 @@ export async function generateMetadata({
     title: post.title,
     description: post.description,
     alternates: { canonical: `/${locale}/blog/${post.slug}` },
-    openGraph: {
+    openGraph: siteOpenGraph({
+      locale,
+      path: `/${locale}/blog/${post.slug}`,
+      type: "article",
       title: post.title,
       description: post.description,
-      type: "article",
-      url: `${SITE_URL}/${locale}/blog/${post.slug}`,
-    },
+      publishedTime: post.date,
+      modifiedTime: post.date,
+    }),
   }
 }
 
@@ -74,6 +78,8 @@ export default async function BlogPostPage({
           publisher: { "@type": "Organization", name: "SMK Web Design" },
           mainEntityOfPage: `${SITE_URL}${lp(`/blog/${post.slug}`)}`,
           articleSection: post.category,
+          datePublished: post.date,
+          dateModified: post.date,
           inLanguage: "en",
         }}
       />
