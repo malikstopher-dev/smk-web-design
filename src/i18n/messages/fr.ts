@@ -648,7 +648,7 @@ export const fr: Dict = {
     whatsapp: "M'écrire sur WhatsApp",
   },
   meta: {
-    homeTitle: "Création de Sites Web Johannesburg | SMK Web Design | Stopher Malik",
+    homeTitle: "SMK Web Design | Agence de Web Design à Johannesburg",
     homeDesc: "Créateur de sites web professionnel à Johannesburg. SMK Web Design conçoit des sites rapides, prêts pour le SEO, qui attirent des clients et stimulent la croissance. Devis gratuit.",
     templateSuffix: "%s | Stopher Malik · SMK Web Design",
     ogImageAlt: "SMK Web Design. Création de sites web professionnelle à Johannesburg, en Afrique du Sud.",

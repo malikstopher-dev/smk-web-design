@@ -648,7 +648,7 @@ export const pt: Dict = {
     whatsapp: "Falar no WhatsApp",
   },
   meta: {
-    homeTitle: "Criação de Sites Joanesburgo | SMK Web Design | Stopher Malik",
+    homeTitle: "SMK Web Design | Agência de Web Design em Joanesburgo",
     homeDesc: "Criador de sites profissional em Joanesburgo. A SMK Web Design cria sites rápidos e otimizados para SEO que atraem clientes e fazem crescer o negócio. Orçamento gratuito.",
     templateSuffix: "%s | Stopher Malik · SMK Web Design",
     ogImageAlt: "SMK Web Design. Criação de sites profissional em Joanesburgo, África do Sul.",
