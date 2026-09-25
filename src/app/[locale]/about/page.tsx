@@ -55,7 +55,7 @@ export default async function AboutPage({
 
       <section className="mx-auto grid max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <PortraitCard
-          src="/stopher-portrait.png"
+          src="/stopher-portrait.webp"
           alt={d.aboutPage.portraitAlt}
           width={640}
           height={800}

@@ -31,7 +31,7 @@ export function personSchema(description?: string) {
     "@type": "Person",
     name: "Stopher Malik",
     url: SITE_URL,
-    image: `${SITE_URL}/stopher-portrait.png`,
+    image: `${SITE_URL}/stopher-portrait.webp`,
     jobTitle: "Web Designer & Full-Stack Developer",
     description:
       description ??
@@ -77,7 +77,7 @@ export function localBusinessSchema(description?: string) {
     name: "SMK Web Design",
     alternateName: "Stopher Malik Web Design",
     url: SITE_URL,
-    image: `${SITE_URL}/stopher-portrait.png`,
+    image: `${SITE_URL}/stopher-portrait.webp`,
     telephone: SITE.phone,
     email: SITE.email,
     description:
