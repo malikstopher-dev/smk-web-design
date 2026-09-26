@@ -18,7 +18,7 @@ export const en: Dict = {
   hero: {
     eyebrowRole: "Web Designer & Developer",
     eyebrowLocation: "Johannesburg, South Africa",
-    tagline: "Website Design. Built to Win Clients.",
+    tagline: "Websites that bring the call.",
     bio: "I help businesses in South Africa, Democratic Republic of the Congo, Mozambique, Canada, and beyond with high-performing websites that rank on Google and turn visitors into paying customers.",
     quoteCta: "Get a Free Quote",
     workCta: "View My Work",
@@ -39,7 +39,7 @@ export const en: Dict = {
   aboutPage: {
     metaTitle: "About",
     metaDesc: "Stopher Malik is a web designer and full-stack developer in Sandton, Johannesburg, and the founder of SMK Web Design. He builds high-converting websites across South Africa, DRC, Mozambique and Canada.",
-    title: "Design that answers one question: will this win clients?",
+    title: "Design that brings the enquiry.",
     lede: "Web designer and developer. Sandton, Johannesburg.",
     intro: "I'm Stopher Malik, a web designer and full-stack developer, founder of SMK Web Design, working out of Paulshof, Sandton.",
     body: "I help businesses in South Africa, Democratic Republic of the Congo, Mozambique, Canada, and beyond with high-performing websites that rank on Google and turn visitors into paying customers. I design systems that attract, engage, and convert.",
@@ -101,7 +101,7 @@ export const en: Dict = {
         short: "Mobile-first sites. Average Lighthouse mobile score: 97.",
         description:
           "Hand-built sites for South African businesses. Mobile-first, fast to load on 3G, easy for you to edit, structured around the call you want to receive.",
-        points: ["Custom design, no templates", "Conversion-focused layouts", "Mobile-first responsive build", "Copy structure that sells"],
+        points: ["Custom design, no templates", "A clear CTA on every page", "Mobile-first responsive build", "Copy structure that sells"],
       },
       {
         title: "Full-Stack Development",
@@ -225,7 +225,7 @@ export const en: Dict = {
   },
   contactPage: {
     metaTitle: "Contact",
-    metaDesc: "Get a free quote from SMK Web Design. WhatsApp +27 72 999 8863, email info@stopher-malik.com, or send the project form. Replies within 24 hours.",
+    metaDesc: "Get a free quote from SMK Web Design. WhatsApp +27 72 999 8863, email info@stopher-malik.co.za, or send the project form. Replies within 24 hours.",
     title: "Let's talk about your project.",
     lede: "Send the form below, or skip the queue on WhatsApp, that's where I reply fastest.",
     whatsappCard: "WhatsApp · fastest reply",
@@ -246,7 +246,7 @@ export const en: Dict = {
       branch: "678910",
       referenceLabel: "Reference",
       reference: "Your name + service",
-      proof: "Send proof of payment to info@stopher-malik.com or WhatsApp.",
+      proof: "Send proof of payment to info@stopher-malik.co.za or WhatsApp.",
       alternativesHeading: "Other ways to pay",
       alternatives: [
         {
@@ -589,7 +589,7 @@ export const en: Dict = {
   },
   jsonld: {
     personDesc: "Stopher Malik is a professional web designer and full-stack developer based in Johannesburg, South Africa, founder of SMK Web Design.",
-    businessDesc: "SMK Web Design builds fast, conversion-focused websites for businesses in South Africa, DRC, Mozambique and Canada.",
+    businessDesc: "SMK Web Design builds fast, SEO-ready websites for businesses in South Africa, DRC, Mozambique and Canada.",
   },
 }
 

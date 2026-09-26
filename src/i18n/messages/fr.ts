@@ -18,7 +18,7 @@ export const fr: Dict = {
   hero: {
     eyebrowRole: "Créateur de sites web & Développeur",
     eyebrowLocation: "Johannesburg, Afrique du Sud",
-    tagline: "Création de sites web. Conçus pour gagner des clients.",
+    tagline: "Des sites web qui génèrent des appels.",
     bio: "J'aide les entreprises en Afrique du Sud, en République Démocratique du Congo, au Mozambique, au Canada et ailleurs avec des sites performants qui se classent sur Google et transforment les visiteurs en clients payants.",
     quoteCta: "Demander un devis gratuit",
     workCta: "Voir mes réalisations",
@@ -39,7 +39,7 @@ export const fr: Dict = {
   aboutPage: {
     metaTitle: "À propos",
     metaDesc: "Stopher Malik est un créateur de sites web et développeur full-stack à Sandton, Johannesburg, et le fondateur de SMK Web Design. Il conçoit des sites à forte conversion en Afrique du Sud, en RDC, au Mozambique et au Canada.",
-    title: "Un design qui répond à une seule question : va-t-il vous rapporter des clients ?",
+    title: "Un design qui génère des demandes.",
     lede: "Web designer et développeur. Sandton, Johannesburg.",
     intro: "Je suis Stopher Malik, créateur de sites web et développeur full-stack, fondateur de SMK Web Design, basé à Paulshof, Sandton.",
     body: "J'aide les entreprises en Afrique du Sud, en République Démocratique du Congo, au Mozambique, au Canada et ailleurs avec des sites performants qui se classent sur Google et transforment les visiteurs en clients payants. Je conçois des systèmes qui attirent, engagent et convertissent.",
@@ -101,7 +101,7 @@ export const fr: Dict = {
         short: "Sites mobile-first. Score Lighthouse mobile moyen : 97.",
         description:
           "Sites sur mesure pour les entreprises sud-africaines. Mobile-first, rapides sur 3G, faciles à éditer, pensés pour l'appel que vous voulez recevoir.",
-        points: ["Design sur mesure, sans templates", "Mises en page orientées conversion", "Build responsive mobile-first", "Une structure de texte qui vend"],
+        points: ["Design sur mesure, sans templates", "CTA clair sur chaque page", "Build responsive mobile-first", "Une structure de texte qui vend"],
       },
       {
         title: "Développement full-stack",
@@ -274,7 +274,7 @@ export const fr: Dict = {
   },
   contactPage: {
     metaTitle: "Contact",
-    metaDesc: "Demandez un devis gratuit à SMK Web Design. WhatsApp +27 72 999 8863, email info@stopher-malik.com, ou formulaire de projet. Réponse sous 24 heures.",
+    metaDesc: "Demandez un devis gratuit à SMK Web Design. WhatsApp +27 72 999 8863, email info@stopher-malik.co.za, ou formulaire de projet. Réponse sous 24 heures.",
     title: "Parlons de votre projet.",
     lede: "Envoyez le formulaire ci-dessous, ou passez directement par WhatsApp, c'est là que je réponds le plus vite.",
     whatsappCard: "WhatsApp · réponse la plus rapide",
@@ -295,7 +295,7 @@ export const fr: Dict = {
       branch: "678910",
       referenceLabel: "Référence",
       reference: "Votre nom + service",
-      proof: "Envoyez la preuve de paiement à info@stopher-malik.com ou sur WhatsApp.",
+      proof: "Envoyez la preuve de paiement à info@stopher-malik.co.za ou sur WhatsApp.",
       alternativesHeading: "Autres moyens de paiement",
       alternatives: [
         {

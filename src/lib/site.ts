@@ -2,7 +2,7 @@ export const SITE = {
   name: "Stopher Malik",
   business: "SMK Web Design",
   role: "Web Designer & Developer",
-  tagline: "Website Design. Built to Win Clients.",
+  tagline: "Websites that bring the call.",
   url: "https://smk.stopher-malik.co.za",
   location: {
     label: "Johannesburg, Gauteng, South Africa",
@@ -19,7 +19,7 @@ export const SITE = {
   },
   phone: "+27729998863",
   phoneLabel: "+27 72 999 8863",
-  email: "info@stopher-malik.com",
+  email: "info@stopher-malik.co.za",
   hours: "Mon–Fri 08:00–18:00 · Sat 09:00–14:00",
   socials: [
     { name: "Facebook", handle: "SMK Web Design", url: "https://www.facebook.com/profile.php?id=61584357221305" },
@@ -43,10 +43,10 @@ export const SERVICES: ServiceItem[] = [
   {
     slug: "website-design",
     title: "Website Design",
-    short: "Mobile-first, conversion-focused websites built to win clients.",
+    short: "Mobile-first sites that load fast and bring the call.",
     description:
-      "Professional website design for South African businesses. Mobile-first, conversion-focused websites built to get you more clients: fast to load, easy to update, and designed around your customers.",
-    points: ["Custom design, no templates", "Conversion-focused layouts", "Mobile-first responsive build", "Copy structure that sells"],
+      "Professional website design for South African businesses. Mobile-first websites built to get you more clients: fast to load, easy to update, and designed around your customers.",
+    points: ["Custom design, no templates", "A clear CTA on every page", "Mobile-first responsive build", "Copy structure that sells"],
   },
   {
     slug: "full-stack-development",
@@ -59,7 +59,7 @@ export const SERVICES: ServiceItem[] = [
   {
     slug: "seo-performance",
     title: "SEO & Performance",
-    short: "Rank on Google and load instantly. Measured, not promised.",
+    short: "Rank on Google and load instantly.",
     description:
       "Technical and local SEO baked into every build: semantic markup, structured data, Core Web Vitals tuning, and Google Business Profile setup so nearby customers actually find you.",
     points: ["Local SEO for Gauteng searches", "Structured data / schema", "Core Web Vitals optimisation", "Analytics & Search Console"],
