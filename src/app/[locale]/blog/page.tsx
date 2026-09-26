@@ -9,7 +9,7 @@ import { Reveal } from "@/components/reveal"
 import { HTML_LANG } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
 import { BLOG_POSTS } from "@/lib/posts"
-import { siteOpenGraph } from "@/lib/seo"
+import { siteAlternates, siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -21,7 +21,7 @@ export async function generateMetadata({
   return {
     title: d.blogPage.metaTitle,
     description: d.blogPage.metaDesc,
-    alternates: { canonical: `/${locale}/blog` },
+    alternates: siteAlternates(`/${locale}/blog`),
     openGraph: siteOpenGraph({ locale, path: `/${locale}/blog` }),
   }
 }

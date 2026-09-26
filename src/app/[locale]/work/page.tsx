@@ -5,7 +5,7 @@ import { InnerHero } from "@/components/inner-hero"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
 import { FilterableWorkGrid } from "@/components/work-grid"
-import { siteOpenGraph } from "@/lib/seo"
+import { siteAlternates, siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -17,7 +17,7 @@ export async function generateMetadata({
   return {
     title: d.workPage.metaTitle,
     description: d.workPage.metaDesc,
-    alternates: { canonical: `/${locale}/work` },
+    alternates: siteAlternates(`/${locale}/work`),
     openGraph: siteOpenGraph({ locale, path: `/${locale}/work` }),
   }
 }

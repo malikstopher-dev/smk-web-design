@@ -5,7 +5,7 @@ import { InnerHero } from "@/components/inner-hero"
 import { ServicesBoard } from "@/components/services-board"
 import { getDict } from "@/i18n/index"
 import { SERVICES } from "@/lib/site"
-import { siteOpenGraph } from "@/lib/seo"
+import { siteAlternates, siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -17,7 +17,7 @@ export async function generateMetadata({
   return {
     title: d.servicesPage.metaTitle,
     description: d.servicesPage.metaDesc,
-    alternates: { canonical: `/${locale}/services` },
+    alternates: siteAlternates(`/${locale}/services`),
     openGraph: siteOpenGraph({ locale, path: `/${locale}/services` }),
   }
 }

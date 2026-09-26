@@ -5,7 +5,7 @@ import { Reveal } from "@/components/reveal"
 import { PricingCards } from "@/components/pricing-cards"
 import { getDict } from "@/i18n/index"
 import { SITE } from "@/lib/site"
-import { siteOpenGraph } from "@/lib/seo"
+import { siteAlternates, siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -17,7 +17,7 @@ export async function generateMetadata({
   return {
     title: d.pricingPage.metaTitle,
     description: d.pricingPage.metaDesc,
-    alternates: { canonical: `/${locale}/pricing` },
+    alternates: siteAlternates(`/${locale}/pricing`),
     openGraph: siteOpenGraph({ locale, path: `/${locale}/pricing` }),
   }
 }

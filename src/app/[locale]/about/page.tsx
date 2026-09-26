@@ -7,7 +7,7 @@ import { ProcessTimeline } from "@/components/process-timeline"
 import { TestimonialCarousel } from "@/components/testimonial-carousel"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
-import { siteOpenGraph } from "@/lib/seo"
+import { siteAlternates, siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -19,7 +19,7 @@ export async function generateMetadata({
   return {
     title: d.aboutPage.metaTitle,
     description: d.aboutPage.metaDesc,
-    alternates: { canonical: `/${locale}/about` },
+    alternates: siteAlternates(`/${locale}/about`),
     openGraph: siteOpenGraph({ locale, path: `/${locale}/about` }),
   }
 }

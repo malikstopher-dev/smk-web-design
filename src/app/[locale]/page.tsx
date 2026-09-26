@@ -19,7 +19,7 @@ import { HTML_LANG } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
 import { FEATURED_PROJECTS } from "@/lib/projects"
 import { SERVICES, SITE } from "@/lib/site"
-import { siteOpenGraph } from "@/lib/seo"
+import { siteAlternates, siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
   params,
@@ -31,7 +31,7 @@ export async function generateMetadata({
   return {
     title: { absolute: d.meta.homeTitle },
     description: d.meta.homeDesc,
-    alternates: { canonical: `/${locale}` },
+    alternates: siteAlternates(`/${locale}`),
     openGraph: siteOpenGraph({ locale, path: `/${locale}` }),
   }
 }

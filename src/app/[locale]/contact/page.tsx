@@ -19,7 +19,7 @@ import { PageHero } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
 import { SERVICES, SITE } from "@/lib/site"
-import { siteOpenGraph } from "@/lib/seo"
+import { siteAlternates, siteOpenGraph } from "@/lib/seo"
 
 function TikTokIcon({ className = "" }: { className?: string }) {
   return (
@@ -53,7 +53,7 @@ export async function generateMetadata({
   return {
     title: d.contactPage.metaTitle,
     description: d.contactPage.metaDesc,
-    alternates: { canonical: `/${locale}/contact` },
+    alternates: siteAlternates(`/${locale}/contact`),
     openGraph: siteOpenGraph({ locale, path: `/${locale}/contact` }),
   }
 }
