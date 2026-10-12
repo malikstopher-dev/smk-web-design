@@ -29,16 +29,16 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>
 }): Promise<Metadata> {
-  const { locale, slug } = await params
+  const { slug } = await params
   const post = getBlogPost(slug)
   if (!post) return {}
   return {
     title: post.title,
     description: post.description,
-    alternates: { canonical: `/${locale}/blog/${post.slug}` },
+    alternates: { canonical: `/en/blog/${post.slug}` },
     openGraph: siteOpenGraph({
-      locale,
-      path: `/${locale}/blog/${post.slug}`,
+      locale: "en",
+      path: `/en/blog/${post.slug}`,
       type: "article",
       title: post.title,
       description: post.description,

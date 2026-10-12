@@ -1,450 +1,99 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { PlanetsScene } from "./planets-scene"
+import { useEffect, useRef } from "react"
+import { subscribeScene, wakeScene, type SceneFrame } from "@/lib/scene-runtime"
+
+const LAYERS = [
+  { count: 145, mobile: 74, radius: 0.65, drift: 1.4, pointer: 9, scroll: 0.055, alpha: 0.4 },
+  { count: 90, mobile: 45, radius: 1.05, drift: 3.8, pointer: 27, scroll: 0.13, alpha: 0.58 },
+  { count: 36, mobile: 18, radius: 1.85, drift: 7, pointer: 56, scroll: 0.26, alpha: 0.78 },
+] as const
 
 export function CosmicBackground() {
-  /* Defer the solar-scene (three.js planets + textures) until
-     the browser is idle AND the page is visible.  This prevents
-     chunk-eval + texture-load + shader-compile from stalling
-     the hero typewriter on inner pages. */
-  const [solarReady, setSolarReady] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches
-
-    if (prefersReduced) {
-      queueMicrotask(() => setSolarReady(true))
-      return
-    }
-
-    let idleId: number | undefined
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) mount()
-      },
-      { rootMargin: "200px 0px 0px 0px" },
-    )
-    let cancelled = false
-
-    const mount = () => {
-      if (cancelled) return
-      setSolarReady(true)
-    }
-
-    /* Wait for browser idle (or 4s ceiling) then mount. */
-    const ric = (window as { requestIdleCallback?: (cb: IdleRequestCallback, opts?: { timeout?: number }) => number }).requestIdleCallback
-    const cic = (window as { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback
-    const scheduleIdle = () => {
-      const cb: IdleRequestCallback = () => mount()
-      idleId = ric ? ric(cb, { timeout: 4000 }) : setTimeout(cb, 4000) as unknown as number
-    }
-
-    /* Also mount when the viewport scrolls to the hero area
-       (within 200px of top) — user is past the hero typing. */
-    io.observe(document.documentElement)
-
-    scheduleIdle()
-
-    return () => {
-      cancelled = true
-      if (idleId != null) {
-        cic?.(idleId)
-        clearTimeout(idleId)
-      }
-      io.disconnect()
-    }
-  }, [])
-
-  useEffect(() => {
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches
-
-    const canvasMaybe = document.getElementById(
-      "cosmic-star-canvas",
-    ) as HTMLCanvasElement | null
-    if (!canvasMaybe) return
-    const canvas: HTMLCanvasElement = canvasMaybe
-    const ctxMaybe = canvas.getContext("2d")
-    if (!ctxMaybe) return
-    const ctx: CanvasRenderingContext2D = ctxMaybe
-
-    let W = 0
-    let H = 0
-    let raf = 0
-    let resizeTimer: ReturnType<typeof setTimeout> | undefined
-
-    const STAR_CONFIG = [
-      { count: 160, rMin: 0.4, rMax: 0.9, opMin: 0.35, opMax: 0.72, flickerSpeed: [0.003, 0.009], scrollFactor: 0.02, glowChance: 0.06, glowScale: 2.5, colors: ["200,220,255", "210,230,255", "220,240,255", "255,255,255"] },
-      { count: 100, rMin: 0.9, rMax: 1.6, opMin: 0.45, opMax: 0.88, flickerSpeed: [0.005, 0.013], scrollFactor: 0.05, glowChance: 0.18, glowScale: 3.5, colors: ["220,235,255", "200,220,255", "240,248,255", "255,255,255"] },
-      { count: 40, rMin: 1.6, rMax: 2.6, opMin: 0.6, opMax: 0.95, flickerSpeed: [0.006, 0.018], scrollFactor: 0.1, glowChance: 0.55, glowScale: 5.0, colors: ["255,255,255", "230,240,255", "210,230,255"] },
-    ]
-
-    function seededRand(seed: number) {
-      let s = seed
-      return function () {
-        s = (s * 1664525 + 1013904223) & 0xffffffff
-        return (s >>> 0) / 0xffffffff
-      }
-    }
-
-    interface Star {
-      nx: number
-      ny: number
-      r: number
-      flickerPhase: number
-      flickerSpeed: number
-      opMin: number
-      opMax: number
-      glow: boolean
-      glowScale: number
-      col: string
-      scrollFactor: number
-    }
-
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext("2d", { alpha: true })
+    if (!canvas || !ctx) return
+    let width = 0
+    let height = 0
+    let compact = false
+    let visible = true
+    let dpr = 1
+    let seed = 0xc0ffee42
+    const rand = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296 }
+    type Star = { x: number; y: number; phase: number; radius: number; depth: number }
     let stars: Star[] = []
 
-    function buildStars() {
+    // Reuse a painted glow instead of constructing gradients for every star,
+    // every frame. The brightest near stars retain the original soft halo.
+    const sprite = document.createElement("canvas")
+    sprite.width = sprite.height = 48
+    const glow = sprite.getContext("2d")!
+    const gradient = glow.createRadialGradient(24, 24, 0, 24, 24, 24)
+    gradient.addColorStop(0, "rgba(235,244,255,0.95)")
+    gradient.addColorStop(0.12, "rgba(215,231,255,0.45)")
+    gradient.addColorStop(0.4, "rgba(160,195,245,0.12)")
+    gradient.addColorStop(1, "rgba(160,195,245,0)")
+    glow.fillStyle = gradient
+    glow.fillRect(0, 0, 48, 48)
+
+    const rebuild = (s: SceneFrame) => {
+      width = s.width
+      height = s.height
+      compact = s.compact
+      dpr = Math.min(devicePixelRatio || 1, compact ? 1.25 : 1.5)
+      canvas.width = Math.round(width * dpr)
+      canvas.height = Math.round(height * dpr)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      seed = 0xc0ffee42
       stars = []
-      const rand = seededRand(0xc0ffee42)
-      STAR_CONFIG.forEach((cfg) => {
-        for (let i = 0; i < cfg.count; i++) {
-          const col = cfg.colors[Math.floor(rand() * cfg.colors.length)]
-          const hasGlow = rand() < cfg.glowChance
-          stars.push({
-            nx: rand(),
-            ny: rand(),
-            r: cfg.rMin + rand() * (cfg.rMax - cfg.rMin),
-            flickerPhase: rand() * Math.PI * 2,
-            flickerSpeed:
-              cfg.flickerSpeed[0] + rand() * (cfg.flickerSpeed[1] - cfg.flickerSpeed[0]),
-            opMin: cfg.opMin + rand() * 0.08,
-            opMax: cfg.opMax - rand() * 0.08,
-            glow: hasGlow,
-            glowScale: hasGlow ? cfg.glowScale + rand() * 1.5 : 0,
-            col,
-            scrollFactor: cfg.scrollFactor,
-          })
+      LAYERS.forEach((layer, depth) => {
+        for (let i = 0; i < (compact ? layer.mobile : layer.count); i++) {
+          stars.push({ x: rand(), y: rand(), phase: rand() * Math.PI * 2, radius: layer.radius * (0.65 + rand() * 0.65), depth })
         }
       })
+      canvas.dataset.stars = String(stars.length)
+      canvas.dataset.layers = "3"
     }
-
-    interface Burst {
-      x: number
-      y: number
-      life: number
-      decay: number
-      maxR: number
-      col: string
-    }
-    interface Spark {
-      x: number
-      y: number
-      vx: number
-      vy: number
-      life: number
-      decay: number
-      r: number
-      col: string
-    }
-
-    const bursts: Burst[] = []
-    const sparks: Spark[] = []
-    let nextBurstTime = 0
-    const BURST_INTERVAL_MIN = 3000
-    const BURST_INTERVAL_MAX = 7000
-
-    function scheduleBurst() {
-      nextBurstTime =
-        performance.now() +
-        BURST_INTERVAL_MIN +
-        Math.random() * (BURST_INTERVAL_MAX - BURST_INTERVAL_MIN)
-    }
-
-    function fireBurst() {
-      const nx = 0.05 + Math.random() * 0.9
-      const ny = 0.05 + Math.random() * 0.65
-      const sx = nx * W
-      const sy = ny * H
-
-      bursts.push({
-        x: sx,
-        y: sy,
-        life: 1.0,
-        decay: 0.018 + Math.random() * 0.012,
-        maxR: 18 + Math.random() * 22,
-        col: Math.random() < 0.7 ? "200,230,255" : "255,240,200",
-      })
-
-      const sparkCount = 8 + Math.floor(Math.random() * 7)
-      for (let i = 0; i < sparkCount; i++) {
-        const angle = (i / sparkCount) * Math.PI * 2 + Math.random() * 0.4
-        const speed = 0.6 + Math.random() * 1.8
-        sparks.push({
-          x: sx,
-          y: sy,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          life: 0.8 + Math.random() * 0.2,
-          decay: 0.008 + Math.random() * 0.008,
-          r: 0.5 + Math.random() * 1.2,
-          col: Math.random() < 0.6 ? "180,220,255" : "255,255,255",
-        })
-      }
-
-      scheduleBurst()
-    }
-
-    function drawBursts() {
-      for (let i = bursts.length - 1; i >= 0; i--) {
-        const b = bursts[i]
-        b.life -= b.decay
-        if (b.life <= 0) {
-          bursts.splice(i, 1)
-          continue
+    const wrap = (value: number, extent: number) => ((value % extent) + extent) % extent
+    const render = (s: SceneFrame) => {
+      if (!visible) return
+      if (width !== s.width || height !== s.height || compact !== s.compact) rebuild(s)
+      ctx.clearRect(0, 0, width, height)
+      const time = s.reduced ? 0 : s.time
+      const amount = compact ? 0.6 : 1
+      for (const star of stars) {
+        const layer = LAYERS[star.depth]
+        const x = wrap(star.x * width + time * layer.drift * amount - s.pointerX * layer.pointer * amount, width + 24) - 12
+        const y = wrap(star.y * height - time * layer.drift * 0.32 * amount - (s.reduced ? 0 : s.scrollY * layer.scroll * amount) - s.pointerY * layer.pointer * amount, height + 24) - 12
+        const twinkle = 0.76 + Math.sin(time * (0.65 + star.depth * 0.2) + star.phase) * 0.24
+        ctx.globalAlpha = layer.alpha * twinkle
+        if (star.depth === 2 || star.phase < 0.55) {
+          const size = star.radius * 10
+          ctx.drawImage(sprite, x - size / 2, y - size / 2, size, size)
         }
-
-        const r = b.maxR * (1 - b.life) * 3
-        const alpha = b.life * 0.75
-        const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, Math.max(r, 1))
-        g.addColorStop(0, `rgba(${b.col},${Math.min(alpha * 1.4, 0.95)})`)
-        g.addColorStop(0.3, `rgba(${b.col},${alpha * 0.7})`)
-        g.addColorStop(0.7, `rgba(${b.col},${alpha * 0.2})`)
-        g.addColorStop(1, `rgba(${b.col},0)`)
-        ctx.globalAlpha = 1
-        ctx.fillStyle = g
+        ctx.fillStyle = "#dcecff"
         ctx.beginPath()
-        ctx.arc(b.x, b.y, Math.max(r, 1), 0, Math.PI * 2)
-        ctx.fill()
-
-        if (b.life > 0.5) {
-          const spikeLen = b.maxR * 2.5 * b.life
-          ctx.save()
-          ctx.globalAlpha = b.life * 0.6
-          ctx.strokeStyle = `rgba(${b.col},1)`
-          ctx.lineWidth = 0.8
-          ctx.lineCap = "round"
-          ctx.beginPath()
-          ctx.moveTo(b.x - spikeLen, b.y)
-          ctx.lineTo(b.x + spikeLen, b.y)
-          ctx.stroke()
-          ctx.beginPath()
-          ctx.moveTo(b.x, b.y - spikeLen)
-          ctx.lineTo(b.x, b.y + spikeLen)
-          ctx.stroke()
-          const dLen = spikeLen * 0.55
-          ctx.lineWidth = 0.5
-          ctx.beginPath()
-          ctx.moveTo(b.x - dLen, b.y - dLen)
-          ctx.lineTo(b.x + dLen, b.y + dLen)
-          ctx.stroke()
-          ctx.beginPath()
-          ctx.moveTo(b.x + dLen, b.y - dLen)
-          ctx.lineTo(b.x - dLen, b.y + dLen)
-          ctx.stroke()
-          ctx.restore()
-        }
-      }
-
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        const p = sparks[i]
-        p.x += p.vx
-        p.y += p.vy
-        p.vx *= 0.97
-        p.vy *= 0.97
-        p.life -= p.decay
-        if (p.life <= 0) {
-          sparks.splice(i, 1)
-          continue
-        }
-
-        ctx.globalAlpha = p.life * 0.9
-        const gr = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3)
-        gr.addColorStop(0, `rgba(${p.col},${p.life})`)
-        gr.addColorStop(1, `rgba(${p.col},0)`)
-        ctx.fillStyle = gr
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2)
-        ctx.fill()
-
-        ctx.fillStyle = `rgba(${p.col},${Math.min(p.life * 1.2, 1)})`
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.arc(x, y, star.radius, 0, Math.PI * 2)
         ctx.fill()
       }
-    }
-
-    let scrollY = 0
-
-    const onScroll = () => {
-      scrollY = window.scrollY
-    }
-
-    // Cursor-reactive starfield spotlight ("torch over the sky")
-    const SPOTLIGHT_RADIUS = 180
-    const finePointer =
-      !prefersReduced &&
-      window.matchMedia("(hover: hover) and (pointer: fine)").matches
-    let cursorOn = false
-    let mx = -99999
-    let my = -99999
-    let tx = -99999
-    let ty = -99999
-
-    const onPointerMove = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") return
-      cursorOn = true
-      tx = e.clientX
-      ty = e.clientY
-    }
-    const onPointerLeave = () => {
-      cursorOn = false
-      tx = -99999
-      ty = -99999
-    }
-    if (finePointer) {
-      window.addEventListener("pointermove", onPointerMove, { passive: true })
-      document.documentElement.addEventListener("pointerleave", onPointerLeave)
-    }
-
-    let t = 0
-    let visible = !document.hidden
-    let inView = true
-
-    const onVisibility = () => {
-      visible = !document.hidden
-    }
-    document.addEventListener("visibilitychange", onVisibility)
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        inView = entry.isIntersecting
-      },
-      { threshold: 0 },
-    )
-    io.observe(document.documentElement)
-
-    function render(ts: number) {
-      if (!visible || !inView) {
-        raf = requestAnimationFrame(render)
-        return
-      }
-      t += 0.016
-      ctx.clearRect(0, 0, W, H)
-
-      if (finePointer) {
-        mx += (tx - mx) * 0.14
-        my += (ty - my) * 0.14
-      }
-
-      stars.forEach((s) => {
-        const sy = prefersReduced ? 0 : scrollY * s.scrollFactor
-        const sx = s.nx * W
-        const rawY = s.ny * H - sy
-        const screenY = ((rawY % H) + H) % H
-
-        const sineVal = Math.sin(t * s.flickerSpeed * 60 + s.flickerPhase)
-        const norm = (sineVal + 1) * 0.5
-
-        let boost = 0
-        if (finePointer && cursorOn) {
-          const dx = sx - mx
-          const dy = screenY - my
-          const d2 = dx * dx + dy * dy
-          if (d2 < SPOTLIGHT_RADIUS * SPOTLIGHT_RADIUS) {
-            const lin = 1 - Math.sqrt(d2) / SPOTLIGHT_RADIUS
-            boost = lin * lin * (3 - 2 * lin)
-          }
-        }
-
-        const opacity = Math.min(
-          1,
-          s.opMin + norm * (s.opMax - s.opMin) + boost * 0.28,
-        )
-        const radius = s.r * (1 + boost * 0.3)
-
-        ctx.globalAlpha = opacity
-
-        if (s.glow) {
-          const glowR = radius * s.glowScale
-          const grad = ctx.createRadialGradient(sx, screenY, 0, sx, screenY, glowR)
-          grad.addColorStop(0, `rgba(${s.col},${opacity * 0.6})`)
-          grad.addColorStop(0.5, `rgba(${s.col},${opacity * 0.2})`)
-          grad.addColorStop(1, `rgba(${s.col},0)`)
-          ctx.fillStyle = grad
-          ctx.beginPath()
-          ctx.arc(sx, screenY, glowR, 0, Math.PI * 2)
-          ctx.fill()
-        }
-
-        ctx.fillStyle = `rgb(${s.col})`
-        ctx.beginPath()
-        ctx.arc(sx, screenY, radius, 0, Math.PI * 2)
-        ctx.fill()
-      })
-
       ctx.globalAlpha = 1
-
-      if (!prefersReduced) {
-        if (ts >= nextBurstTime) fireBurst()
-        drawBursts()
-      }
-
-      ctx.globalAlpha = 1
-
-      raf = requestAnimationFrame(render)
     }
-
-    function setSize() {
-      W = canvas.width = window.innerWidth
-      H = canvas.height = window.innerHeight
-    }
-
-    setSize()
-    buildStars()
-    scheduleBurst()
-    raf = requestAnimationFrame(render)
-
-    const onResize = () => {
-      clearTimeout(resizeTimer)
-      resizeTimer = setTimeout(() => {
-        setSize()
-      }, 100)
-    }
-    window.addEventListener("resize", onResize, { passive: true })
-
-    if (!prefersReduced) {
-      window.addEventListener("scroll", onScroll, { passive: true })
-    }
-
-    return () => {
-      cancelAnimationFrame(raf)
-      clearTimeout(resizeTimer)
-      window.removeEventListener("resize", onResize)
-      window.removeEventListener("scroll", onScroll)
-      window.removeEventListener("pointermove", onPointerMove)
-      document.documentElement.removeEventListener(
-        "pointerleave",
-        onPointerLeave,
-      )
-      document.removeEventListener("visibilitychange", onVisibility)
-      io.disconnect()
-    }
+    const unsubscribe = subscribeScene(render)
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; wakeScene() })
+    observer.observe(canvas)
+    return () => { unsubscribe(); observer.disconnect() }
   }, [])
 
-    return (
-      <div id="cosmic-bg" aria-hidden>
-        <div id="cosmic-gradient" />
-        <div id="cosmic-vignette" />
-        <div id="cosmic-nebula-1" />
-        <div id="cosmic-nebula-2" />
-        <canvas id="cosmic-star-canvas" />
-        <div id="cosmic-moon" />
-        {solarReady && <PlanetsScene />}
-        <div id="noise-overlay" aria-hidden />
-      </div>
-    )
-  }
+  return <div id="cosmic-bg" aria-hidden>
+    <div id="cosmic-gradient" />
+    <div id="cosmic-vignette" />
+    <div id="cosmic-nebula-1" />
+    <div id="cosmic-nebula-2" />
+    <canvas ref={canvasRef} id="cosmic-star-canvas" />
+    <div id="cosmic-moon" />
+    <div id="noise-overlay" aria-hidden />
+  </div>
+}

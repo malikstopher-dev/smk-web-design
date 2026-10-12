@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
+import styles from "./portrait-card.module.css"
 
 /* ═══════════════════════════════════════════════════════
    PORTRAIT CARD — the About page photo. Entrance on scroll
@@ -69,7 +70,7 @@ export function PortraitCard({
     <div>
       <div
         ref={wrapRef}
-        className="relative overflow-hidden border border-white/[0.06]"
+        className={styles.frame}
         style={{
           opacity: entered ? 1 : 0,
           transform: entered ? "scale(1)" : "scale(0.92)",
@@ -79,17 +80,19 @@ export function PortraitCard({
             : "none",
         }}
       >
+        <span aria-hidden className={styles.glow} />
         <Image
           src={src}
           alt={alt}
           width={width}
           height={height}
-          className="h-auto w-full object-cover"
+          className={styles.image}
           priority
         />
+        <span aria-hidden className={styles.shade} />
       </div>
       <p
-        className="mt-4 flex items-center gap-2 text-sm text-white/30"
+        className="mt-4 flex items-center gap-2 text-xs leading-relaxed text-slate-400"
         style={{
           opacity: entered ? 1 : 0,
           transition: entered

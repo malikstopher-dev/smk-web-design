@@ -17,19 +17,18 @@ const PATHS: { path: string; priority: number; freq: "monthly" | "yearly" | "wee
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date()
   const entries: MetadataRoute.Sitemap = []
 
   for (const { path, priority, freq } of PATHS) {
-    entries.push({
-      url: `${SITE_URL}/en${path}`,
-      lastModified: now,
+    for (const locale of LOCALES) entries.push({
+      url: `${SITE_URL}/${locale}${path}`,
       changeFrequency: freq,
       priority,
       alternates: {
-        languages: Object.fromEntries(
-          LOCALES.map((l) => [l, `${SITE_URL}/${l}${path}`]),
-        ),
+        languages: {
+          ...Object.fromEntries(LOCALES.map((language) => [language, `${SITE_URL}/${language}${path}`])),
+          "x-default": `${SITE_URL}${path || "/"}`,
+        },
       },
     })
   }
@@ -37,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const p of BLOG_POSTS) {
     entries.push({
       url: `${SITE_URL}/en/blog/${p.slug}`,
-      lastModified: now,
+      lastModified: p.date,
       changeFrequency: "monthly",
       priority: 0.7,
     })

@@ -14,13 +14,22 @@ function canMagnet() {
 export function useMagnet(strength = 0.3, maxShift = 6) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const springX = useSpring(x, { stiffness: 260, damping: 18, mass: 0.4 })
-  const springY = useSpring(y, { stiffness: 260, damping: 18, mass: 0.4 })
+  const springX = useSpring(x, { stiffness: 240, damping: 28, mass: 0.6 })
+  const springY = useSpring(y, { stiffness: 240, damping: 28, mass: 0.6 })
   const enabled = useRef(false)
 
   useEffect(() => {
-    enabled.current = canMagnet()
-  }, [])
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const pointer = window.matchMedia("(hover: hover) and (pointer: fine)")
+    const sync = () => {
+      enabled.current = canMagnet()
+      if (!enabled.current) { x.set(0); y.set(0) }
+    }
+    sync()
+    motion.addEventListener("change", sync)
+    pointer.addEventListener("change", sync)
+    return () => { motion.removeEventListener("change", sync); pointer.removeEventListener("change", sync) }
+  }, [x, y])
 
   function onMouseMove(e: MouseEvent<HTMLElement>) {
     if (!enabled.current) return

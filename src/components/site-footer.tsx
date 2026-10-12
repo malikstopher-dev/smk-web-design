@@ -147,7 +147,7 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
             </li>
             <li>
               <a
-                href={`mailto:${SITE.email}`}
+                href={SITE.emailHref}
                 className="flex items-center gap-2.5 transition-colors hover:text-white/70"
               >
                 <Mail className="h-4 w-4 shrink-0" />
@@ -156,7 +156,7 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
             </li>
             <li>
               <a
-                href={`tel:${SITE.phone}`}
+                href={SITE.tel}
                 className="flex items-center gap-2.5 transition-colors hover:text-white/70"
               >
                 <Phone className="h-4 w-4 shrink-0" />
@@ -181,7 +181,7 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
                 </span>
               </a>
             </li>
-            <li className="pt-1 text-xs text-white/25">{SITE.hours}</li>
+            <li className="pt-1 text-xs text-white/55">{dict.footer.hours}</li>
           </ul>
         </div>
       </div>

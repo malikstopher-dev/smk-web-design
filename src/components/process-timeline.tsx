@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { SignalDiagram } from "@/components/signal-diagram"
+import styles from "./signal-panels.module.css"
 
 /* ═══════════════════════════════════════════════════════
    PROCESS TIMELINE — vertical line draws with scroll,
@@ -26,6 +28,7 @@ export function ProcessTimeline({
      clients arm the reveal once after mount. */
   const [reduced, setReduced] = useState(false)
   const [progress, setProgress] = useState(1)
+  const [selected, setSelected] = useState(0)
   const [active, setActive] = useState<boolean[]>(() =>
     steps.map(() => true),
   )
@@ -52,7 +55,7 @@ export function ProcessTimeline({
     if (!line) return
 
     const onScroll = () => {
-      const r = line.getBoundingClientRect()
+      const r = line.parentElement!.getBoundingClientRect()
       const vh = window.innerHeight
       // Draw as the timeline's own height passes 75% viewport.
       const drawn = Math.min(
@@ -60,6 +63,12 @@ export function ProcessTimeline({
         Math.max(0, (vh * 0.75 - r.top) / r.height),
       )
       setProgress(drawn)
+      const closest = stepRefs.current.reduce((best, step, index) => {
+        if (!step) return best
+        const distance = Math.abs(step.getBoundingClientRect().top - vh * 0.5)
+        return distance < best.distance ? { index, distance } : best
+      }, { index: 0, distance: Infinity })
+      if (r.top < vh && r.bottom > 0) setSelected(closest.index)
     }
     onScroll()
     window.addEventListener("scroll", onScroll, { passive: true })
@@ -102,6 +111,11 @@ export function ProcessTimeline({
   const animate = !reduced
 
   return (
+    <div className={styles.process}>
+      <div className={styles.processVisual}>
+        <SignalDiagram stage={selected} process />
+        <p className={styles.stageCaption} aria-hidden="true">{steps[selected]?.title}</p>
+      </div>
     <div className="relative mt-8 pl-10 sm:pl-14">
       {/* Track */}
       <div
@@ -128,6 +142,8 @@ export function ProcessTimeline({
                 stepRefs.current[i] = el
               }}
               className="relative"
+              onMouseEnter={() => setSelected(i)}
+              onFocus={() => setSelected(i)}
             >
               {/* Node */}
               <span
@@ -151,7 +167,6 @@ export function ProcessTimeline({
                 style={
                   animate
                     ? {
-                        opacity: lit ? 1 : 0,
                         transform: lit ? "none" : "translateX(24px)",
                         transition: lit
                           ? `opacity 500ms ${EASE}, transform 500ms ${EASE}`
@@ -160,8 +175,8 @@ export function ProcessTimeline({
                     : undefined
                 }
               >
-                <h3 className="font-semibold text-white">{step.title}</h3>
-                <p className="mt-1.5 max-w-md text-sm leading-relaxed text-white">
+                <h3><button type="button" className={styles.stageButton} aria-pressed={selected === i} onClick={() => setSelected(i)}>{step.title}</button></h3>
+                <p className="mt-1.5 max-w-md text-sm leading-relaxed text-slate-300">
                   {step.body}
                 </p>
               </div>
@@ -169,6 +184,7 @@ export function ProcessTimeline({
           )
         })}
       </ol>
+    </div>
     </div>
   )
 }

@@ -9,6 +9,7 @@ import {
 } from "framer-motion"
 import type { MouseEvent, ReactNode } from "react"
 import { useMagnet } from "@/components/magnetic"
+import styles from "./interaction-polish.module.css"
 
 export const EASE_OUT = [0.22, 1, 0.36, 1] as const
 
@@ -27,12 +28,13 @@ export function FadeIn({
   className?: string
   once?: boolean
 }) {
+  const reduced = useReducedMotion()
   return (
     <motion.div
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduced ? false : { y }}
+      whileInView={{ y: 0 }}
       viewport={{ once, margin: "-48px" }}
-      transition={{ duration, ease: EASE_OUT, delay }}
+      transition={{ duration: reduced ? 0 : duration, ease: EASE_OUT, delay: reduced ? 0 : delay }}
       className={className}
     >
       {children}
@@ -49,11 +51,12 @@ export function HeroIn({
   delay?: number
   className?: string
 }) {
+  const reduced = useReducedMotion()
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: EASE_OUT, delay }}
+      initial={reduced ? false : { y: 12 }}
+      animate={{ y: 0 }}
+      transition={{ duration: reduced ? 0 : 0.3, ease: EASE_OUT, delay: reduced ? 0 : delay }}
       className={className}
     >
       {children}
@@ -71,18 +74,19 @@ export function HoverButton({
   style,
   ...rest
 }: HoverButtonProps) {
-  const magnet = useMagnet(0.25, 5)
+  const magnet = useMagnet(0.25, 8)
+  const reduced = useReducedMotion()
   return (
     <motion.a
       {...magnet}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.15, ease: "easeOut" }}
-      className={className}
-      style={style}
+      whileHover={reduced ? undefined : { scale: 1.035 }}
+      whileTap={reduced ? undefined : { scale: 0.97 }}
+      transition={{ duration: 0.32, ease: EASE_OUT }}
+      className={`${className} ${styles.button}`}
+      style={{ ...magnet.style, ...style }}
       {...rest}
     >
-      {children}
+      <span className={styles.buttonContent}>{children}</span>
     </motion.a>
   )
 }

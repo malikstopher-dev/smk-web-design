@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import styles from "./signal-panels.module.css"
 
 /* ═══════════════════════════════════════════════════════
    TESTIMONIAL CAROUSEL — quote cards with a decorative
@@ -96,7 +97,7 @@ export function TestimonialCarousel({
           : "none",
       }}
     >
-      <figure className="relative overflow-hidden border border-white/[0.06] bg-[#03070f]/60 p-8 sm:p-10">
+      <figure className={`${styles.quote} relative overflow-hidden p-8 sm:p-12`}>
         {/* Decorative gold quote mark, behind the text */}
         <span
           aria-hidden
@@ -106,10 +107,10 @@ export function TestimonialCarousel({
           &ldquo;
         </span>
         <blockquote className="relative">
-          <p className="max-w-xl text-base leading-relaxed text-white">
+          <p className="max-w-3xl font-display text-2xl leading-relaxed text-white sm:text-3xl">
             &ldquo;{active.quote}&rdquo;
           </p>
-          <figcaption className="mt-5 flex items-center gap-2">
+          <figcaption className="mt-7 flex flex-wrap items-center gap-2">
             <span
               aria-hidden
               className="inline-block h-1.5 w-1.5 rounded-full bg-[#e8b04b]"
@@ -132,12 +133,8 @@ export function TestimonialCarousel({
               aria-label={`${i + 1} / ${count}`}
               aria-current={i === index}
               onClick={() => setIndex(i)}
-              className="h-2.5 w-2.5 rounded-full border transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-              style={{
-                borderColor: i === index ? "#e8b04b" : "rgba(255,255,255,0.2)",
-                background: i === index ? "#e8b04b" : "transparent",
-              }}
-            />
+              className="grid h-11 w-11 place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            ><span aria-hidden className="h-2.5 w-2.5 rounded-full border" style={{ borderColor: i === index ? "#e8b04b" : "#ffffff55", background: i === index ? "#e8b04b" : "transparent" }} /></button>
           ))}
         </div>
       )}

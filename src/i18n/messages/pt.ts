@@ -1,6 +1,8 @@
 import type { Dict } from "@/i18n/types"
+import { email, hours, phoneDisplay } from "@/lib/contact"
 
 export const pt: Dict = {
+  sceneControls: { drag: "Arraste para explorar", left: "Rodar para a esquerda", right: "Rodar para a direita", pause: "Pausar a animação", play: "Retomar a animação", search: "Encontrar um artigo", all: "Todos os temas", empty: "Nenhum artigo corresponde a esta pesquisa." },
   nav: {
     home: "Início",
     about: "Sobre",
@@ -19,7 +21,7 @@ export const pt: Dict = {
     eyebrowRole: "Criador de Sites & Programador",
     eyebrowLocation: "Joanesburgo, África do Sul",
     tagline: "Sites que geram chamadas.",
-    bio: "Ajudo empresas na África do Sul, na República Democrática do Congo, em Moçambique, no Canadá e além, com sites de alto desempenho que ranqueiam no Google e transformam visitantes em clientes pagantes.",
+    bio: "Desenho e desenvolvo o seu site em Sandton, do primeiro esboço ao lançamento. Trabalha directamente comigo, com uma única factura.",
     quoteCta: "Pedir Orçamento Grátis",
     workCta: "Ver o Meu Trabalho",
     scroll: "Deslize",
@@ -29,10 +31,10 @@ export const pt: Dict = {
     featuredTitle: "Sites que dão retorno",
     allProjects: "Todos os projetos",
     servicesEyebrow: "Serviços",
-    servicesTitle: "Tudo o que o seu site precisa para vencer",
+    servicesTitle: "Design, desenvolvimento, SEO e lançamento",
     bannerText: "SMK Web Design",
-    ctaTitle: "Tem um projeto em mente?",
-    ctaBody: "Fale-me do seu negócio. Volto com um plano e uma primeira versão em 48 horas.",
+    ctaTitle: "Diga-me o que o site precisa de fazer.",
+    ctaBody: "Conte-me onde perde pedidos. Preparo as páginas, o projeto e um orçamento único.",
   },
   viewLiveSite: "Ver site online",
   viewProject: "Ver projeto",
@@ -42,11 +44,12 @@ export const pt: Dict = {
     title: "Design que traz contactos.",
     lede: "Web designer e developer. Sandton, Joanesburgo.",
     intro: "Sou Stopher Malik, criador de sites e programador full-stack, fundador da SMK Web Design, com base em Paulshof, Sandton.",
-    body: "Ajudo empresas na África do Sul, na República Democrática do Congo, em Moçambique, no Canadá e além, com sites de alto desempenho que ranqueiam no Google e transformam visitantes em clientes pagantes. Concebo sistemas que atraem, envolvem e convertem.",
+    body: "Crio sites para empresas na África do Sul, RD Congo, Moçambique e Canadá. Cada projeto parte da chamada, reserva ou encomenda que a empresa precisa.",
     factLineLead: "Com base em Sandton, trabalho com clientes em Joanesburgo, Kinshasa, Maputo e Montreal.",
-    factLineRest: "Vinte e dois sites online, o último lançado neste trimestre.",
+    factLineRest: "Projetos de reservas, serviços locais e lojas online.",
     portraitAlt: "Stopher Malik, criador de sites em Joanesburgo",
-    locationCaption: "",
+    locationCaption: "Paulshof, Sandton",
+    processEyebrow: "Processo",
     processHeading: "Como decorre um projeto",
     process: [
       {
@@ -54,8 +57,8 @@ export const pt: Dict = {
         body: "30 min, WhatsApp ou telefone. Definimos os seus objetivos e o que significa ter sucesso.",
       },
       {
-        title: "Primeira versão em 48h",
-        body: "Layout real, texto real. Não é um mood board.",
+        title: "Primeira versão",
+        body: "Layout e texto para analisar no seu telemóvel.",
       },
       {
         title: "Construção e afinação",
@@ -63,7 +66,7 @@ export const pt: Dict = {
       },
       {
         title: "Lançamento e posicionamento",
-        body: "Publicado em edge. SEO, analytics e Ficha Google Business ativos desde o dia 1.",
+        body: "Domínio, pesquisa e analytics verificados antes do lançamento.",
       },
     ],
     testimonialsHeading: "O que dizem os clientes",
@@ -93,33 +96,33 @@ export const pt: Dict = {
   servicesPage: {
     metaTitle: "Serviços",
     metaDesc: "Criação de sites, desenvolvimento full-stack, SEO e performance, implantação na nuvem, UI/UX e branding: serviços web para empresas em Joanesburgo e além.",
-    title: "Seis disciplinas, um resultado: um site que lhe ganha clientes.",
-    lede: "Cada projeto chega com os fundamentos assegurados: velocidade, estrutura, pesquisa. Escolha o que precisa; a maioria dos projetos combina três ou quatro elementos.",
+    title: "Um estúdio para design, código, SEO e lançamento.",
+    lede: "Escolha o que o seu negócio precisa. Cada projeto tem âmbito, calendário e uma fatura.",
     items: [
       {
         title: "Criação de Sites",
-        short: "Sites mobile-first. Pontuação Lighthouse mobile média: 97.",
+        short: "Sites móveis rápidos em 3G, com um caminho claro para o contacto.",
         description:
           "Sites feitos à medida para empresas sul-africanas. Mobile-first, rápidos em 3G, fáceis de editar, pensados para a chamada que quer receber.",
         points: ["Design à medida, sem templates", "CTA claro em cada página", "Construção responsive mobile-first", "Estrutura de texto que vende"],
       },
       {
         title: "Desenvolvimento Full-Stack",
-        short: "Apps Next.js, API Node, PostgreSQL. Entregue em 14 dias.",
+        short: "Apps Next.js, APIs e dados para reservas, painéis e lojas online.",
         description:
           "Apps Next.js e serviços Node.js com camada de dados limpa. Reservas, dashboards, backends de e-commerce — código de produção, não protótipo.",
         points: ["Aplicações Next.js e React", "APIs e integrações Node.js", "Camadas de dados PostgreSQL / MongoDB", "TypeScript de ponta a ponta"],
       },
       {
         title: "SEO e Performance",
-        short: "SEO local para o Gauteng. Ficha Google Business em cada projeto.",
+        short: "SEO local, dados estruturados, Search Console e Core Web Vitals.",
         description:
           "SEO local e Core Web Vitals, bem configurados desde o primeiro dia. Schema, sitemap, Search Console e uma Ficha Google Business real — não apenas uma menção.",
         points: ["SEO local para pesquisas no Gauteng", "Dados estruturados / schema", "Otimização de Core Web Vitals", "Analytics e Search Console"],
       },
       {
         title: "Implantação na Nuvem",
-        short: "Hospedagem edge. TTFB abaixo de 200 ms em Joburg e Kinshasa.",
+        short: "Cloudflare, Vercel ou AWS. Domínio, SSL e publicação incluídos.",
         description:
           "Cloudflare Pages, Vercel e AWS, com domínios, DNS, SSL e monitorização de disponibilidade integrados. CI a cada push, sem implantações manuais.",
         points: ["Cloudflare Pages e Workers", "Deploys na Vercel", "Domínios, DNS e SSL", "Monitorização de disponibilidade"],
@@ -144,8 +147,8 @@ export const pt: Dict = {
   workPage: {
     metaTitle: "Portefólio",
     metaDesc: "Portefólio de sites de Stopher Malik na SMK Web Design. Restaurantes, serviços para a casa, e-commerce e aplicações web para clientes na África do Sul e na RDC.",
-    title: "Vinte projetos. Empresas reais, resultados reais.",
-    lede: "De restaurantes em Joanesburgo a lounges em Kinshasa. Todos os sites abaixo estão online, são rápidos e foram feitos para converter.",
+    title: "{n} projetos, de Joanesburgo a Montréal.",
+    lede: "Reservas em Kinshasa, pedidos de orçamento em Gauteng e compras online em Montréal.",
     filters: {
       all: "Todos",
       restaurant: "Restaurantes",
@@ -163,11 +166,12 @@ export const pt: Dict = {
     ctaBody: "Todos os sites desta grelha começaram com uma conversa gratuita no WhatsApp. Envie a sua.",
     
     descs: {
-      "salem": "Identidade de marca completa e um site de geração de contactos para uma empresa de serviços para a casa em crescimento em Joanesburgo: 40% mais chamadas em dois meses.",
-      "boma": "Um site Next.js rico em imagem que captura a atmosfera deste restaurante intimista; as reservas online aumentaram 60% após o lançamento.",
+      "ak-global-trading": "Site de comércio internacional: importação, exportação, catálogo e logística.",
+      "salem": "Site de serviços para a casa da Salem em Joanesburgo, com páginas de serviços e contacto direto.",
+      "boma": "Site de restaurante e eventos para The Boma Café: cozinha, espaço, galeria e reservas.",
       "selrahc": "Um portefólio bilingue que apresenta a visão arquitetónica através de imagem imersiva e layouts editoriais limpos, para um público internacional.",
       "jmoto": "Um site otimizado para a conversão com SEO local focado em pesquisas de serviços elétricos no Gauteng, a gerar contactos qualificados todas as semanas.",
-      "jkj": "Um site profissional para soluções solares e de segurança, concebido para gerar confiança e pedidos de serviço junto de proprietários.",
+      "jkj": "Serviços solares, elétricos, CCTV e segurança da JKJ SolarTech, com contacto direto.",
       "cleanisa": "Um site limpo e transmissor de confiança para serviços de limpeza, que transforma visitantes em consultas agendadas.",
       "bemhlanga": "Um site de serviços concebido para clareza máxima e contacto rápido, que transforma visitas em trabalhos marcados.",
       "tomy-global": "Um site profissional de serviços empresariais alojado na Cloudflare, otimizado para velocidade e acesso global.",
@@ -183,8 +187,7 @@ export const pt: Dict = {
       "dolcevita": "Site de pizzaria que capta a alegria da verdadeira pizza italiana, feito para gerar take-away e entregas.",
       "penzura": "Uma aplicação web completa em React, pensada para produtividade e interações limpas.",
       "babooshka": "Um site de catering rico em marca, com apresentação apetitosa dos pratos que gera pedidos de eventos.",
-      "buxaba": "O portefólio de um chef que une arte culinária e design premium para atrair clientes de catering de alto padrão.",
-      "marche": "Um site de e-commerce bilingue que liga clientes a produtos na RDC, feito para velocidade e compra móvel.",
+      "marche": "Catálogo bilingue para uma mercearia afro-caribenha em Montréal, com compras no telemóvel.",
     },
     tagLabels: {
       "Home Services": "Serviços para a Casa",
@@ -212,6 +215,17 @@ export const pt: Dict = {
       "Catering": "Catering",
       "Chef / Catering": "Chef / Catering",
       "E-Commerce": "E-Commerce",
+    },
+    explorer: {
+      eyebrow: "Trabalhos selecionados",
+      title: "Escolha um projeto.",
+      selectedLabel: "Projeto selecionado",
+      instruction: "Cada ponto é um projeto. Escolha um para ver o trabalho.",
+      inspect: "Ver o projeto",
+      previous: "Projeto anterior",
+      next: "Projeto seguinte",
+      reset: "Repor a vista",
+      all: "Ver todos os projetos",
     },
   },
   pricingPage: {
@@ -274,7 +288,7 @@ export const pt: Dict = {
   },
   contactPage: {
     metaTitle: "Contacto",
-    metaDesc: "Peça um orçamento gratuito à SMK Web Design. WhatsApp +27 72 999 8863, email info@stopher-malik.co.za, ou formulário de projeto. Resposta em 24 horas.",
+    metaDesc: `Peça um orçamento gratuito à SMK Web Design. WhatsApp ${phoneDisplay}, email ${email}, ou formulário de projeto. Resposta em 24 horas.`,
     title: "Vamos falar sobre o seu projeto.",
     lede: "Envie o formulário abaixo, ou avance direto no WhatsApp, é aí que respondo mais depressa.",
     whatsappCard: "WhatsApp · resposta mais rápida",
@@ -295,7 +309,7 @@ export const pt: Dict = {
       branch: "678910",
       referenceLabel: "Referência",
       reference: "O seu nome + serviço",
-      proof: "Envie o comprovativo para info@stopher-malik.co.za ou pelo WhatsApp.",
+      proof: `Envie o comprovativo para ${email} ou pelo WhatsApp.`,
       alternativesHeading: "Outras formas de pagar",
       alternatives: [
         {
@@ -352,8 +366,9 @@ export const pt: Dict = {
     lede: "Escritos práticos sobre web design e SEO para empresários sul-africanos. Sem enrolação, apenas o que move rankings e pedidos de orçamento.",
     enNotice: "Os artigos estão atualmente publicados em inglês.",
     comingSoonTitle: "Artigos em português em breve",
-    comingSoonBody: "O blog é publicado primeiro em inglês. As traduções chegarão aqui ao longo do próximo trimestre.",
+    comingSoonBody: "Os artigos estão em inglês enquanto se preparam as traduções.",
     readCta: "Ler artigo",
+    readEnglishCta: "Ler os artigos em inglês",
     ctaTitle: "Ler sobre isso é o primeiro passo.",
     ctaBody: "O segundo passo é um website que vende de facto. Essa parte construo eu.",
     ctaButton: "Iniciar um projeto",
@@ -606,6 +621,7 @@ export const pt: Dict = {
     servicesCol: "Serviços",
     contactCol: "Contacto",
     fastestReply: "Resposta mais rápida",
+    hours,
     followUs: "Siga-me",
     builtWith: "Construído com Next.js · Publicado na Cloudflare",
     legal: "Informação legal",
@@ -614,11 +630,17 @@ export const pt: Dict = {
     refunds: "Reembolsos",
   },
   ctaBand: {
-    title: "Tem um projeto em mente?",
-    body: "Fale-me do seu negócio. Volto com um plano e uma primeira versão em 48 horas.",
+    title: "Diga-me o que o site precisa de fazer.",
+    body: "Conte-me onde perde pedidos. Preparo as páginas, o projeto e um orçamento único.",
     secondaryLabel: "Ver trabalhos",
   },
   globe: {
+    interactionLabel: "Rodar o globo",
+    dragHint: "Arraste para rodar a Terra. Escolha um país para ver os projectos.",
+    rotateLeft: "Rodar para a esquerda",
+    rotateRight: "Rodar para a direita",
+    pause: "Pausar",
+    play: "Continuar",
     captionIdle: "Toque num marcador: geografia real de clientes em quatro países.",
     figAria: "Geografia de clientes",
     markers: {
@@ -628,7 +650,7 @@ export const pt: Dict = {
       },
       "dr-congo": {
         country: "RD Congo",
-        work: "Sites de restauração e hotelaria: Le Centre, Levante, Marché LT.",
+        work: "Sites de restaurantes em Kinshasa: Le Centre e Levante.",
       },
       "mozambique": {
         country: "Moçambique",
@@ -636,7 +658,7 @@ export const pt: Dict = {
       },
       "canada": {
         country: "Canadá",
-        work: "E-commerce para a diáspora africana.",
+        work: "Catálogo alimentar bilingue de Marché LT em Montréal.",
       },
     },
   },

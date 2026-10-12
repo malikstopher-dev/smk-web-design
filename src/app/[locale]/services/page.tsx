@@ -45,10 +45,11 @@ export default async function ServicesPage({
         heading={d.servicesPage.title}
         subtext={d.servicesPage.lede}
         scene="services"
+        controls={d.sceneControls}
+        link={{ href: "#services-workbench", label: d.nav.services }}
       />
 
       <section className="mx-auto max-w-6xl px-6 pb-12 sm:px-10">
-        <div className="editorial-divider mb-12" />
         <ServicesBoard
           eyebrow={d.nav.services}
           services={SERVICES}

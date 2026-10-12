@@ -192,15 +192,16 @@ type RingControls = {
 const DRAG_YAW = 0.006
 const DRAG_PITCH = 0.004
 const IDLE_SPEED = 0.14
-const PITCH_LIMIT = 0.5
+const PITCH_LIMIT = 1.15
 
 export const RingScene = forwardRef<
   RingSceneController,
   {
     active: boolean
     mobile: boolean
+    selection?: number
   }
->(function RingScene({ active, mobile }, controllerRef) {
+>(function RingScene({ active, mobile, selection = 1 }, controllerRef) {
   const controlsRef = useRef<RingControls>({
     dragging: false,
     pointerX: 0,
@@ -208,7 +209,7 @@ export const RingScene = forwardRef<
     orientationX: 0,
     orientationY: 0,
     yaw: 0.4,
-    pitch: 0.42,
+    pitch: 0.78,
     velocityYaw: 0,
     velocityPitch: 0,
     lastInteractionAt: 0,
@@ -323,12 +324,27 @@ export const RingScene = forwardRef<
   return (
     <>
       <FrameScheduler active={active} mobile={mobile} />
+      <ambientLight intensity={1.2} />
+      <directionalLight position={[-3, 4, 5]} intensity={4} color="#d9e7f0" />
+      <directionalLight position={[3, -2, 2]} intensity={2} color="#e8b04b" />
       <group
         ref={tiltRef}
-        position={mobile ? [0, -0.06, 0] : [2.15, -0.04, 0]}
-        scale={mobile ? 1.5 : 1.74}
+        position={[0, 0.08, 0]}
+        scale={mobile ? 1.12 : 1.32}
       >
         <group ref={ringRef} rotation={[0.42, 0, 0.1]}>
+          <mesh rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[1, 0.075, 12, 100]} />
+            <meshStandardMaterial color="#718292" metalness={0.72} roughness={0.24} />
+          </mesh>
+          <mesh rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[1.008, 0.082, 12, 80, Math.PI * (0.5 + selection * 0.45)]} />
+            <meshStandardMaterial color="#e8b04b" metalness={0.65} roughness={0.26} emissive="#e8b04b" emissiveIntensity={0.15} />
+          </mesh>
+          <mesh rotation={[Math.PI / 2 - 0.24, 0, 0]}>
+            <torusGeometry args={[0.73, 0.018, 8, 90]} />
+            <meshStandardMaterial color="#b5c5d5" metalness={0.65} roughness={0.25} />
+          </mesh>
           <points>
             <bufferGeometry>
               <bufferAttribute

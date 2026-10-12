@@ -1,404 +1,287 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import createGlobe from "cobe"
+import type { createEarthGlobe } from "@/lib/earth-globe"
 import type { ClientGeo } from "@/lib/markers"
+import { SCENE_MOTION, sceneFrame, subscribeScene, wakeScene } from "@/lib/scene-runtime"
+import styles from "./globe-markers.module.css"
 
 const DEG = Math.PI / 180
 const BASE_THETA = 0.28
+const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x))
 
 function latLngToVec([lat, lng]: [number, number]): [number, number, number] {
   const la = lat * DEG
   const lo = lng * DEG - Math.PI
-  return [
-    -Math.cos(la) * Math.cos(lo),
-    Math.sin(la),
-    Math.cos(la) * Math.sin(lo),
-  ]
+  return [-Math.cos(la) * Math.cos(lo), Math.sin(la), Math.cos(la) * Math.sin(lo)]
 }
-
-function project(
-  v: [number, number, number],
-  phi: number,
-  theta: number,
-): { x: number; y: number; visible: boolean } {
-  const cp = Math.cos(phi)
-  const sp = Math.sin(phi)
-  const ct = Math.cos(theta)
-  const st = Math.sin(theta)
+function project(v: [number, number, number], phi: number, theta: number) {
+  const cp = Math.cos(phi), sp = Math.sin(phi), ct = Math.cos(theta), st = Math.sin(theta)
   const x = cp * v[0] + sp * v[2]
   const y = sp * st * v[0] + ct * v[1] - cp * st * v[2]
   const z = -sp * ct * v[0] + st * v[1] + cp * ct * v[2]
-  return {
-    x: (x + 1) / 2,
-    y: (1 - y) / 2,
-    visible: z >= 0 || x * x + y * y >= 0.64,
-  }
+  return { x: (x * 0.8 + 1) / 2, y: (1 - y * 0.8) / 2, visible: z > 0.025 }
 }
-
-function wrapPi(x: number) {
-  return ((x + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI
-}
-
+function wrapPi(x: number) { return ((x + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI }
 function focusAngles(v: [number, number, number]) {
   const phi = Math.atan2(-v[0], v[2])
-  const sp = Math.sin(phi)
-  const cp = Math.cos(phi)
-  const a = sp * v[0] - cp * v[2]
-  return { phi, theta: Math.atan2(v[1], -a) }
+  return { phi, theta: Math.atan2(v[1], -(Math.sin(phi) * v[0] - Math.cos(phi) * v[2])) }
+}
+
+interface LocalizedClientGeo extends ClientGeo {
+  country: string
+  work: string
 }
 
 interface GlobeMarkersProps {
-  markers?: ClientGeo[]
+  markers?: LocalizedClientGeo[]
   className?: string
   speed?: number
   onSelect?: (id: string | null) => void
+  cinematic?: boolean
+  renderWithoutMarkers?: boolean
+  selectedId?: string | null
+  rotationStep?: number
+  paused?: boolean
+  interactionLabel?: string
 }
 
-export function GlobeMarkers({
-  markers,
-  className = "",
-  speed = 0.0022,
-  onSelect,
-}: GlobeMarkersProps) {
-  const vecs = useMemo(
-    () => (markers ?? []).map((m) => latLngToVec(m.location)),
-    [markers],
-  )
-
+export function GlobeMarkers({ markers, className = "", speed = 0.0022, onSelect, cinematic = false, renderWithoutMarkers = false, selectedId, rotationStep = 0, paused = false, interactionLabel }: GlobeMarkersProps) {
+  const vecs = useMemo(() => (markers ?? []).map(m => latLngToVec(m.location)), [markers])
   const wrapRef = useRef<HTMLDivElement>(null)
-  const tiltRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const dotRefs = useRef<(HTMLDivElement | null)[]>([])
-  const pointerStart = useRef<{ x: number; y: number } | null>(null)
-  const dragOffset = useRef({ phi: 0, theta: 0 })
-  const phiOffset = useRef(0)
-  const thetaOffset = useRef(0)
-  const basePhi = useRef(0)
-  const baseTheta = useRef(BASE_THETA)
-  const pausedRef = useRef(false)
-  const hoveredRef = useRef<string | null>(null)
+  const phi = useRef(-1.95)
+  const theta = useRef(BASE_THETA)
+  const velocity = useRef({ x: 0, y: 0 })
+  const pointer = useRef<{ x: number; y: number; startX: number; startY: number; time: number; type: string } | null>(null)
+  const held = useRef(false)
   const selectedRef = useRef<string | null>(null)
-  const targetRef = useRef<{ phi: number; theta: number } | null>(null)
-  const reducedRef = useRef(false)
+  const target = useRef<{ phi: number; theta: number } | null>(null)
+  const [internalSelected, setSelected] = useState<string | null>(null)
+  const selected = selectedId === undefined ? internalSelected : selectedId
+  const pausedRef = useRef(paused)
+  const lastStep = useRef(rotationStep)
   const [width, setWidth] = useState(0)
-  const [selected, setSelected] = useState<string | null>(null)
   const [shouldRender, setShouldRender] = useState(false)
 
-  useEffect(() => {
-    reducedRef.current = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches
-  }, [])
-
-  const holdMarker = useCallback((id: string) => {
-    hoveredRef.current = id
-    pausedRef.current = true
-  }, [])
-
-  const releaseMarker = useCallback(() => {
-    hoveredRef.current = null
-    if (!pointerStart.current) pausedRef.current = false
-  }, [])
-
-  const handleSelect = useCallback(
-    (id: string, i: number) => {
-      const next = selectedRef.current === id ? null : id
-      selectedRef.current = next
-      setSelected(next)
-      onSelect?.(next)
-      if (!next) {
-        targetRef.current = null
-        return
-      }
-      const angles = focusAngles(vecs[i])
-      if (reducedRef.current) {
-        basePhi.current = angles.phi
-        baseTheta.current = angles.theta
-        targetRef.current = null
-      } else {
-        targetRef.current = {
-          phi: basePhi.current + wrapPi(angles.phi - basePhi.current),
-          theta: angles.theta,
-        }
-      }
-    },
-    [vecs, onSelect],
-  )
-
-  const handlePointerDown = useCallback((e: React.PointerEvent) => {
-    pointerStart.current = { x: e.clientX, y: e.clientY }
-    if (canvasRef.current) canvasRef.current.style.cursor = "grabbing"
-    pausedRef.current = true
-  }, [])
+  const handleSelect = useCallback((id: string, index: number) => {
+    const next = selectedRef.current === id ? null : id
+    selectedRef.current = next
+    setSelected(next)
+    onSelect?.(next)
+    velocity.current = { x: 0, y: 0 }
+    if (next) {
+      const angles = focusAngles(vecs[index])
+      if (sceneFrame.reduced) {
+        phi.current = angles.phi
+        theta.current = angles.theta
+        target.current = null
+      } else target.current = { phi: phi.current + wrapPi(angles.phi - phi.current), theta: angles.theta }
+    } else target.current = null
+    wakeScene()
+  }, [vecs, onSelect])
 
   useEffect(() => {
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!pointerStart.current) return
-      dragOffset.current = {
-        phi: (e.clientX - pointerStart.current.x) / 280,
-        theta: (e.clientY - pointerStart.current.y) / 900,
-      }
-    }
-    const handlePointerUp = () => {
-      if (pointerStart.current) {
-        phiOffset.current += dragOffset.current.phi
-        thetaOffset.current += dragOffset.current.theta
-        dragOffset.current = { phi: 0, theta: 0 }
-      }
-      pointerStart.current = null
-      pausedRef.current = false
-    }
-    window.addEventListener("pointermove", handlePointerMove, { passive: true })
-    window.addEventListener("pointerup", handlePointerUp, { passive: true })
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove)
-      window.removeEventListener("pointerup", handlePointerUp)
-    }
-  }, [])
+    pausedRef.current = paused
+    wakeScene()
+  }, [paused])
+  useEffect(() => {
+    if (selectedId === undefined || selectedId === selectedRef.current) return
+    selectedRef.current = selectedId
+    velocity.current = { x: 0, y: 0 }
+    const index = markers?.findIndex(marker => marker.id === selectedId) ?? -1
+    if (index >= 0) {
+      const angles = focusAngles(vecs[index])
+      target.current = { phi: phi.current + wrapPi(angles.phi - phi.current), theta: angles.theta }
+    } else target.current = null
+    wakeScene()
+  }, [selectedId, markers, vecs])
+  useEffect(() => {
+    phi.current += (rotationStep - lastStep.current) * Math.PI / 6
+    lastStep.current = rotationStep
+    target.current = null
+    velocity.current = { x: 0, y: 0 }
+    wakeScene()
+  }, [rotationStep])
 
   useEffect(() => {
     const el = wrapRef.current
     if (!el) return
-    const ro = new ResizeObserver((entries) => {
-      const w = Math.round(entries[0]?.contentRect.width ?? 0)
-      if (w > 0) setWidth((prev) => (prev === w ? prev : w))
+    const ro = new ResizeObserver(([entry]) => {
+      const size = Math.round(entry.contentRect.width)
+      if (size > 0) setWidth(prev => prev === size ? prev : size)
     })
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setShouldRender(true); io.disconnect() }
+    }, { rootMargin: "120px" })
     ro.observe(el)
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldRender(true)
-          io.disconnect()
-        }
-      },
-      { rootMargin: "100px" },
-    )
     io.observe(el)
+    return () => { ro.disconnect(); io.disconnect() }
+  }, [])
+
+  useEffect(() => {
+    const move = (e: PointerEvent) => {
+      const drag = pointer.current
+      if (!drag) return
+      const dx = e.clientX - drag.x
+      const dy = e.clientY - drag.y
+      if (drag.type === "touch" && Math.abs(e.clientY - drag.startY) > 8 && Math.abs(e.clientY - drag.startY) > Math.abs(e.clientX - drag.startX) * 1.2) {
+        pointer.current = null
+        velocity.current = { x: 0, y: 0 }
+        return
+      }
+      const dt = Math.max((e.timeStamp - drag.time) / 1000, 0.008)
+      const yaw = dx / 220
+      const pitch = dy / 600
+      phi.current += yaw
+      theta.current = clamp(theta.current + pitch, -0.65, 0.95)
+      velocity.current = { x: clamp(yaw / dt, -1.6, 1.6), y: clamp(pitch / dt, -0.65, 0.65) }
+      drag.x = e.clientX; drag.y = e.clientY; drag.time = e.timeStamp
+      wakeScene()
+    }
+    const up = (e: PointerEvent) => {
+      if (e.type === "pointercancel") velocity.current = { x: 0, y: 0 }
+      pointer.current = null
+      if (canvasRef.current) canvasRef.current.style.cursor = "grab"
+      wakeScene()
+    }
+    window.addEventListener("pointermove", move, { passive: true })
+    window.addEventListener("pointerup", up, { passive: true })
+    window.addEventListener("pointercancel", up, { passive: true })
     return () => {
-      ro.disconnect()
-      io.disconnect()
+      window.removeEventListener("pointermove", move)
+      window.removeEventListener("pointerup", up)
+      window.removeEventListener("pointercancel", up)
     }
   }, [])
 
   useEffect(() => {
-    if (!shouldRender) return
     const canvas = canvasRef.current
-    if (!canvas || width === 0 || !markers?.length) return
-
-    let frame = 0
-    let shown = false
-    const prefersReduced = reducedRef.current
-
-    const hub = markers[0]?.location
-    const spokes = markers.slice(1).map((m) => m.location)
-
-    function lerpLoc(
-      a: [number, number],
-      b: [number, number],
-      t: number,
-    ): [number, number] {
-      return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]
-    }
-
-    function smooth(t: number) {
-      return t * t * (3 - 2 * t)
-    }
-
-    const fullArcs = hub
-      ? spokes.map((to) => ({ from: hub, to }))
-      : []
-
-    const globe = createGlobe(canvas, {
-      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
-      width,
-      height: width,
-      phi: basePhi.current,
-      theta: baseTheta.current,
-      dark: 1,
-      diffuse: 1.4,
-      mapSamples: 20000,
-      mapBrightness: 6,
-      baseColor: [0.3, 0.3, 0.32],
-      markerColor: [1, 1, 1],
-      glowColor: [0.42, 0.45, 0.55],
-      arcColor: [0.78, 0.83, 0.96],
-      arcWidth: 0.32,
-      arcHeight: 0.24,
-      markers: [],
-      arcs: prefersReduced ? fullArcs : [],
+    const wrap = wrapRef.current
+    if (!shouldRender || !canvas || !wrap || !width || (!markers?.length && !renderWithoutMarkers)) return
+    let inView = true
+    let px = 0, py = 0, surfaceTime = 0
+    let cancelled = false
+    let globe: ReturnType<typeof createEarthGlobe> | undefined
+    delete wrap.dataset.ready
+    delete wrap.dataset.fallback
+    canvas.style.opacity = "0"
+    // The renderer (and Three.js) only loads when the globe approaches view.
+    void import("@/lib/earth-globe").then(({ createEarthGlobe }) => {
+      if (cancelled) return
+      globe = createEarthGlobe(canvas, {
+        compact: sceneFrame.compact,
+        locations: vecs,
+        onReady: () => {
+          if (cancelled) return
+          wrap.dataset.ready = "true"
+          canvas.style.opacity = "1"
+          wakeScene()
+        },
+        onTextureLoad: wakeScene,
+      })
+      wakeScene()
+    }).catch(() => {
+      if (!cancelled) wrap.dataset.fallback = "true"
     })
-
-    const animate = () => {
-      const dragging = pointerStart.current !== null
-      const target = targetRef.current
-
-      if (!dragging) {
-        if (target) {
-          const dPhi = target.phi - basePhi.current
-          const dTheta = target.theta - baseTheta.current
-          if (Math.abs(dPhi) < 0.0015 && Math.abs(dTheta) < 0.0015) {
-            basePhi.current = target.phi
-            baseTheta.current = target.theta
-            targetRef.current = null
-          } else {
-            basePhi.current += dPhi * 0.085
-            baseTheta.current += dTheta * 0.085
-          }
-        } else if (
-          !pausedRef.current &&
-          !hoveredRef.current &&
-          !selectedRef.current
-        ) {
-          basePhi.current += speed
+    const unsubscribe = subscribeScene(s => {
+      if (!inView || !globe) return
+      const dt = s.delta
+      const settle = 1 - Math.exp(-5 * dt)
+      const dragging = pointer.current !== null
+      const focused = selectedRef.current !== null || held.current
+      if (s.reduced) {
+        velocity.current = { x: 0, y: 0 }
+        if (target.current) { phi.current = target.current.phi; theta.current = target.current.theta; target.current = null }
+      } else if (!dragging) {
+        if (target.current) {
+          phi.current += (target.current.phi - phi.current) * settle
+          theta.current += (target.current.theta - theta.current) * settle
+          if (Math.abs(target.current.phi - phi.current) + Math.abs(target.current.theta - theta.current) < 0.001) target.current = null
+        } else if (!focused && !pausedRef.current) {
+          const inertia = Math.abs(velocity.current.x) > 0.008
+          phi.current += velocity.current.x * dt + (inertia ? 0 : (cinematic ? SCENE_MOTION.globeRadiansPerSecond : speed * 60) * dt)
+          theta.current = clamp(theta.current + velocity.current.y * dt, -0.65, 0.95)
+          const decay = Math.exp(-SCENE_MOTION.dragDamping * dt)
+          velocity.current.x *= decay
+          velocity.current.y *= decay
         }
       }
-
-      const curPhi = basePhi.current + phiOffset.current + dragOffset.current.phi
-      const curTheta =
-        baseTheta.current + thetaOffset.current + dragOffset.current.theta
-
-      if (hub && !prefersReduced) {
-        const tSec = performance.now() / 1000
-        const arcs = spokes.map((to, k) => {
-          const phase = (tSec * 0.1 + k * 0.37) % 1
-          return { from: hub, to: lerpLoc(hub, to, smooth(phase)) }
-        })
-        globe.update({ phi: curPhi, theta: curTheta, arcs })
-      } else {
-        globe.update({ phi: curPhi, theta: curTheta })
-      }
-
-      markers.forEach((_, i) => {
+      const respond = cinematic && !dragging && !focused && !s.reduced
+      px += ((respond ? s.pointerX : 0) - px) * settle
+      py += ((respond ? s.pointerY : 0) - py) * settle
+      if (s.reduced) px = py = 0
+      const curPhi = phi.current + px * SCENE_MOTION.globePointerYaw
+      const curTheta = theta.current + py * SCENE_MOTION.globePointerPitch
+      if (!focused && !dragging && !s.reduced && !pausedRef.current) surfaceTime += dt
+      const dpr = Math.max(1, Math.min(devicePixelRatio || 1, s.compact ? 1.25 : 1.75) * s.quality)
+      globe.update({ phi: curPhi, theta: curTheta, time: surfaceTime, width, dpr })
+      wrap.dataset.rotation = curPhi.toFixed(3)
+      const markerList = markers ?? []
+      markerList.forEach((_, i) => {
         const el = dotRefs.current[i]
         if (!el) return
         const p = project(vecs[i], curPhi, curTheta)
-        el.style.left = `${p.x * 100}%`
-        el.style.top = `${p.y * 100}%`
-        el.style.opacity = p.visible ? "1" : "0"
-        el.style.pointerEvents = p.visible ? "auto" : "none"
+        el.style.transform = `translate3d(${(p.x * width).toFixed(2)}px, ${(p.y * width).toFixed(2)}px, 0)`
+        const visible = p.visible && wrap.dataset.ready === "true"
+        el.style.opacity = visible ? "1" : "0"
+        el.style.pointerEvents = visible ? "auto" : "none"
+        const button = el.querySelector("button")
+        if (button) button.tabIndex = visible ? 0 : -1
       })
+    })
+    const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; wakeScene() })
+    observer.observe(canvas)
+    return () => { cancelled = true; unsubscribe(); observer.disconnect(); globe?.destroy() }
+  }, [width, speed, markers, vecs, shouldRender, cinematic, renderWithoutMarkers])
 
-      if (!shown) {
-        shown = true
-        canvas.style.opacity = "1"
-      }
-      frame = requestAnimationFrame(animate)
-    }
-    frame = requestAnimationFrame(animate)
-
-    return () => {
-      cancelAnimationFrame(frame)
-      globe.destroy()
-    }
-  }, [width, speed, markers, vecs, shouldRender])
-
-  const handleTiltMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (reducedRef.current || e.pointerType !== "mouse") return
-    const rect = e.currentTarget.getBoundingClientRect()
-    const dx = (e.clientX - rect.left) / rect.width - 0.5
-    const dy = (e.clientY - rect.top) / rect.height - 0.5
-    const el = tiltRef.current
-    if (!el) return
-    el.style.setProperty("--rx", `${(-dy * 4).toFixed(2)}deg`)
-    el.style.setProperty("--ry", `${(dx * 5).toFixed(2)}deg`)
-  }
-
-  const handleTiltLeave = () => {
-    const el = tiltRef.current
-    if (!el) return
-    el.style.setProperty("--rx", "0deg")
-    el.style.setProperty("--ry", "0deg")
-  }
-
-  return (
-    <div ref={wrapRef} className={`relative aspect-square w-full select-none ${className}`}>
-      <div
-        ref={tiltRef}
-        className="relative h-full w-full"
-        style={{
-          transform:
-            "perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))",
-          transition: "transform 0.25s ease-out",
-          willChange: "transform",
-        }}
-        onPointerMove={handleTiltMove}
-        onPointerLeave={handleTiltLeave}
-      >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -inset-[4%] z-0 rounded-full"
-        >
-          <div className="atmo-ring orbit-slow h-full w-full rounded-full" />
-        </div>
-        <canvas
-          ref={canvasRef}
-          onPointerDown={handlePointerDown}
-          className="block h-full w-full"
-          style={{
-            cursor: "grab",
-            opacity: 0,
-            transition: "opacity 1s ease",
-            // Horizontal globe drag, vertical page scroll still works.
-            touchAction: "pan-y",
-          }}
+  return <div ref={wrapRef} data-earth-globe className={`relative aspect-square w-full select-none ${styles.globe} ${className}`}>
+    <div aria-hidden className={styles.placeholder} />
+    <canvas ref={canvasRef}
+      tabIndex={interactionLabel ? 0 : undefined}
+      role={interactionLabel ? "group" : undefined}
+      aria-label={interactionLabel}
+      onKeyDown={e => {
+        if (!["ArrowLeft", "ArrowRight", "Home"].includes(e.key)) return
+        e.preventDefault()
+        phi.current = e.key === "Home" ? -1.95 : phi.current + (e.key === "ArrowRight" ? 1 : -1) * Math.PI / 12
+        target.current = null
+        velocity.current = { x: 0, y: 0 }
+        wakeScene()
+      }}
+      onPointerDown={e => {
+        if (e.pointerType === "mouse" && e.button !== 0) return
+        pointer.current = { x: e.clientX, y: e.clientY, startX: e.clientX, startY: e.clientY, time: e.timeStamp, type: e.pointerType }
+        velocity.current = { x: 0, y: 0 }
+        target.current = null
+        selectedRef.current = null
+        setSelected(null)
+        onSelect?.(null)
+        e.currentTarget.style.cursor = "grabbing"
+      }}
+      className="relative z-[2] block h-full w-full"
+      style={{ cursor: "grab", opacity: 0, transition: "opacity 0.7s ease", touchAction: "pan-y" }}
+    />
+    {(markers ?? []).map((m, i) => {
+      const active = selected === m.id
+      return <div key={m.id} ref={el => { dotRefs.current[i] = el }} data-selected={active} className={`group absolute ${styles.marker}`} style={{ left: 0, top: 0, opacity: 0 }}>
+        <span aria-hidden className={styles.pulse} />
+        <span className={`absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e8b04b] shadow-[0_0_14px_rgba(232,176,75,0.7)] ring-2 ring-gray-950/60 transition-transform duration-300 group-hover:scale-150 group-focus-within:scale-150 ${active ? "h-3.5 w-3.5" : "h-2.5 w-2.5"}`} />
+        <button type="button" tabIndex={-1} aria-label={`${m.country}, ${m.work}`} aria-pressed={active}
+          onMouseEnter={() => { held.current = true; velocity.current = { x: 0, y: 0 } }}
+          onMouseLeave={() => { held.current = false }}
+          onFocus={() => { held.current = true; velocity.current = { x: 0, y: 0 } }}
+          onBlur={() => { held.current = false }}
+          onClick={() => handleSelect(m.id, i)}
+          onKeyDown={e => { if (e.key === "Escape" && active) handleSelect(m.id, i) }}
+          className="absolute left-0 top-0 h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white"
         />
-        {(markers ?? []).map((m, i) => {
-          const active = selected === m.id
-          return (
-            <div
-              key={m.id}
-              ref={(el) => {
-                dotRefs.current[i] = el
-              }}
-              className="group absolute"
-              style={{ left: "50%", top: "50%", opacity: 0 }}
-            >
-              <span
-                className={`absolute left-0 top-0 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border transition-opacity duration-200 ${
-                  active
-                    ? "border-gray-900/50 opacity-100 dark:border-white/60"
-                    : "border-gray-900/30 opacity-0 group-hover:opacity-70 dark:border-white/40"
-                }`}
-              />
-              <span
-                className={`absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-900 shadow-md ring-2 ring-white/70 transition-transform duration-150 group-hover:scale-125 dark:bg-white dark:ring-gray-950/60 ${
-                  active ? "h-3.5 w-3.5" : "h-2.5 w-2.5"
-                }`}
-              />
-              <button
-                type="button"
-                aria-label={`${m.country}, ${m.work}`}
-                aria-pressed={active}
-                onMouseEnter={() => holdMarker(m.id)}
-                onMouseLeave={releaseMarker}
-                onFocus={() => holdMarker(m.id)}
-                onBlur={releaseMarker}
-                onClick={() => handleSelect(m.id, i)}
-                onKeyDown={(e) => {
-                  if (e.key === "Escape" && active) handleSelect(m.id, i)
-                }}
-                className="absolute left-0 top-0 h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full outline-none focus-visible:ring-2 focus-visible:ring-gray-900 dark:focus-visible:ring-white"
-              />
-              <span
-                role="tooltip"
-                className={`pointer-events-none absolute bottom-4 left-0 hidden w-max max-w-[240px] -translate-x-1/2 rounded-2xl bg-gray-900 px-3.5 py-2 text-left shadow-xl transition-all duration-150 lg:block dark:bg-white ${
-                  active
-                    ? "translate-y-0 opacity-100"
-                    : "translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100"
-                }`}
-              >
-                <span className="block text-xs font-semibold text-white dark:text-gray-900">
-                  {m.country}
-                </span>
-                <span className="mt-0.5 block text-[11px] leading-snug text-gray-300 dark:text-gray-600">
-                  {m.work}
-                </span>
-              </span>
-            </div>
-          )
-        })}
+        <span role="tooltip" className={`pointer-events-none absolute bottom-5 left-0 hidden w-max max-w-[240px] -translate-x-1/2 rounded-2xl bg-white px-3.5 py-2 text-left shadow-xl transition-[opacity,translate] duration-300 lg:block ${cinematic ? styles.cinematicTooltip : ""} ${active ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100"}`}>
+          <span className={`block text-xs font-semibold ${cinematic ? "text-white" : "text-gray-900"}`}>{m.country}</span>
+          <span className={`mt-0.5 block text-[11px] leading-snug ${cinematic ? "text-white/75" : "text-gray-600"}`}>{m.work}</span>
+        </span>
       </div>
-    </div>
-  )
+    })}
+  </div>
 }

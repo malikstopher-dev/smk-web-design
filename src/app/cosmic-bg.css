@@ -100,6 +100,10 @@ footer       { background: rgba(2, 4, 11, 0.55) !important; }
    ══════════════════════════════════════════ */
 html[data-solar3d] #cosmic-moon { display: none; }
 
+/* The About hero has its own globe; keep the shared planets behind it quiet. */
+html:has([data-hero-scene="about"]) #cosmic-bg canvas[data-planet-scene],
+html:has([data-hero-scene="about"]) #cosmic-moon { visibility: hidden; }
+
 #cosmic-moon {
   position: absolute;
   top: 7vh;

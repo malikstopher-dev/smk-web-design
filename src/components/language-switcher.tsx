@@ -2,6 +2,10 @@
 
 import { usePathname, useRouter } from "next/navigation"
 import { LOCALES, localizedPath, type Locale } from "@/i18n/config"
+import { useId } from "react"
+import { motion, useReducedMotion } from "framer-motion"
+import { EASE_OUT } from "@/components/motion"
+import styles from "./interaction-polish.module.css"
 
 const LABELS: Record<Locale, string> = { en: "EN", fr: "FR", pt: "PT" }
 
@@ -20,6 +24,8 @@ export function LanguageSwitcher({
 }) {
   const pathname = usePathname()
   const router = useRouter()
+  const id = useId()
+  const reduced = useReducedMotion()
 
   function switchTo(target: Locale) {
     if (target === locale) return
@@ -47,13 +53,14 @@ export function LanguageSwitcher({
               role="radio"
               aria-checked={active}
               onClick={() => switchTo(l)}
-              className={`rounded-full px-2 py-1 font-mono text-[0.68rem] font-bold tracking-[0.1em] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 ${
+              className={`${styles.language} relative rounded-full px-2 py-1 font-mono text-[0.68rem] font-bold tracking-[0.1em] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 ${
                 active
-                  ? "bg-gray-900 text-white"
+                  ? "text-white"
                   : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
-              {LABELS[l]}
+              {active && <motion.span aria-hidden layoutId={`${id}-language`} initial={false} transition={{ duration: reduced ? 0 : 0.35, ease: EASE_OUT }} className="absolute inset-0 rounded-full bg-gray-900" />}
+              <span className="relative z-10">{LABELS[l]}</span>
             </button>
           </span>
         )

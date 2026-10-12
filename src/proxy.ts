@@ -32,7 +32,9 @@ export function proxy(req: NextRequest) {
   const seg = pathname.split("/")[1]
 
   if (isLocale(seg)) {
-    const res = NextResponse.next()
+    const requestHeaders = new Headers(req.headers)
+    requestHeaders.set("x-smk-locale", seg)
+    const res = NextResponse.next({ request: { headers: requestHeaders } })
     res.headers.set("x-smk-locale", seg)
     res.headers.set("Vary", "Cookie, Accept-Language")
     return res

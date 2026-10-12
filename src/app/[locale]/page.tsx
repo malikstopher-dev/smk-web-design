@@ -2,14 +2,13 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowUpRight, MessageCircle } from "lucide-react"
 import { GlobeSection } from "@/components/globe-section"
-import { Magnetic } from "@/components/magnetic"
+import { HomeDepth } from "@/components/home-depth"
 import {
   JsonLd,
   localBusinessSchema,
   personSchema,
   websiteSchema,
 } from "@/components/json-ld"
-import { HeroIn, HoverButton } from "@/components/motion"
 import { CtaBand } from "@/components/page-hero"
 import { SplitHeading } from "@/components/split-heading"
 import { HomeServicesGrid } from "@/components/home-services-grid"
@@ -17,7 +16,7 @@ import { WorkBoard } from "@/components/work-board"
 import { WordmarkBanner } from "@/components/wordmark-banner"
 import { HTML_LANG } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
-import { FEATURED_PROJECTS } from "@/lib/projects"
+import { FEATURED_PROJECTS, PROJECTS } from "@/lib/projects"
 import { SERVICES, SITE } from "@/lib/site"
 import { siteAlternates, siteOpenGraph } from "@/lib/seo"
 
@@ -40,11 +39,12 @@ function OrbitRings() {
   return (
     <div
       aria-hidden
+      data-depth-orbits
       className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
     >
       <span className="absolute rounded-full border border-white/[0.06]" style={{ width: "116%", height: "116%" }} />
       <span className="absolute hidden rounded-full border border-white/[0.04] sm:block" style={{ width: "134%", height: "134%" }} />
-      <span className="orbit-spin absolute hidden rounded-full border border-dashed border-white/[0.08] sm:block" style={{ width: "154%", height: "154%" }}>
+      <span className="absolute hidden rounded-full border border-dashed border-white/[0.08] sm:block" style={{ width: "154%", height: "154%" }}>
         <span className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/70 shadow-[0_0_8px_2px_rgba(255,255,255,0.35)]" />
       </span>
     </div>
@@ -71,94 +71,61 @@ export default async function HomePage({
       <JsonLd data={personSchema(d.jsonld.personDesc)} />
       <JsonLd data={localBusinessSchema(d.jsonld.businessDesc)} />
 
-      {/* ═══ HERO — Cinematic fullscreen with globe ═══ */}
-      <section className="relative isolate flex min-h-[100dvh] flex-col items-center overflow-hidden px-6 pb-12 pt-20 text-center sm:pt-28">
-        {/* Coordinate labels */}
-        <HeroIn delay={0.8}>
-          <span className="coord-label absolute left-6 top-6 hidden sm:block">
-            {SITE.location.lat}°S {SITE.location.lng}°E
-          </span>
-        </HeroIn>
-        <HeroIn delay={0.9}>
-          <span className="coord-label absolute right-6 top-6 hidden sm:block">
-            Portfolio {new Date().getFullYear()}
-          </span>
-        </HeroIn>
-
-        {/* Eyebrow */}
-        <HeroIn>
-          <p className="tech-label">
-            {d.hero.eyebrowRole} · {d.hero.eyebrowLocation}
-          </p>
-        </HeroIn>
-
-        {/* Name — editorial scale */}
-        <HeroIn delay={0.1}>
-          <h1 className="display-xl mt-6 text-white">
-            Stopher Malik
-          </h1>
-        </HeroIn>
-
-        {/* Globe — centered hero element, clear of the heading */}
-        <HeroIn delay={0.2} className="relative mt-10 w-full max-w-md">
-          <OrbitRings />
-          <div className="relative z-10">
-            <GlobeSection globe={d.globe} />
-          </div>
-        </HeroIn>
-
-        {/* Tagline */}
-        <HeroIn delay={0.3}>
-          <p className="display-md mt-10 max-w-2xl text-white/80">
-            {d.hero.tagline}
-          </p>
-        </HeroIn>
-
-        {/* Bio */}
-        <HeroIn delay={0.4}>
-          <p className="mt-5 max-w-xl text-sm leading-relaxed text-gray-400 sm:text-base">
-            {d.hero.bio}
-          </p>
-        </HeroIn>
-
-        {/* CTAs */}
-        <HeroIn delay={0.5}>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <HoverButton
-              href={SITE.whatsapp.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-13 items-center gap-2.5 rounded-full border border-white bg-white px-8 text-sm font-medium text-gray-900 shadow-lg shadow-white/10 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]"
-            >
-              <MessageCircle className="h-4 w-4" />
-              {d.hero.quoteCta}
-            </HoverButton>
-            <Magnetic strength={0.25} maxShift={4}>
+      <HomeDepth className="relative isolate flex min-h-[100svh] items-center px-6 pb-16 pt-28 sm:px-10 lg:pt-24">
+        <div data-hero-layout className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-4">
+          <div data-hero-copy className="relative z-20 max-w-2xl">
+            <p className="tech-label flex items-center gap-3">
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[#e8b04b]" />
+              {d.hero.eyebrowRole} · {d.hero.eyebrowLocation}
+            </p>
+            <h1 data-depth-title className="display-xl mt-6 text-white">
+              Stopher Malik
+            </h1>
+            <p data-depth-tagline className="mt-7 max-w-xl font-display text-3xl leading-[1.12] text-[#e8b04b] sm:text-4xl lg:text-[3.4rem]">
+              {d.hero.tagline}
+            </p>
+            <p data-depth-intro className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
+              {d.hero.bio}
+            </p>
+            <div data-hero-actions className="mt-9 flex flex-wrap gap-3">
+              <a
+                href={SITE.whatsapp.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-12 items-center gap-2.5 rounded-full bg-[#e8b04b] px-7 text-sm font-medium text-[#03070f] shadow-[0_14px_38px_-18px_rgba(232,176,75,0.95)] transition-[background-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:bg-[#f1c56b] hover:shadow-[0_18px_44px_-16px_rgba(232,176,75,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]"
+              >
+                <MessageCircle className="h-4 w-4" />
+                {d.hero.quoteCta}
+              </a>
               <Link
                 href={lp("/work")}
-                className="inline-flex h-13 items-center gap-2 rounded-full border border-white/20 px-8 text-sm font-medium text-white transition-colors hover:border-white hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/25 px-7 text-sm font-medium text-white transition-colors hover:border-white/70 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 {d.hero.workCta}
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
-            </Magnetic>
+            </div>
+            <p className="tech-label mt-12 hidden items-center gap-3 lg:flex">
+              <span className="h-px w-10 bg-[#e8b04b]/70" />
+              {d.hero.scroll}
+            </p>
           </div>
-        </HeroIn>
 
-        {/* Scroll hint */}
-        <HeroIn delay={0.7}>
-          <div className="mt-16 flex flex-col items-center gap-3">
-            <p className="tech-label">{d.hero.scroll}</p>
-            <div className="h-10 w-px bg-gradient-to-b from-white/40 to-transparent" />
+          <div data-depth-sphere data-hero-globe className="relative z-10 mx-auto w-full max-w-[38rem] lg:max-w-none">
+            <OrbitRings />
+            <div className="relative z-10">
+              <GlobeSection globe={d.globe} />
+            </div>
           </div>
-        </HeroIn>
-      </section>
+        </div>
+      </HomeDepth>
 
-      {/* ═══ FEATURED WORK — Draggable scattered board ═══ */}
+      {/* ═══ FEATURED WORK — Spatial project board ═══ */}
       <section aria-labelledby="featured-heading" className="relative mx-auto max-w-6xl px-6 sm:px-10">
         <div className="editorial-divider mb-16" />
         <WorkBoard
           projects={FEATURED_PROJECTS}
+          rotationPool={PROJECTS}
           heading={d.home.featuredTitle}
           eyebrow={d.home.featuredEyebrow}
           allLabel={d.home.allProjects}

@@ -1,3 +1,5 @@
+import { email, emailHref, hours, phoneDisplay, phoneE164, telUrl, whatsappBase } from "@/lib/contact"
+
 export const SITE = {
   name: "Stopher Malik",
   business: "SMK Web Design",
@@ -13,14 +15,16 @@ export const SITE = {
     lng: 28.05,
   },
   whatsapp: {
-    number: "+27729998863",
-    label: "+27 72 999 8863",
-    url: "https://wa.me/27729998863",
+    number: phoneE164,
+    label: phoneDisplay,
+    url: whatsappBase,
   },
-  phone: "+27729998863",
-  phoneLabel: "+27 72 999 8863",
-  email: "info@stopher-malik.co.za",
-  hours: "Mon–Fri 08:00–18:00 · Sat 09:00–14:00",
+  phone: phoneE164,
+  phoneLabel: phoneDisplay,
+  tel: telUrl,
+  email,
+  emailHref,
+  hours,
   socials: [
     { name: "Facebook", handle: "SMK Web Design", url: "https://www.facebook.com/profile.php?id=61584357221305" },
     { name: "Instagram", handle: "@stophermalik", url: "https://www.instagram.com/stophermalik/" },

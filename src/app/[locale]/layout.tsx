@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { GlobeHUD } from "@/components/globe-hud"
 import { SITE_URL } from "@/components/json-ld"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
@@ -50,7 +49,6 @@ export default async function LocaleLayout({
 
   return (
     <>
-      <GlobeHUD locale={locale as typeof LOCALES[number]} />
       <SiteHeader locale={locale} dict={d} />
       <main className="flex-1 pb-14 sm:pb-24">{children}</main>
       <SiteFooter locale={locale} dict={d} />

@@ -105,12 +105,12 @@ export default async function LegalPage({
             <p>{SITE.name}</p>
             <p>{SITE.location.label}</p>
             <p>
-              <a className="underline-offset-4 hover:text-white hover:underline" href={`mailto:${SITE.email}`}>
+              <a className="underline-offset-4 hover:text-white hover:underline" href={SITE.emailHref}>
                 {SITE.email}
               </a>
             </p>
             <p>
-              <a className="underline-offset-4 hover:text-white hover:underline" href={`tel:${SITE.phone}`}>
+              <a className="underline-offset-4 hover:text-white hover:underline" href={SITE.tel}>
                 {SITE.phoneLabel}
               </a>
             </p>

@@ -1,7 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { EASE_OUT } from "@/components/motion"
 
 export function Reveal({
@@ -15,12 +15,14 @@ export function Reveal({
   y?: number
   className?: string
 }) {
+  const reduced = useReducedMotion()
+  const delaySeconds = delay >= 1 ? delay / 1000 : delay
   return (
     <motion.div
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduced ? false : { y }}
+      whileInView={{ y: 0 }}
       viewport={{ once: true, margin: "-48px" }}
-      transition={{ duration: 0.3, ease: EASE_OUT, delay }}
+      transition={{ duration: reduced ? 0 : 0.3, ease: EASE_OUT, delay: reduced ? 0 : delaySeconds }}
       className={className}
     >
       {children}

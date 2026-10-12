@@ -13,7 +13,9 @@ import {
   Youtube,
 } from "lucide-react"
 import { ContactForm } from "@/components/contact-form"
-import { ContactCursor, ContactMesh } from "@/components/contact-anim"
+import { ContactMesh } from "@/components/contact-anim"
+import { ContactSignal } from "@/components/contact-signal"
+import styles from "@/components/signal-panels.module.css"
 import { JsonLd, breadcrumbSchema, localBusinessSchema } from "@/components/json-ld"
 import { PageHero } from "@/components/page-hero"
 import { Reveal } from "@/components/reveal"
@@ -78,8 +80,6 @@ export default async function ContactPage({
 
   return (
     <>
-      <ContactMesh />
-      <ContactCursor />
       <JsonLd data={localBusinessSchema(d.jsonld.businessDesc)} />
       <JsonLd
         data={breadcrumbSchema([
@@ -88,14 +88,17 @@ export default async function ContactPage({
         ])}
       />
 
+      <div className={styles.contactHero}>
       <PageHero
         eyebrow={d.nav.contact}
         title={d.contactPage.title}
         lede={d.contactPage.lede}
-        ledeAsTypewriter
       />
+      <ContactSignal />
+      <ContactMesh />
+      </div>
 
-      <section className="mx-auto grid max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-[1.15fr_0.85fr]">
+      <section className={`${styles.contactLayout} mx-auto grid max-w-6xl px-6 sm:px-10 lg:grid-cols-[1.15fr_0.85fr]`}>
         <Reveal>
           <ContactForm
             labels={d.contactPage.form}
@@ -127,7 +130,7 @@ export default async function ContactPage({
             </a>
 
             <a
-              href={`mailto:${SITE.email}`}
+              href={SITE.emailHref}
               className="group flex items-center gap-4 border border-white/[0.06] p-6 transition-colors hover:border-white/[0.15]"
             >
               <span className="flex h-11 w-11 shrink-0 items-center justify-center border border-white/10 text-white/50 transition-colors group-hover:border-white/30 group-hover:text-white/80">
@@ -135,7 +138,7 @@ export default async function ContactPage({
               </span>
               <span>
                 <span className="block text-sm font-semibold text-white">
-                  Email
+                  {d.contactPage.form.email}
                 </span>
                 <span className="mt-0.5 block text-sm text-white/40">
                   {SITE.email}
@@ -144,7 +147,7 @@ export default async function ContactPage({
             </a>
 
             <a
-              href={`tel:${SITE.phone}`}
+              href={SITE.tel}
               className="group flex items-center gap-4 border border-white/[0.06] p-6 transition-colors hover:border-white/[0.15]"
             >
               <span className="flex h-11 w-11 shrink-0 items-center justify-center border border-white/10 text-white/50 transition-colors group-hover:border-white/30 group-hover:text-white/80">
@@ -152,7 +155,7 @@ export default async function ContactPage({
               </span>
               <span>
                 <span className="block text-sm font-semibold text-white">
-                  Phone
+                  {d.contactPage.form.phone}
                 </span>
                 <span className="mt-0.5 block text-sm text-white/40">
                   {SITE.phoneLabel}
@@ -171,7 +174,7 @@ export default async function ContactPage({
                 </li>
                 <li className="flex items-start gap-2.5">
                   <Clock className="mt-0.5 h-4 w-4 shrink-0" />
-                  {SITE.hours}
+                  {d.footer.hours}
                 </li>
                 <li className="flex items-start gap-2.5">
                   <CreditCard className="mt-0.5 h-4 w-4 shrink-0" />

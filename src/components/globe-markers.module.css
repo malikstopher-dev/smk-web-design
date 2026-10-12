@@ -1,0 +1,54 @@
+.globe { isolation: isolate; }
+.globe::before {
+  content: "";
+  position: absolute;
+  inset: 4%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(90, 151, 239, 0.08), transparent 72%);
+  pointer-events: none;
+}
+.placeholder {
+  position: absolute;
+  inset: 10%;
+  z-index: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  background: #0a2039 url("/planets/earth-day-2k.jpg") 57% center / 200% 100%;
+  box-shadow: inset -38px -18px 55px rgba(0, 4, 13, 0.88), inset 6px 4px 12px rgba(104, 173, 237, 0.3);
+}
+.globe[data-ready="true"] .placeholder { visibility: hidden; }
+.cinematicTooltip {
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(3,7,15,0.78) !important;
+  color: rgba(255,255,255,0.82);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+  font-size: 10px;
+  letter-spacing: 0.01em;
+}
+.marker { z-index: 4; }
+.pulse {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: -15px;
+  top: -15px;
+  border: 1px solid rgba(225,239,255,0.65);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.marker:hover .pulse,
+.marker:focus-within .pulse,
+.marker[data-selected="true"] .pulse { animation: pulse 2.4s cubic-bezier(0.22,1,0.36,1) infinite; }
+@keyframes pulse {
+  0% { transform: scale(0.5); opacity: 0.8; }
+  85%, 100% { transform: scale(1.5); opacity: 0; }
+}
+.globe[data-fallback="true"] .marker { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .marker .pulse { animation: none !important; }
+  .marker[data-selected="true"] .pulse { opacity: 0.6; }
+  .marker span { transition: none; }
+}

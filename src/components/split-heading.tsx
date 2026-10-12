@@ -60,8 +60,9 @@ export function SplitHeading({
     <Tag className={className} style={style} id={id}>
       {words.map((word, i) => {
         const side = i % 2 === 0 ? -1 : 1
-        const y = 70 + wordRandom(1, i) * 50 // 70..120
-        const rot = (10 + wordRandom(2, i) * 10) * side // 10..20 toward x
+        // Stable decimal strings across Node SSR and the browser's CSS parser.
+        const y = Math.round((70 + wordRandom(1, i) * 50) * 100) / 100
+        const rot = (Math.round((10 + wordRandom(2, i) * 10) * 100) / 100) * side
         const hidden: WordState = { x: side * 40, y, rotate: rot }
         const final = triggered
         const transition = final

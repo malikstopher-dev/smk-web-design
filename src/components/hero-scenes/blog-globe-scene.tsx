@@ -360,12 +360,19 @@ export const BlogGlobeScene = forwardRef<
   return (
     <>
       <FrameScheduler active={active} mobile={mobile} />
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[-3, 4, 5]} intensity={3} color="#c5dded" />
+      <directionalLight position={[3, -2, 1]} intensity={1.5} color="#e8b04b" />
       <group
         ref={tiltRef}
-        position={mobile ? [0.25, -0.02, 0] : [2.35, -0.05, 0.45]}
-        scale={mobile ? 1.5 : 1.72}
+        position={[0, 0.08, 0]}
+        scale={mobile ? 1.05 : 1.2}
       >
         <group ref={globeRef}>
+          <mesh scale={0.96}>
+            <sphereGeometry args={[1, 32, 24]} />
+            <meshStandardMaterial color="#14283e" metalness={0.5} roughness={0.4} />
+          </mesh>
           <points>
             <bufferGeometry>
               <bufferAttribute
@@ -429,7 +436,7 @@ export const BlogGlobeScene = forwardRef<
             <meshBasicMaterial
               color="#9fc8f0"
               transparent
-              opacity={0.16}
+              opacity={0.5}
               depthWrite={false}
             />
           </mesh>

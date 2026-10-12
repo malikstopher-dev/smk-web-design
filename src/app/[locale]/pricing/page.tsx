@@ -44,6 +44,9 @@ export default async function PricingPage({
         heading={d.pricingPage.title}
         subtext={d.pricingPage.lede}
         scene="pricing"
+        controls={d.sceneControls}
+        sceneItems={d.pricingPage.tiers.map(tier => tier.eyebrow)}
+        link={{ href: "#pricing-packages", label: d.pricingPage.groupLabel }}
       />
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">

@@ -70,7 +70,6 @@ export function CtaBand({
       <Reveal>
         <div className="flex flex-col items-start justify-between gap-8 rounded-none border border-white/[0.06] p-8 sm:p-12 md:flex-row md:items-center">
           <div className="max-w-xl">
-            <p className="tech-label mb-4">Contact</p>
             <h2
               id="cta-heading"
               className="display-md text-white"

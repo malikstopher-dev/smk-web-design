@@ -1,0 +1,12 @@
+.about { min-height: clamp(610px, 84vh, 760px); }
+.content { min-height: inherit; }
+.content > h1, .content > p { max-width: min(100%, 600px); }
+.portrait { width: clamp(170px, 17vw, 220px); }
+.portrait img { object-fit: contain; }
+.lede { max-width: 35rem !important; }
+@media (max-width: 767px) {
+  .about { min-height: 610px; }
+  .content { padding-top: 104px; }
+  .portrait { width: clamp(138px, 39vw, 172px); }
+  .lede { max-width: min(100%, 340px) !important; }
+}

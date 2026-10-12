@@ -9,9 +9,13 @@ import { LanguageSwitcher } from "@/components/language-switcher"
 import type { Dict } from "@/i18n/types"
 import type { Locale } from "@/i18n/config"
 import { SITE } from "@/lib/site"
+import { motion, useReducedMotion } from "framer-motion"
+import { EASE_OUT } from "@/components/motion"
+import styles from "./interaction-polish.module.css"
 
 export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
   const pathname = usePathname()
+  const reduced = useReducedMotion()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const openRef = useRef(false)
@@ -135,21 +139,21 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
           </Link>
 
           {/* Nav — center */}
-          <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+          <nav aria-label={dict.nav.menuLabel} className="hidden items-center gap-1 md:flex">
             {items.map((item) => (
               <Link
                 key={item.href}
                 href={lp(item.href)}
                 aria-current={isActive(item.href) ? "page" : undefined}
-                className={`relative px-3 py-1.5 text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                className={`${styles.navLink} relative px-3 py-1.5 text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                   isActive(item.href)
                     ? "font-medium text-white"
                     : "text-white/40 hover:text-white/80"
                 }`}
               >
-                {item.label}
+                <span className={styles.navText}>{item.label}</span>
                 {isActive(item.href) && (
-                  <span className="absolute bottom-0 left-3 right-3 h-px bg-white" />
+                  <motion.span layoutId="smk-primary-underline" initial={false} transition={{ duration: reduced ? 0 : 0.42, ease: EASE_OUT }} className="absolute bottom-0 left-3 right-3 h-px bg-white" />
                 )}
               </Link>
             ))}
@@ -163,7 +167,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
                 href={SITE.whatsapp.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-9 items-center gap-2 rounded-full border border-white/15 px-4 text-[13px] font-medium text-white/70 transition-all duration-200 hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]"
+                className={`${styles.talk} inline-flex h-9 items-center gap-2 rounded-full border border-white/15 px-4 text-[13px] font-medium text-white/70 transition-all duration-200 hover:border-white/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]`}
               >
                 <MessageCircle className="h-3.5 w-3.5" />
                 {dict.nav.letsTalk}
@@ -221,7 +225,7 @@ export function SiteHeader({ locale, dict }: { locale: Locale; dict: Dict }) {
             : "invisible -translate-y-3 opacity-0"
         }`}
       >
-        <nav aria-label="Mobile" className="flex flex-col">
+        <nav aria-label={dict.nav.menuLabel} className="flex flex-col">
           {items.map((item, i) => (
             <Link
               key={item.href}

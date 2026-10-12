@@ -18,6 +18,7 @@ export interface LegalDocument {
 }
 
 export interface Dict {
+  sceneControls: { drag: string; left: string; right: string; pause: string; play: string; search: string; all: string; empty: string }
   nav: {
     home: string
     about: string
@@ -64,6 +65,7 @@ export interface Dict {
     factLineRest: string
     portraitAlt: string
     locationCaption: string
+    processEyebrow: string
     processHeading: string
     process: { title: string; body: string }[]
     testimonialsHeading: string
@@ -91,6 +93,17 @@ export interface Dict {
     cardAlt: string
     descs: Record<string, string>
     tagLabels: Record<string, string>
+    explorer: {
+      eyebrow: string
+      title: string
+      selectedLabel: string
+      instruction: string
+      inspect: string
+      previous: string
+      next: string
+      reset: string
+      all: string
+    }
   }
   pricingPage: {
     metaTitle: string
@@ -169,6 +182,7 @@ export interface Dict {
     comingSoonTitle: string
     comingSoonBody: string
     readCta: string
+    readEnglishCta: string
     ctaTitle: string
     ctaBody: string
     ctaButton: string
@@ -189,6 +203,7 @@ export interface Dict {
     servicesCol: string
     contactCol: string
     fastestReply: string
+    hours: string
     followUs: string
     builtWith: string
     legal: string
@@ -202,6 +217,12 @@ export interface Dict {
     secondaryLabel: string
   }
   globe: {
+    interactionLabel: string
+    dragHint: string
+    rotateLeft: string
+    rotateRight: string
+    pause: string
+    play: string
     captionIdle: string
     markers: Record<string, { country: string; work: string }>
     figAria: string

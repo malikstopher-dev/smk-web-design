@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     ".opencode/**",
+    ".playwright-cli/**",
+    "output/playwright/**",
     "next-env.d.ts",
     // Local reference copy of the live site (not part of this build):
     "MALIK CURRENT/**",

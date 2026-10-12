@@ -1,0 +1,46 @@
+.navLink > .navText {
+  display: inline-block;
+  transition: translate 420ms cubic-bezier(0.22,1,0.36,1);
+}
+.navLink::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  background: rgba(255,255,255,0.65);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 450ms cubic-bezier(0.22,1,0.36,1);
+}
+.navLink:hover > .navText,
+.navLink:focus-visible > .navText { translate: 0 -3px; }
+.navLink:hover::after,
+.navLink:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+.talk, .button { position: relative; isolation: isolate; overflow: hidden; }
+.talk::before, .button::before {
+  content: "";
+  position: absolute;
+  inset: -30% -10%;
+  background: linear-gradient(110deg, transparent 30%, rgba(188,213,250,0.25) 50%, transparent 70%);
+  translate: -120% 0;
+  pointer-events: none;
+  transition: translate 700ms cubic-bezier(0.22,1,0.36,1);
+}
+.talk:hover::before, .talk:focus-visible::before,
+.button:hover::before, .button:focus-visible::before { translate: 120% 0; }
+.talk svg, .button svg { transition: transform 420ms cubic-bezier(0.22,1,0.36,1); }
+.talk:hover svg, .talk:focus-visible svg,
+.button:hover svg, .button:focus-visible svg { transform: translate(2px,-2px) rotate(-8deg); }
+.button:hover, .button:focus-visible, .talk:hover { box-shadow: 0 10px 28px -12px rgba(195,219,255,0.4); }
+.buttonContent { display: inline-flex; align-items: center; gap: inherit; transition: translate 420ms cubic-bezier(0.22,1,0.36,1); }
+.button:hover .buttonContent { translate: 3px 0; }
+.language { transition: transform 300ms cubic-bezier(0.22,1,0.36,1), color 200ms ease; }
+.language:active { transform: scale(0.94); }
+@media (prefers-reduced-motion: reduce) {
+  .navLink > .navText, .navLink::after, .talk svg, .button svg, .buttonContent, .language { transition: none; }
+  .navLink:hover > .navText, .button:hover .buttonContent { translate: none; }
+  .talk::before, .button::before { display: none; }
+  .talk:hover svg, .talk:focus-visible svg, .button:hover svg, .button:focus-visible svg, .language:active { transform: none; }
+}

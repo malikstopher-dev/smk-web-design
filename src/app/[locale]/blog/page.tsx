@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
-import { FadeIn } from "@/components/motion"
+import { JournalIndex } from "@/components/journal-index"
 import { Magnetic } from "@/components/magnetic"
 import { JsonLd, breadcrumbSchema, websiteSchema } from "@/components/json-ld"
 import { InnerHero } from "@/components/inner-hero"
@@ -47,37 +47,12 @@ export default async function BlogPage({
         ])}
       />
 
-      <InnerHero eyebrow={d.nav.blog} heading={d.blogPage.title} subtext={d.blogPage.lede} scene="blog" />
+      <InnerHero eyebrow={d.nav.blog} heading={d.blogPage.title} subtext={d.blogPage.lede} scene="blog" controls={d.sceneControls} link={{ href: "#journal-index", label: isEn ? d.sceneControls.search : d.blogPage.comingSoonTitle }} />
 
-      <section className="mx-auto max-w-6xl px-6 sm:px-10">
+      <section id="journal-index" className="mx-auto max-w-6xl scroll-mt-28 px-6 sm:px-10">
         <div className="editorial-divider mb-12" />
         {isEn ? (
-          <>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {BLOG_POSTS.map((post, i) => (
-                <FadeIn key={post.slug} delay={(i % 3) * 0.08} className="h-full">
-                  <Link
-                    href={`/${locale}/blog/${post.slug}`}
-                    className="group flex h-full flex-col border border-white/[0.06] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                  >
-                    <span className="inline-flex w-fit items-center rounded-full border border-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/40">
-                      {post.category}
-                    </span>
-                    <h2 className="mt-4 font-display text-xl font-semibold leading-snug tracking-tight text-white">
-                      {post.title}
-                    </h2>
-                    <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed text-white/35">
-                      {post.description}
-                    </p>
-                    <span className="mt-auto flex items-center justify-between pt-5 text-xs text-white/30">
-                      {d.blogPage.readCta}
-                      <ArrowUpRight className="h-4 w-4 text-white/20 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white/60" />
-                    </span>
-                  </Link>
-                </FadeIn>
-              ))}
-            </div>
-          </>
+          <JournalIndex posts={BLOG_POSTS.map(({ slug, title, category, description }) => ({ slug, title, category, description }))} controls={d.sceneControls} readLabel={d.blogPage.readCta} locale={locale} />
         ) : (
           <div className="border border-white/[0.06] p-8 text-center sm:p-12">
             <h2 className="display-md text-white">
@@ -90,7 +65,7 @@ export default async function BlogPage({
               href="/en/blog"
               className="mt-6 inline-flex h-11 items-center gap-2 rounded-full border border-white bg-white px-6 text-sm font-medium text-gray-900 shadow-lg shadow-white/10 transition-colors hover:bg-gray-200"
             >
-              {d.blogPage.readCta} (EN)
+              {d.blogPage.readEnglishCta}
               <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>

@@ -2,12 +2,12 @@ import type { Metadata } from "next"
 import { JsonLd, breadcrumbSchema, personSchema } from "@/components/json-ld"
 import { CtaBand } from "@/components/page-hero"
 import { InnerHero } from "@/components/inner-hero"
-import { PortraitCard } from "@/components/portrait-card"
 import { ProcessTimeline } from "@/components/process-timeline"
 import { TestimonialCarousel } from "@/components/testimonial-carousel"
 import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
 import { siteAlternates, siteOpenGraph } from "@/lib/seo"
+import styles from "@/components/signal-panels.module.css"
 
 export async function generateMetadata({
   params,
@@ -51,30 +51,26 @@ export default async function AboutPage({
         heading={d.aboutPage.title}
         subtext={d.aboutPage.lede}
         scene="about"
+        controls={d.sceneControls}
+        link={{ href: "#studio-process", label: d.aboutPage.processHeading }}
+        portraitAlt={d.aboutPage.portraitAlt}
+        portraitCaption={d.aboutPage.locationCaption}
       />
 
-      <section className="mx-auto grid max-w-6xl gap-8 px-6 sm:px-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-        <PortraitCard
-          src="/stopher-portrait.webp"
-          alt={d.aboutPage.portraitAlt}
-          width={640}
-          height={800}
-          caption="Paulshof, Sandton"
-        />
-
+      <section className="mx-auto max-w-6xl px-6 sm:px-10">
         <div>
           <Reveal>
-            <p className="text-lg leading-relaxed text-white/55">
+            <div className={styles.aboutIntro}>
+            <p>
               {d.aboutPage.intro}
             </p>
-          </Reveal>
-          <Reveal delay={90}>
-            <p className="mt-5 leading-relaxed text-white/45">
+            <p>
               {d.aboutPage.body}
             </p>
+            </div>
           </Reveal>
           <Reveal delay={0.18}>
-            <p className="mt-9 border-y border-white/[0.06] py-7 text-sm leading-relaxed text-white/45">
+            <p className={styles.factLine}>
               <span className="font-semibold text-white">
                 {d.aboutPage.factLineLead}
               </span>{" "}
@@ -82,9 +78,9 @@ export default async function AboutPage({
             </p>
           </Reveal>
 
-          <div className="mt-12">
+          <div id="studio-process" className="mt-16 scroll-mt-28 border-t border-white/10 pt-10">
             <Reveal>
-              <p className="tech-label mb-4">Process</p>
+              <p className="mb-4 text-sm text-slate-400">{d.aboutPage.processEyebrow}</p>
               <h2 className="display-md text-white">
                 {d.aboutPage.processHeading}
               </h2>
@@ -92,9 +88,9 @@ export default async function AboutPage({
             <ProcessTimeline steps={d.aboutPage.process} />
           </div>
 
-          <div className="mt-16">
+          <div className="mt-24">
             <Reveal>
-              <p className="tech-label mb-4">{d.aboutPage.testimonialsHeading}</p>
+              <h2 className="display-md mb-8 text-white">{d.aboutPage.testimonialsHeading}</h2>
             </Reveal>
             <div className="mt-6">
               <TestimonialCarousel testimonials={d.aboutPage.testimonials} />

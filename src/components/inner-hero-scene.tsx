@@ -66,14 +66,6 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
 
-/* Blog data labels — post counts layered over the globe.
-   Static positions, no per-frame DOM writes. */
-const BLOG_LABELS = [
-  { count: "16", label: "SEO" },
-  { count: "17", label: "Web Design" },
-  { count: "12", label: "Growth" },
-  { count: "50", label: "Posts" },
-]
 
 function BlogSceneFallback() {
   return (
@@ -81,8 +73,8 @@ function BlogSceneFallback() {
       data-scene-fallback
       className="absolute inset-0"
     >
-      <div className="absolute inset-0 flex items-center justify-end md:pr-[7vw]">
-        <div className="relative aspect-square w-[min(90vw,24rem)] md:w-[min(44vw,30rem)]">
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative aspect-square w-[85%]">
           <div className="absolute inset-[6%] rounded-full border border-sky-200/15 bg-[radial-gradient(circle_at_36%_28%,rgba(255,255,255,0.1),transparent_36%),radial-gradient(circle_at_66%_74%,rgba(56,160,238,0.14),transparent_46%),rgba(4,14,28,0.4)] shadow-[0_0_90px_rgba(56,160,238,0.12)]" />
           <div
             className="absolute inset-[8%] rounded-full opacity-6"
@@ -102,35 +94,10 @@ function BlogSceneFallback() {
           <div className="absolute inset-[2%] rotate-[12deg] rounded-full border border-sky-200/10" />
         </div>
       </div>
-      <BlogLabels />
     </div>
   )
 }
 
-function BlogLabels() {
-  return (
-    <div className="absolute bottom-[12%] right-[6vw] hidden flex-col gap-2 md:flex">
-      {BLOG_LABELS.map((item, index) => (
-        <div
-          key={item.label}
-          className="flex items-center gap-2.5 border border-white/10 bg-[#050a14]/70 px-3 py-1.5 backdrop-blur-sm"
-          style={{ marginRight: index % 2 === 0 ? 0 : "1.5rem" }}
-        >
-          <span
-            className={`font-display text-lg leading-none ${
-              item.label === "Posts" ? "text-[#e8b04b]" : "text-white"
-            }`}
-          >
-            {item.count}
-          </span>
-          <span className="text-[11px] uppercase tracking-[0.14em] text-white/40">
-            {item.label}
-          </span>
-        </div>
-      ))}
-    </div>
-  )
-}
 
 /* Services fallback — layered dot-wave rows in pure CSS. */
 function ServicesSceneFallback() {
@@ -145,7 +112,7 @@ function ServicesSceneFallback() {
           className="absolute left-1/2"
           style={{
             bottom: `${4 + layer * 9}%`,
-            width: `${140 - layer * 24}vw`,
+            width: `${100 - layer * 14}%`,
             height: "26%",
             transform: "translateX(-50%)",
             backgroundImage: `radial-gradient(circle, rgba(${190 - layer * 30},${210 - layer * 30},${240 - layer * 25}, ${0.55 - layer * 0.14}) 0 1.1px, transparent 1.4px)`,
@@ -169,9 +136,9 @@ function PricingSceneFallback() {
       data-scene-fallback
       className="absolute inset-0"
     >
-      <div className="absolute inset-0 flex items-center justify-end md:pr-[8vw]">
+      <div className="absolute inset-0 flex items-center justify-center">
         <div
-          className="relative aspect-square w-[min(80vw,22rem)] rotate-[24deg] md:w-[min(40vw,30rem)]"
+          className="relative aspect-square w-[85%] rotate-[24deg]"
           style={{ transform: "perspective(1000px) rotateX(56deg) rotateZ(6deg)" }}
         >
           {/* Track */}
@@ -217,9 +184,9 @@ function WorkSceneFallback() {
       data-scene-fallback
       className="absolute inset-0"
     >
-      <div className="absolute inset-0 flex items-center justify-end md:pr-[8vw]">
+      <div className="absolute inset-0 flex items-center justify-center">
         <div
-          className="relative aspect-square w-[min(84vw,23rem)] md:w-[min(42vw,30rem)]"
+          className="relative aspect-square w-[85%]"
           style={{ transform: "perspective(1100px) rotateX(52deg)" }}
         >
           {[0, 1, 2, 3].map((ring) => (
@@ -254,9 +221,9 @@ function AboutSceneFallback() {
   return (
     <div
       data-scene-fallback
-      className="absolute inset-0 flex items-center justify-center md:justify-end md:pr-[8vw]"
+      className="absolute inset-0 flex items-center justify-center"
     >
-      <div className="relative aspect-square w-[min(82vw,25rem)] md:w-[min(42vw,31rem)]">
+      <div className="relative aspect-square w-[85%]">
         <div className="absolute inset-[7%] rounded-full border border-cyan-100/15 bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.11),transparent_34%),radial-gradient(circle_at_68%_72%,rgba(34,211,238,0.13),transparent_48%),rgba(4,12,25,0.42)] shadow-[0_0_80px_rgba(34,211,238,0.10)]" />
         <div
           className="absolute inset-[9%] rounded-full opacity-55"
@@ -309,7 +276,7 @@ type OrientationConstructor = typeof DeviceOrientationEvent & {
   requestPermission?: () => Promise<"granted" | "denied">
 }
 
-export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
+export function InnerHeroScene({ scene, paused = false, turn = 0, selection = 0 }: { scene: InnerHeroSceneName; paused?: boolean; turn?: number; selection?: number }) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const globeController = useRef<SceneController>(null)
   const pointerSession = useRef<PointerSession>(initialPointerSession())
@@ -320,9 +287,19 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
   const [shouldMount, setShouldMount] = useState(false)
   const [active, setActive] = useState(false)
   const [ready, setReady] = useState(false)
+  const [failed, setFailed] = useState(false)
   const [mobile, setMobile] = useState(false)
   const [reduced, setReduced] = useState(false)
   const [dragging, setDragging] = useState(false)
+  const lastTurn = useRef(turn)
+  useEffect(() => {
+    const delta = turn - lastTurn.current
+    lastTurn.current = turn
+    if (!delta || !ready || reduced) return
+    globeController.current?.beginDrag()
+    globeController.current?.drag(delta * 45, 0, 12)
+    globeController.current?.endDrag()
+  }, [turn, ready, reduced])
 
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 767px)")
@@ -503,15 +480,15 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
      alongside or ahead of a working canvas, so the globe is
      one single continuous object: the WebGL globe and its
      own scatter-convergence entrance, from its first frame. */
-  const showCanvas = shouldMount && canUseWebGL === true && !reduced
-  const showFallback = !showCanvas && canUseWebGL !== null
+  const showCanvas = shouldMount && canUseWebGL === true && !reduced && !failed
+  const showFallback = !showCanvas || !ready
 
   return (
     <div
       ref={wrapRef}
       aria-hidden="true"
       data-hero-scene={scene}
-      className="absolute inset-0 z-0 overflow-hidden bg-[#03070f]/75"
+      className="absolute inset-0 z-0 overflow-hidden"
       style={{
         cursor: ready && !reduced ? (dragging ? "grabbing" : "grab") : "default",
         touchAction: "pan-y",
@@ -522,24 +499,22 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
       onPointerCancel={endDrag}
       onPointerLeave={onPointerLeave}
     >
-      {scene === "about" && showFallback && <AboutSceneFallback />}
-      {scene === "blog" && showFallback && <BlogSceneFallback />}
-      {scene === "services" && showFallback && (
-        <ServicesSceneFallback />
-      )}
-      {scene === "pricing" && showFallback && <PricingSceneFallback />}
-      {scene === "work" && showFallback && <WorkSceneFallback />}
-      {scene === "blog" && showCanvas && (
-        <div className="pointer-events-none absolute inset-0">
-          <BlogLabels />
-        </div>
-      )}
+      <div
+        className="pointer-events-none absolute inset-0 transition-opacity duration-700"
+        style={{ opacity: showFallback ? 1 : 0 }}
+      >
+        {scene === "about" && <AboutSceneFallback />}
+        {scene === "blog" && <BlogSceneFallback />}
+        {scene === "services" && <ServicesSceneFallback />}
+        {scene === "pricing" && <PricingSceneFallback />}
+        {scene === "work" && <WorkSceneFallback />}
+      </div>
 
       {showCanvas && (
-        <SceneBoundary onError={() => setReady(false)}>
+        <SceneBoundary onError={() => { setReady(false); setFailed(true) }}>
           <Canvas
             frameloop="demand"
-            dpr={mobile ? [1, 1.5] : [1, 2]}
+            dpr={mobile ? [1, 1.25] : [1, 1.5]}
             camera={{ position: [0, 0, 5], fov: 42, near: 0.1, far: 30 }}
             gl={{
               alpha: true,
@@ -559,35 +534,37 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
             {scene === "about" && (
               <AboutGlobeScene
                 ref={globeController}
-                active={active}
+                active={active && !paused}
                 mobile={mobile}
               />
             )}
             {scene === "blog" && (
               <BlogGlobeScene
                 ref={globeController}
-                active={active}
+                active={active && !paused}
                 mobile={mobile}
               />
             )}
             {scene === "services" && (
               <WaveTerrainScene
                 ref={globeController}
-                active={active}
+                active={active && !paused}
                 mobile={mobile}
+                selection={selection}
               />
             )}
             {scene === "pricing" && (
               <RingScene
                 ref={globeController}
-                active={active}
+                active={active && !paused}
                 mobile={mobile}
+                selection={selection}
               />
             )}
             {scene === "work" && (
               <StreamScene
                 ref={globeController}
-                active={active}
+                active={active && !paused}
                 mobile={mobile}
               />
             )}
@@ -595,21 +572,6 @@ export function InnerHeroScene({ scene }: { scene: InnerHeroSceneName }) {
         </SceneBoundary>
       )}
 
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            scene === "blog"
-              ? "linear-gradient(90deg, rgba(3,7,15,0.99) 0%, rgba(3,7,15,0.94) 38%, rgba(3,7,15,0.55) 64%, rgba(3,7,15,0.26) 100%)"
-              : scene === "services"
-                ? "linear-gradient(180deg, rgba(3,7,15,0.9) 0%, rgba(3,7,15,0.36) 46%, rgba(3,7,15,0.2) 72%, rgba(3,7,15,0.72) 100%), linear-gradient(90deg, rgba(3,7,15,0.98) 0%, rgba(3,7,15,0.82) 40%, transparent 75%)"
-                : "linear-gradient(90deg, rgba(3,7,15,0.98) 0%, rgba(3,7,15,0.93) 34%, rgba(3,7,15,0.48) 62%, rgba(3,7,15,0.18) 100%)",
-        }}
-      />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_38%,rgba(3,7,15,0.58)_100%)] md:hidden" />
-      {scene === "blog" && (
-        <div className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_at_62%_44%,transparent_30%,rgba(3,7,15,0.5)_78%,rgba(3,7,15,0.82)_100%)] md:block" />
-      )}
     </div>
   )
 }

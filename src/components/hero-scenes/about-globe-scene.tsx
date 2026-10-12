@@ -23,10 +23,10 @@ const POINT_VERTEX = `
     float eased = 1.0 - pow(1.0 - uProgress, 3.0);
     vec3 transformed = mix(position + aScatter, position, eased);
     vec4 mvPosition = modelViewMatrix * vec4(transformed, 1.0);
-    vec3 viewNormal = normalize(normalMatrix * normalize(transformed));
-    float facing = dot(viewNormal, vec3(0.0, 0.0, 1.0)) * 0.5 + 0.5;
+    vec3 viewNormal = normalize(normalMatrix * normalize(position));
+    float facing = dot(viewNormal, vec3(0.0, 0.0, 1.0));
     vColor = color;
-    vAlpha = mix(0.13, 0.92, facing);
+    vAlpha = mix(0.09, 0.92, smoothstep(-0.55, 0.85, facing));
     gl_PointSize = aSize * uPixelRatio * (5.0 / max(2.0, -mvPosition.z));
     gl_Position = projectionMatrix * mvPosition;
   }
@@ -39,7 +39,7 @@ const POINT_FRAGMENT = `
   void main() {
     float distanceToCenter = length(gl_PointCoord - vec2(0.5));
     if (distanceToCenter > 0.5) discard;
-    float alpha = (1.0 - smoothstep(0.18, 0.5, distanceToCenter)) * vAlpha;
+    float alpha = (1.0 - smoothstep(0.12, 0.5, distanceToCenter)) * vAlpha;
     gl_FragColor = vec4(vColor, alpha);
   }
 `
@@ -64,12 +64,12 @@ const RIM_FRAGMENT = `
   varying vec3 vObjectNormal;
 
   void main() {
-    float fresnel = pow(1.0 - max(dot(vNormal, vViewDirection), 0.0), 2.8);
+    float fresnel = pow(1.0 - max(dot(vNormal, vViewDirection), 0.0), 3.7);
     float warmth = smoothstep(-0.65, 0.85, vObjectNormal.y + vObjectNormal.x * 0.3);
-    vec3 cyan = vec3(0.18, 0.78, 0.96);
+    vec3 cyan = vec3(0.44, 0.7, 0.92);
     vec3 warmWhite = vec3(1.0, 0.91, 0.76);
     vec3 color = mix(cyan, warmWhite, warmth);
-    gl_FragColor = vec4(color, fresnel * 0.34);
+    gl_FragColor = vec4(color, fresnel * 0.18);
   }
 `
 
@@ -86,6 +86,17 @@ const AFRICA: [number, number][] = [
   [-17, 15],
 ]
 
+// Approximate coast silhouettes, sampled as points rather than an Earth texture.
+// The smaller continents give rotation a readable back side without a dense map.
+const LAND: { outline: [number, number][]; bounds: [number, number, number, number]; weight: number }[] = [
+  { outline: AFRICA, bounds: [-18, 52, -36, 38], weight: 1.3 },
+  { outline: [[-168,63],[-151,70],[-135,59],[-126,51],[-123,40],[-117,32],[-108,27],[-97,16],[-85,10],[-78,21],[-82,26],[-80,33],[-65,45],[-53,47],[-60,54],[-78,59],[-92,72],[-120,72]], bounds: [-168,-53,10,72], weight: 0.9 },
+  { outline: [[-80,12],[-73,8],[-63,11],[-51,5],[-35,-6],[-35,-13],[-45,-23],[-48,-29],[-55,-34],[-70,-55],[-75,-40],[-71,-19],[-81,-5]], bounds: [-81,-35,-55,12], weight: 0.8 },
+  { outline: [[-11,36],[-9,44],[-12,55],[6,59],[15,70],[32,71],[41,59],[29,46],[26,36],[10,35]], bounds: [-12,41,35,71], weight: 0.5 },
+  { outline: [[30,71],[55,74],[85,74],[105,73],[130,65],[163,60],[142,47],[132,35],[119,20],[106,6],[101,-5],[85,9],[72,8],[67,23],[51,27],[40,40],[28,46]], bounds: [28,163,-5,74], weight: 1.4 },
+  { outline: [[113,-12],[129,-12],[138,-15],[151,-25],[154,-36],[139,-39],[124,-35],[114,-23]], bounds: [113,154,-39,-12], weight: 0.4 },
+]
+
 function seededRandom(seed: number) {
   let value = seed >>> 0
   return () => {
@@ -94,11 +105,11 @@ function seededRandom(seed: number) {
   }
 }
 
-function insidePolygon(lng: number, lat: number) {
+function insidePolygon(lng: number, lat: number, polygon: [number, number][]) {
   let inside = false
-  for (let i = 0, j = AFRICA.length - 1; i < AFRICA.length; j = i++) {
-    const [xi, yi] = AFRICA[i]
-    const [xj, yj] = AFRICA[j]
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [xi, yi] = polygon[i]
+    const [xj, yj] = polygon[j]
     const intersects =
       yi > lat !== yj > lat &&
       lng < ((xj - xi) * (lat - yi)) / (yj - yi) + xi
@@ -119,10 +130,10 @@ function latLngToPoint(lat: number, lng: number, radius: number) {
 }
 
 function buildParticles(mobile: boolean) {
-  const worldCount = mobile ? 950 : 1850
-  const africaCount = mobile ? 380 : 760
-  const southAfricaCount = mobile ? 45 : 90
-  const count = worldCount + africaCount + southAfricaCount
+  const worldCount = mobile ? 460 : 900
+  const landCounts = LAND.map(land => Math.round((mobile ? 440 : 1150) * land.weight / 5.3))
+  const southAfricaCount = mobile ? 30 : 70
+  const count = worldCount + landCounts.reduce((sum, n) => sum + n, 0) + southAfricaCount
   const positions = new Float32Array(count * 3)
   const scatter = new Float32Array(count * 3)
   const colors = new Float32Array(count * 3)
@@ -166,22 +177,23 @@ function buildParticles(mobile: boolean) {
         y * radius,
         Math.sin(theta) * radiusAtY * radius,
       ),
-      [0.62, 0.78, 0.95],
-      2 + random() * 0.8,
+       [0.32, 0.51, 0.7],
+       1.5 + random() * 0.65,
     )
   }
 
-  let placed = 0
-  while (placed < africaCount) {
-    const lng = -18 + random() * 70
-    const lat = -36 + random() * 74
-    if (!insidePolygon(lng, lat)) continue
-    addPoint(
-      latLngToPoint(lat, lng, 1.012 + random() * 0.012),
-      [0.9, 0.96, 1],
-      2.7 + random() * 0.9,
-    )
-    placed++
+  for (let region = 0; region < LAND.length; region++) {
+    const { outline, bounds } = LAND[region]
+    let placed = 0
+    while (placed < landCounts[region]) {
+      const lng = bounds[0] + random() * (bounds[1] - bounds[0])
+      const lat = bounds[2] + random() * (bounds[3] - bounds[2])
+      if (!insidePolygon(lng, lat, outline)) continue
+      addPoint(latLngToPoint(lat, lng, 1.012 + random() * 0.007),
+        region === 0 ? [0.85, 0.92, 0.98] : [0.66, 0.78, 0.9],
+        (region === 0 ? 2.4 : 2.1) + random() * 0.7)
+      placed++
+    }
   }
 
   for (let i = 0; i < southAfricaCount; i++) {
@@ -199,7 +211,22 @@ function buildParticles(mobile: boolean) {
   return { positions, scatter, colors, sizes }
 }
 
-function FrameScheduler({ active, mobile }: { active: boolean; mobile: boolean }) {
+const CONNECTIONS: [number, number][] = [[-26, 28],[-4,15],[25,-11],[43,-79]]
+function buildConnections() {
+  const hub = latLngToPoint(-26, 28, 1)
+  const positions: number[] = []
+  for (const [lat, lng] of CONNECTIONS.slice(1)) {
+    const end = latLngToPoint(lat, lng, 1)
+    for (let i = 0; i < 36; i++) {
+      const arc = (t: number) => hub.clone().lerp(end, t).normalize().multiplyScalar(1.027 + Math.sin(Math.PI * t) * 0.09)
+      const a = arc(i / 36), b = arc((i + 1) / 36)
+      positions.push(a.x, a.y, a.z, b.x, b.y, b.z)
+    }
+  }
+  return new Float32Array(positions)
+}
+
+function FrameScheduler({ active }: { active: boolean }) {
   const invalidate = useThree((state) => state.invalidate)
 
   useEffect(() => {
@@ -207,7 +234,7 @@ function FrameScheduler({ active, mobile }: { active: boolean; mobile: boolean }
     if (!active) return
     let frame = 0
     let lastFrame = 0
-    const minimumFrameTime = 1000 / (mobile ? 30 : 60)
+    const minimumFrameTime = 1000 / 60
     const tick = (time: number) => {
       if (!document.hidden && time - lastFrame >= minimumFrameTime) {
         lastFrame = time
@@ -217,7 +244,7 @@ function FrameScheduler({ active, mobile }: { active: boolean; mobile: boolean }
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [active, invalidate, mobile])
+  }, [active, invalidate])
 
   return null
 }
@@ -257,7 +284,7 @@ export const AboutGlobeScene = forwardRef<
     pointerY: 0,
     orientationX: 0,
     orientationY: 0,
-    yaw: 0,
+    yaw: -0.5,
     pitch: -0.08,
     velocityYaw: 0,
     velocityPitch: 0,
@@ -269,7 +296,10 @@ export const AboutGlobeScene = forwardRef<
   const enteredAt = useRef<number | null>(null)
   const tiltX = useRef(0)
   const tiltY = useRef(0)
+  const scrollTarget = useRef(0)
+  const scrollCurrent = useRef(0)
   const particles = useMemo(() => buildParticles(mobile), [mobile])
+  const connections = useMemo(() => buildConnections(), [])
   const pixelRatio = useThree((state) => state.gl.getPixelRatio())
   const uniforms = useMemo(
     () => ({
@@ -278,6 +308,13 @@ export const AboutGlobeScene = forwardRef<
     }),
     [pixelRatio],
   )
+
+  useEffect(() => {
+    const sample = () => { scrollTarget.current = Math.min(window.scrollY / (window.innerHeight * 1.1), 1) }
+    sample()
+    window.addEventListener("scroll", sample, { passive: true })
+    return () => window.removeEventListener("scroll", sample)
+  }, [])
 
   useImperativeHandle(
     controllerRef,
@@ -306,8 +343,8 @@ export const AboutGlobeScene = forwardRef<
         const pitchDelta = -dy * 0.004
         controls.yaw += yawDelta
         controls.pitch = clampPitch(controls.pitch + pitchDelta)
-        controls.velocityYaw = yawDelta / frameScale
-        controls.velocityPitch = pitchDelta / frameScale
+        controls.velocityYaw = THREE.MathUtils.lerp(controls.velocityYaw, yawDelta / frameScale, 0.45)
+        controls.velocityPitch = THREE.MathUtils.lerp(controls.velocityPitch, pitchDelta / frameScale, 0.45)
         controls.lastInteractionAt = performance.now()
       },
       endDrag() {
@@ -332,20 +369,23 @@ export const AboutGlobeScene = forwardRef<
     material.uniforms.uPixelRatio.value = pixelRatio
 
     const controls = controlsRef.current
-    const frameScale = Math.min(delta * 60, 2)
+    // Demand rendering pauses out of view. Never integrate the entire pause
+    // into the first visible frame when scrolling back toward the hero.
+    const dt = Math.min(delta, 0.05)
+    const frameScale = Math.min(dt * 60, 2)
     if (!controls.dragging) {
       controls.yaw += controls.velocityYaw * frameScale
       controls.pitch = clampPitch(
         controls.pitch + controls.velocityPitch * frameScale,
       )
-      const decay = Math.exp(-5.2 * delta)
+      const decay = Math.exp(-4.2 * dt)
       controls.velocityYaw *= decay
       controls.velocityPitch *= decay
       if (
         performance.now() - controls.lastInteractionAt > 1800 &&
         Math.abs(controls.velocityYaw) < 0.0004
       ) {
-        controls.yaw += delta * 0.075
+        controls.yaw += dt * 0.075
       }
     }
 
@@ -355,24 +395,43 @@ export const AboutGlobeScene = forwardRef<
     const targetTiltX = clampTilt(
       -controls.pointerY * 0.09 + controls.orientationY * 0.06,
     )
-    const smoothing = 1 - Math.exp(-5.5 * delta)
+    const smoothing = 1 - Math.exp(-5.5 * dt)
     tiltX.current += (targetTiltX - tiltX.current) * smoothing
     tiltY.current += (targetTiltY - tiltY.current) * smoothing
     tilt.rotation.x = tiltX.current
     tilt.rotation.y = tiltY.current
+    scrollCurrent.current += (scrollTarget.current - scrollCurrent.current) * smoothing
+    const baseScale = mobile ? 1.08 : 1.2
+    tilt.scale.setScalar(baseScale * (1 - scrollCurrent.current * 0.09))
+    tilt.position.y = 0.08 - scrollCurrent.current * 0.09
     globe.rotation.x = controls.pitch
     globe.rotation.y = controls.yaw
   })
 
   return (
     <>
-      <FrameScheduler active={active} mobile={mobile} />
+      <FrameScheduler active={active} />
+      <ambientLight intensity={0.8} />
+      <directionalLight color="#cedded" intensity={2.4} position={[-3, 3, 5]} />
+      <directionalLight color="#e8b04b" intensity={1.1} position={[3, -2, -1]} />
       <group
         ref={tiltRef}
-        position={mobile ? [0.3, -0.05, 0] : [2.05, -0.08, 0]}
-        scale={mobile ? 1.36 : 1.58}
-      >
+         position={[0, 0.08, 0]}
+         scale={mobile ? 1.08 : 1.2}
+       >
         <group ref={globeRef}>
+          <mesh scale={0.967}>
+            <sphereGeometry args={[1, mobile ? 24 : 40, mobile ? 16 : 28]} />
+            <meshPhysicalMaterial
+              color="#152a41"
+              roughness={0.4}
+              metalness={0.3}
+              clearcoat={0.24}
+              clearcoatRoughness={0.32}
+              emissive="#061321"
+              emissiveIntensity={0.28}
+            />
+          </mesh>
           <points>
             <bufferGeometry>
               <bufferAttribute
@@ -399,7 +458,7 @@ export const AboutGlobeScene = forwardRef<
               uniforms={uniforms}
               transparent
               depthWrite={false}
-              blending={THREE.AdditiveBlending}
+               blending={THREE.NormalBlending}
               toneMapped={false}
             />
           </points>
@@ -417,23 +476,25 @@ export const AboutGlobeScene = forwardRef<
             />
           </mesh>
 
-          <mesh scale={1.01}>
-            <sphereGeometry args={[1, mobile ? 20 : 30, mobile ? 14 : 20]} />
-            <meshBasicMaterial
-              color="#c8ddf4"
-              wireframe
-              transparent
-              opacity={0.035}
-              depthWrite={false}
-            />
-          </mesh>
+          <lineSegments>
+            <bufferGeometry>
+              <bufferAttribute attach="attributes-position" args={[connections, 3]} />
+            </bufferGeometry>
+            <lineBasicMaterial color="#b6cfe9" transparent opacity={0.27} depthWrite={false} />
+          </lineSegments>
+          {CONNECTIONS.map(([lat, lng], index) => (
+            <mesh key={`${lat}-${lng}`} position={latLngToPoint(lat, lng, 1.045).toArray()}>
+              <sphereGeometry args={[index === 0 ? 0.024 : 0.014, 8, 6]} />
+              <meshBasicMaterial color={index === 0 ? "#efbc74" : "#d7e7f7"} />
+            </mesh>
+          ))}
 
           <mesh rotation={[1.08, 0.15, 0.2]}>
             <torusGeometry args={[1.18, 0.003, 4, mobile ? 80 : 140]} />
             <meshBasicMaterial
               color="#b6dcff"
               transparent
-              opacity={0.2}
+               opacity={0.45}
               depthWrite={false}
             />
           </mesh>
@@ -442,7 +503,7 @@ export const AboutGlobeScene = forwardRef<
             <meshBasicMaterial
               color="#f4e2bd"
               transparent
-              opacity={0.12}
+               opacity={0.3}
               depthWrite={false}
             />
           </mesh>

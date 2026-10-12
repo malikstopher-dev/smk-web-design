@@ -2,9 +2,10 @@ import type { Metadata } from "next"
 import { JsonLd, breadcrumbSchema } from "@/components/json-ld"
 import { CtaBand } from "@/components/page-hero"
 import { InnerHero } from "@/components/inner-hero"
-import { Reveal } from "@/components/reveal"
 import { getDict } from "@/i18n/index"
 import { FilterableWorkGrid } from "@/components/work-grid"
+import { WorkExplorer } from "@/components/work-explorer"
+import { PROJECTS } from "@/lib/projects"
 import { siteAlternates, siteOpenGraph } from "@/lib/seo"
 
 export async function generateMetadata({
@@ -40,22 +41,16 @@ export default async function WorkPage({
         ])}
       />
 
-      <InnerHero eyebrow={d.nav.work} heading={d.workPage.title} subtext={d.workPage.lede} scene="work" />
+      <InnerHero eyebrow={d.nav.work} heading={d.workPage.title.replace("{n}", String(PROJECTS.length))} subtext={d.workPage.lede} scene="work" controls={d.sceneControls} link={{ href: "#work-explorer-heading", label: d.workPage.explorer.title }} previews={PROJECTS.filter(p => ["boma", "salem"].includes(p.slug))} />
 
-      <section className="mx-auto max-w-6xl px-6 sm:px-10">
+      <WorkExplorer projects={PROJECTS} locale={locale} dict={d} />
+
+      <section aria-labelledby="all-projects-heading" className="mx-auto mt-24 max-w-6xl px-6 sm:px-10">
         <div className="editorial-divider mb-12" />
-        <Reveal>
-          <FilterableWorkGrid locale={locale} dict={d} />
-        </Reveal>
-
-        <Reveal delay={120}>
-          <p className="mt-16 text-sm leading-relaxed text-white/40">
-            <span className="font-semibold text-white">
-              {d.aboutPage.factLineLead}
-            </span>{" "}
-            {d.aboutPage.factLineRest}
-          </p>
-        </Reveal>
+        <h2 id="all-projects-heading" className="display-md mb-8 text-white">
+          {d.home.allProjects}
+        </h2>
+        <FilterableWorkGrid locale={locale} dict={d} />
       </section>
 
       <CtaBand

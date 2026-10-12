@@ -19,26 +19,36 @@ export async function submitContact(
   const locale = String(formData.get("locale") ?? "en")
   const t = getDict(locale).contactPage.form.errors
 
-  const name = String(formData.get("name") ?? "").trim()
-  const email = String(formData.get("email") ?? "").trim()
-  const phone = String(formData.get("phone") ?? "").trim()
-  const service = String(formData.get("service") ?? "").trim()
-  const message = String(formData.get("message") ?? "").trim()
+  const text = (key: string) => {
+    const value = formData.get(key)
+    return typeof value === "string" ? value.trim() : ""
+  }
+  const name = text("name")
+  const email = text("email")
+  const phone = text("phone")
+  const service = text("service")
+  const message = text("message")
 
   const errors: ContactState["errors"] = {}
-  if (name.length < 2) errors.name = t.name
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = t.email
-  if (message.length < 10) errors.message = t.message
+  if (name.length < 2 || name.length > 120 || /[\r\n]/.test(name)) errors.name = t.name
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = t.email
+  if (message.length < 10 || message.length > 5000) errors.message = t.message
   if (Object.keys(errors).length > 0) {
     return { status: "error", errors }
   }
 
+  const accessKey = process.env.WEB3FORMS_ACCESS_KEY?.trim()
+  if (!accessKey || phone.length > 40 || service.length > 120) {
+    return { status: "error", message: t.send }
+  }
+
   const fd = new FormData()
-  fd.set("access_key", process.env.WEB3FORMS_ACCESS_KEY ?? "")
+  fd.set("access_key", accessKey)
   fd.set("from_name", "SMK Web Design Contact")
   fd.set("subject", `New enquiry from ${name}`)
   fd.set("name", name)
   fd.set("email", email)
+  fd.set("replyto", email)
   fd.set("phone", phone || "Not provided")
   fd.set("service", service || "General enquiry")
   fd.set("message", message)
@@ -48,6 +58,7 @@ export async function submitContact(
       method: "POST",
       body: fd,
       headers: { Accept: "application/json" },
+      signal: AbortSignal.timeout(12000),
     })
     const data = (await res.json().catch(() => ({}))) as { success?: boolean }
     if (res.ok && data.success) {

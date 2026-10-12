@@ -9,15 +9,15 @@ import type { Locale } from "@/i18n/config"
 
 /* ─────────────────────────────────────────────────────────────
    SITE-WIDE GLOBE SYSTEM
-   One source of truth: GlobeMarkers (cobe).
+   One source of truth: GlobeMarkers (textured Earth).
 
    - Home page hero: GlobeSection renders the large in-flow globe
      directly (this component returns null on "/" routes).
    - Internal pages: this component renders the small persistent
-     corner globe — same materials, dots, colour and motion.
+     corner globe — same surface, markers, colour and motion.
 
    The layout wraps every locale route, so the corner globe
-   survives client-side navigation without re-initialising cobe.
+   survives client-side navigation without re-initialising the renderer.
    ───────────────────────────────────────────────────────────── */
 
 function isHome(pathname: string) {
@@ -52,12 +52,12 @@ export function GlobeHUD({ locale }: { locale: Locale }) {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  if (isHome(pathname)) return null
+  if (isHome(pathname) || pathname.split("/").filter(Boolean)[1] === "about") return null
 
   const markers = CLIENT_GEO.map((m) => ({
     ...m,
-    country: d.globe.markers[m.id]?.country ?? m.country,
-    work: d.globe.markers[m.id]?.work ?? m.work,
+    country: d.globe.markers[m.id]?.country ?? m.id,
+    work: d.globe.markers[m.id]?.work ?? "",
   }))
   const active = markers.find((m) => m.id === selected) ?? null
 

@@ -34,7 +34,7 @@ const WAVE_VERTEX = `
     float eased = 1.0 - pow(1.0 - uProgress, 3.0);
     vec3 settled = position;
     // Ripple: two crossing sine waves scrolling with uScroll.
-    float wave = sin(settled.x * 1.6 + uTime * 0.9 + aPhase) * 0.5
+    float wave = sin(settled.x * 1.6 + uTime * 0.9 + aPhase + uScroll) * 0.5
                + sin(settled.z * 2.1 - uTime * 0.7 + aPhase * 1.7) * 0.5;
     settled.y += wave * 0.22;
     vec3 transformed = mix(position + aScatter, settled, eased);
@@ -189,8 +189,9 @@ export const WaveTerrainScene = forwardRef<
   {
     active: boolean
     mobile: boolean
+    selection?: number
   }
->(function WaveTerrainScene({ active, mobile }, controllerRef) {
+>(function WaveTerrainScene({ active, mobile, selection = 0 }, controllerRef) {
   const controlsRef = useRef<WaveControls>({
     dragging: false,
     pointerX: 0,
@@ -204,6 +205,7 @@ export const WaveTerrainScene = forwardRef<
     lastInteractionAt: 0,
   })
   const tiltRef = useRef<THREE.Group>(null)
+  const stackRef = useRef<THREE.Group>(null)
   const materialRef = useRef<THREE.ShaderMaterial>(null)
   const enteredAt = useRef<number | null>(null)
   const smoothedTilt = useRef(0.12)
@@ -303,13 +305,39 @@ export const WaveTerrainScene = forwardRef<
     const smoothing = 1 - Math.exp(-5.5 * delta)
     smoothedTilt.current += (targetTilt - smoothedTilt.current) * smoothing
     tilt.rotation.x = controls.tilt + smoothedTilt.current
+    tilt.rotation.y = THREE.MathUtils.damp(tilt.rotation.y, controls.scroll * 0.6 + controls.pointerX * 0.25, 5, delta)
+    if (stackRef.current) {
+      stackRef.current.position.y = 0.3 + Math.sin(state.clock.elapsedTime * 0.65) * 0.08
+      stackRef.current.children.forEach((layer, index) => {
+        layer.position.y = THREE.MathUtils.damp(layer.position.y, -index * (0.4 + (selection % 3) * 0.1), 4, delta)
+      })
+    }
   })
 
   return (
     <>
       <FrameScheduler active={active} mobile={mobile} />
+      <ambientLight intensity={0.9} />
+      <directionalLight position={[-3, 4, 5]} intensity={3.5} color="#d8e6f2" />
+      <directionalLight position={[3, -1, 2]} intensity={1.6} color="#e8b04b" />
       <group ref={tiltRef} rotation={[0.12, 0, 0]}>
-        <points>
+        <group ref={stackRef} rotation={[0.55, -0.5, 0.2]} position={[0, 0.3, 0]} scale={1.25}>
+          {[0, 1, 2].map(layer => <group key={layer} position={[0, -layer * 0.4, 0]}>
+            <mesh>
+              <boxGeometry args={[1.75, 0.065, 1.4]} />
+              <meshStandardMaterial color={layer === 0 ? "#a1b8c9" : "#253c51"} metalness={0.6} roughness={0.3} />
+            </mesh>
+            <mesh position={[0, 0.038, 0.57]}>
+              <boxGeometry args={[1.48, 0.012, 0.035]} />
+              <meshBasicMaterial color={layer === 0 ? "#e8b04b" : "#6a899d"} />
+            </mesh>
+            {[-0.46, 0, 0.46].map(x => <mesh key={x} position={[x, 0.038, -0.06]}>
+              <boxGeometry args={[0.38, 0.012, 0.65]} />
+              <meshStandardMaterial color="#14263a" metalness={0.3} roughness={0.4} />
+            </mesh>)}
+          </group>)}
+        </group>
+        <points scale={0.4} position={[0, -0.4, 0]}>
           <bufferGeometry>
             <bufferAttribute
               attach="attributes-position"

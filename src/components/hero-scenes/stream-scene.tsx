@@ -322,8 +322,8 @@ export const StreamScene = forwardRef<
       <FrameScheduler active={active} mobile={mobile} />
       <group
         ref={tiltRef}
-        position={mobile ? [0, -0.02, 0] : [2.3, -0.02, 0]}
-        scale={mobile ? 1.45 : 1.68}
+        position={[0, 0.05, 0]}
+        scale={mobile ? 1 : 1.12}
       >
         <group ref={discRef} rotation={[0.5, 0, 0]}>
           <points>
