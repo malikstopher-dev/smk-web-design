@@ -1,4 +1,4 @@
-import { email, emailHref, hours, phoneDisplay, phoneE164, telUrl, whatsappBase } from "@/lib/contact"
+import { email, emailHref, hours, phoneDisplay, phoneE164, telUrl, whatsappBase, whatsappDisplay } from "@/lib/contact"
 
 export const SITE = {
   name: "Stopher Malik",
@@ -16,7 +16,7 @@ export const SITE = {
   },
   whatsapp: {
     number: phoneE164,
-    label: phoneDisplay,
+    label: whatsappDisplay,
     url: whatsappBase,
   },
   phone: phoneE164,

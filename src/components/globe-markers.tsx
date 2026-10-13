@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import type { createEarthGlobe } from "@/lib/earth-globe"
+import { createEarthGlobe } from "@/lib/earth-globe"
 import type { ClientGeo } from "@/lib/markers"
 import { SCENE_MOTION, sceneFrame, subscribeScene, wakeScene } from "@/lib/scene-runtime"
 import styles from "./globe-markers.module.css"
@@ -167,8 +167,8 @@ export function GlobeMarkers({ markers, className = "", speed = 0.0022, onSelect
     delete wrap.dataset.ready
     delete wrap.dataset.fallback
     canvas.style.opacity = "0"
-    // The renderer (and Three.js) only loads when the globe approaches view.
-    void import("@/lib/earth-globe").then(({ createEarthGlobe }) => {
+    // Initialise near the viewport; the module is shared with the planet scene.
+    try {
       if (cancelled) return
       globe = createEarthGlobe(canvas, {
         compact: sceneFrame.compact,
@@ -182,9 +182,9 @@ export function GlobeMarkers({ markers, className = "", speed = 0.0022, onSelect
         onTextureLoad: wakeScene,
       })
       wakeScene()
-    }).catch(() => {
+    } catch {
       if (!cancelled) wrap.dataset.fallback = "true"
-    })
+    }
     const unsubscribe = subscribeScene(s => {
       if (!inView || !globe) return
       const dt = s.delta

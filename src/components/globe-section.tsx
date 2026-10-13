@@ -20,6 +20,8 @@ export function GlobeSection({ globe }: { globe: Dict["globe"] }) {
 
   return (
     <figure className="mx-auto w-full max-w-xl">
+      <link rel="preload" as="image" href="/planets/earth-day-2k.jpg" fetchPriority="high" />
+      {["earth-night-1k.jpg", "earth-clouds-1k.jpg", "jupiter-2k.jpg", "saturn-2k.jpg", "mars-2k.jpg", "venus-2k.jpg", "moon_1024.jpg"].map(texture => <link key={texture} rel="preload" as="image" href={`/planets/${texture}`} />)}
       <div data-solar-stage className="relative isolate aspect-square w-full">
         <div data-hero-planets aria-hidden className="pointer-events-none absolute inset-0"><PlanetsScene /></div>
         <div className="absolute inset-0 flex items-center justify-center">

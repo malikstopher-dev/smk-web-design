@@ -1,13 +1,14 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import * as T from "three"
 import { SCENE_MOTION, subscribeScene, wakeScene } from "@/lib/scene-runtime"
 
 // The same locally licensed maps and five bodies. Coordinates are now framed
 // against the frustum, keeping Saturn visible on both wide and tall viewports.
 const BODIES = [
   { id: "jupiter", texture: "/planets/jupiter-2k.jpg", radius: .078, mobileRadius: .078, depth: -5.6, x: -.72, y: -.54, mobileX: -.72, mobileY: -.54, spin: 0.12, drift: 0.08, rim: [0.97, 0.77, 0.52], roughness: 0.86 },
-  { id: "saturn", texture: "/planets/saturn-2k.jpg", radius: .06, mobileRadius: .06, depth: -7.2, x: -.64, y: .65, mobileX: -.64, mobileY: .65, spin: 0.09, drift: 0.07, rim: [0.93, 0.84, 0.62], roughness: 0.9 },
+  { id: "saturn", texture: "/planets/saturn-2k.jpg", radius: .06, mobileRadius: .06, depth: -7.2, x: -.56, y: .65, mobileX: -.56, mobileY: .65, spin: 0.09, drift: 0.07, rim: [0.93, 0.84, 0.62], roughness: 0.9 },
   { id: "mars", texture: "/planets/mars-2k.jpg", radius: .035, mobileRadius: .04, depth: -8.2, x: .76, y: -.28, mobileX: .76, mobileY: -.28, spin: 0.075, drift: 0.05, rim: [0.9, 0.42, 0.22], roughness: 0.98 },
   { id: "venus", texture: "/planets/venus-2k.jpg", radius: .038, mobileRadius: .043, depth: -9, x: .42, y: -.83, mobileX: .42, mobileY: -.83, spin: 0.055, drift: 0.045, rim: [0.96, 0.7, 0.38], roughness: 0.94 },
   { id: "moon", texture: "/planets/moon_1024.jpg", radius: .052, mobileRadius: .058, depth: -2.6, x: .68, y: .65, mobileX: .68, mobileY: .65, spin: 0.045, drift: 0.05, rim: [0.65, 0.72, 0.86], roughness: 1 },
@@ -26,6 +27,8 @@ const SURFACE_VERTEX = `
 `
 const SURFACE_FRAGMENT = `
   uniform sampler2D uTexture;
+  uniform float uLoaded;
+  uniform vec3 uBaseColour;
   uniform vec3 uLight;
   uniform float uRoughness;
   uniform float uMoon;
@@ -44,7 +47,7 @@ const SURFACE_FRAGMENT = `
     vec3 lightDir = normalize(uLight);
     // SRGBColorSpace textures are decoded by WebGL on sampling. Work in
     // linear light here, then convert to display colour once at the end.
-    vec3 tex = texture2D(uTexture, vUv).rgb;
+    vec3 tex = mix(uBaseColour, texture2D(uTexture, vUv).rgb, uLoaded);
     // Very shallow relief from local texture variation on the rocky bodies.
     // This preserves the silhouette and does not pretend to be elevation data.
     if (uRelief > 0.0) {
@@ -149,7 +152,7 @@ export function PlanetsScene() {
     let destroyed = false
     let dispose = () => {}
 
-    void import("three").then(T => {
+    const initialise = () => {
       if (destroyed) return
       const compactAtMount = matchMedia("(max-width: 767px), (pointer: coarse)").matches
       let renderer: InstanceType<typeof T.WebGLRenderer>
@@ -186,7 +189,11 @@ export function PlanetsScene() {
         axis.rotation.x = config.id === "saturn" ? 0.55 : 0.06
         axis.rotation.z = config.id === "saturn" ? -0.24 : 0.1
         const ringNormal = new T.Vector3(0, 1, 0).applyEuler(axis.rotation)
-        const texture = loader.load(config.texture)
+        const texture = loader.load(config.texture, () => {
+          if (destroyed) return
+          surfaceMaterial.uniforms.uLoaded.value = 1
+          wakeScene()
+        }, undefined, () => { canvas.dataset.textureError = config.id })
         texture.colorSpace = T.SRGBColorSpace
         texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), compactAtMount ? 2 : 8)
         texture.minFilter = T.LinearMipmapLinearFilter
@@ -194,6 +201,7 @@ export function PlanetsScene() {
         const surfaceMaterial = new T.ShaderMaterial({
           uniforms: {
             uTexture: { value: texture }, uLight: { value: light },
+            uLoaded: { value: 0 }, uBaseColour: { value: new T.Color(...config.rim) },
             uRoughness: { value: config.roughness }, uMoon: { value: config.id === "moon" ? 1 : 0 },
             uRelief: { value: config.id === "moon" ? 0.035 : config.id === "mars" ? 0.012 : 0 },
             uVenus: { value: config.id === "venus" ? 1 : 0 }, uSaturn: { value: config.id === "saturn" ? 1 : 0 },
@@ -313,8 +321,9 @@ export function PlanetsScene() {
         }
         // Parallel camera translation gives unequal screen movement at each Z.
         // Keep orientation stable so the environment never tilts the text.
-        camera.position.set(pointerX * SCENE_MOTION.planetPointer.x * amount,
-          -pointerY * SCENE_MOTION.planetPointer.y * amount - progress * 0.6, 11 + progress * 0.8)
+        // Reserve the ring's full diameter plus pointer travel inside the canvas.
+        camera.position.set(pointerX * SCENE_MOTION.planetPointer.x * amount * .3,
+          -pointerY * SCENE_MOTION.planetPointer.y * amount * .3 - progress * 0.6, 11 + progress * 0.8)
         renderer.render(scene, camera)
         canvas.dataset.sceneTime = time.toFixed(2)
       })
@@ -347,10 +356,11 @@ export function PlanetsScene() {
         sunMaterial.dispose()
         renderer.dispose()
       }
-    }).catch(() => {
+    }
+    try { initialise() } catch {
       if (!destroyed) canvas.dataset.fallback = "unavailable"
       dispose()
-    })
+    }
 
     return () => { destroyed = true; dispose() }
   }, [])

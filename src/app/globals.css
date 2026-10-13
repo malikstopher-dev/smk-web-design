@@ -608,38 +608,10 @@
   50% { opacity: 0; }
 }
 
-/* ── CONTACT: custom cursor ── */
-.smk-cursor-dot {
-  position: fixed;
-  left: -100px;
-  top: -100px;
-  z-index: 90;
-  width: 10px;
-  height: 10px;
-  margin: -5px 0 0 -5px;
-  border-radius: 9999px;
-  background: #e8b04b;
-  pointer-events: none;
-  opacity: 0;
-  transition: width 220ms ease, height 220ms ease, margin 220ms ease,
-    background 220ms ease, border-color 220ms ease, opacity 220ms ease;
-}
-.smk-cursor-on .smk-cursor-dot { opacity: 1; }
-html.smk-cursor-on,
-html.smk-cursor-on * { cursor: none !important; }
-.smk-cursor-dot.smk-cursor-ring {
-  width: 50px;
-  height: 50px;
-  margin: -25px 0 0 -25px;
-  background: transparent;
-  border: 1.5px solid #e8b04b;
-}
-
-/* ── CONTACT: drifting gold gradient mesh ── */
+/* Contact uses the native cursor and static lighting. */
 .smk-mesh {
   position: absolute;
   border-radius: 9999px;
-  will-change: transform;
 }
 .smk-mesh-a {
   width: 60vw;
@@ -652,7 +624,6 @@ html.smk-cursor-on * { cursor: none !important; }
     rgba(232, 176, 75, 0.03) 40%,
     transparent 70%
   );
-  animation: smk-mesh-drift-a 14s ease-in-out infinite alternate;
 }
 .smk-mesh-b {
   width: 50vw;
@@ -665,7 +636,6 @@ html.smk-cursor-on * { cursor: none !important; }
     rgba(232, 176, 75, 0.02) 45%,
     transparent 70%
   );
-  animation: smk-mesh-drift-b 14s ease-in-out infinite alternate;
 }
 @keyframes smk-mesh-drift-a {
   from { transform: translate(0, 0) scale(1); }
