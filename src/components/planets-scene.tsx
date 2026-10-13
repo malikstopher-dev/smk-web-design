@@ -4,14 +4,14 @@ import { useEffect, useRef } from "react"
 import * as T from "three"
 import { SCENE_MOTION, subscribeScene, wakeScene } from "@/lib/scene-runtime"
 
-// The same locally licensed maps and five bodies. Coordinates are now framed
-// against the frustum, keeping Saturn visible on both wide and tall viewports.
+// The five existing textured bodies frame the full hero, not just Earth's
+// square stage. Coordinates use the camera frustum (-1 to 1 in each axis).
 const BODIES = [
-  { id: "jupiter", texture: "/planets/jupiter-2k.jpg", radius: .078, mobileRadius: .078, depth: -5.6, x: -.72, y: -.54, mobileX: -.72, mobileY: -.54, spin: 0.12, drift: 0.08, rim: [0.97, 0.77, 0.52], roughness: 0.86 },
-  { id: "saturn", texture: "/planets/saturn-2k.jpg", radius: .06, mobileRadius: .06, depth: -7.2, x: -.56, y: .65, mobileX: -.56, mobileY: .65, spin: 0.09, drift: 0.07, rim: [0.93, 0.84, 0.62], roughness: 0.9 },
-  { id: "mars", texture: "/planets/mars-2k.jpg", radius: .035, mobileRadius: .04, depth: -8.2, x: .76, y: -.28, mobileX: .76, mobileY: -.28, spin: 0.075, drift: 0.05, rim: [0.9, 0.42, 0.22], roughness: 0.98 },
-  { id: "venus", texture: "/planets/venus-2k.jpg", radius: .038, mobileRadius: .043, depth: -9, x: .42, y: -.83, mobileX: .42, mobileY: -.83, spin: 0.055, drift: 0.045, rim: [0.96, 0.7, 0.38], roughness: 0.94 },
-  { id: "moon", texture: "/planets/moon_1024.jpg", radius: .052, mobileRadius: .058, depth: -2.6, x: .68, y: .65, mobileX: .68, mobileY: .65, spin: 0.045, drift: 0.05, rim: [0.65, 0.72, 0.86], roughness: 1 },
+  { id: "jupiter", texture: "/planets/jupiter-2k.jpg", radius: .078, mobileRadius: .078, depth: -5.6, x: .055, y: -.55, mobileX: -.8, mobileY: -.84, spin: 0.12, drift: 0.08, rim: [0.97, 0.77, 0.52], roughness: 0.86 },
+  { id: "saturn", texture: "/planets/saturn-2k.jpg", radius: .032, mobileRadius: .052, depth: -7.2, x: -.49, y: .69, mobileX: -.73, mobileY: -.02, spin: 0.09, drift: 0.07, rim: [0.93, 0.84, 0.62], roughness: 0.9 },
+  { id: "mars", texture: "/planets/mars-2k.jpg", radius: .035, mobileRadius: .04, depth: -8.2, x: .85, y: -.1, mobileX: .8, mobileY: -.78, spin: 0.075, drift: 0.05, rim: [0.9, 0.42, 0.22], roughness: 0.98 },
+  { id: "venus", texture: "/planets/venus-2k.jpg", radius: .038, mobileRadius: .043, depth: -9, x: .16, y: .58, mobileX: .78, mobileY: -.28, spin: 0.055, drift: 0.045, rim: [0.96, 0.7, 0.38], roughness: 0.94 },
+  { id: "moon", texture: "/planets/moon_1024.jpg", radius: .052, mobileRadius: .058, depth: -2.6, x: .79, y: .47, mobileX: .84, mobileY: .35, spin: 0.045, drift: 0.05, rim: [0.65, 0.72, 0.86], roughness: 1 },
 ] as const
 
 const SURFACE_VERTEX = `
@@ -289,7 +289,9 @@ export function PlanetsScene() {
             const halfH = Math.tan(19 * Math.PI / 180) * (11 - cfg.depth)
             body.baseX = (s.compact ? cfg.mobileX : cfg.x) * halfH * camera.aspect
             body.baseY = (s.compact ? cfg.mobileY : cfg.y) * halfH
-            const radius = (s.compact ? cfg.mobileRadius : cfg.radius) * halfH * camera.aspect * 2
+            // Size against the shorter hero dimension. A full-width desktop
+            // canvas must not inflate Saturn's rings or the smaller planets.
+            const radius = (s.compact ? cfg.mobileRadius : cfg.radius) * halfH * 2 * Math.min(1, camera.aspect)
             body.axis.scale.setScalar(radius)
             body.surfaceMaterial.uniforms.uRadius.value = radius
             if (body.ringMaterial) body.ringMaterial.uniforms.uRadius.value = radius
@@ -311,12 +313,14 @@ export function PlanetsScene() {
         for (const body of bodies) {
           const cfg = body.config
           const depthWeight = 10 / (11 - cfg.depth)
+          const drift = cfg.drift * (s.compact ? 3.3 : 1)
+          const travel = time * (s.compact ? 0.8 : 0.38)
           body.anchor.position.set(
-            body.baseX + Math.sin(time * 0.38 + cfg.depth) * cfg.drift * amount,
-            body.baseY + Math.sin(time * 0.28 + cfg.x) * cfg.drift * 0.7 * amount + progress * depthWeight * 1.35 * amount,
+            body.baseX + Math.sin(travel + cfg.depth) * drift * (s.compact && cfg.id === "moon" ? 0.2 : 1),
+            body.baseY + Math.cos(travel * 0.8 + cfg.x) * drift * 0.7 + progress * depthWeight * 1.35 * amount,
             cfg.depth - progress * depthWeight * 2.1,
           )
-          body.surface.rotation.y = time * cfg.spin + body.initialRotation
+          body.surface.rotation.y = time * cfg.spin * (s.compact ? 2.3 : 1) + body.initialRotation
           body.rimMaterial.uniforms.uIntensity.value = (cfg.id === "moon" ? 0.045 : 0.24) * (0.9 + Math.sin(time * 0.22) * 0.1)
         }
         // Parallel camera translation gives unequal screen movement at each Z.

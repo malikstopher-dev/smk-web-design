@@ -201,7 +201,10 @@ export function GlobeMarkers({ markers, className = "", speed = 0.0022, onSelect
           if (Math.abs(target.current.phi - phi.current) + Math.abs(target.current.theta - theta.current) < 0.001) target.current = null
         } else if (!focused && !pausedRef.current) {
           const inertia = Math.abs(velocity.current.x) > 0.008
-          phi.current += velocity.current.x * dt + (inertia ? 0 : (cinematic ? SCENE_MOTION.globeRadiansPerSecond : speed * 60) * dt)
+          const idleSpeed = cinematic
+            ? (s.compact ? 0.22 : SCENE_MOTION.globeRadiansPerSecond)
+            : speed * 60
+          phi.current += velocity.current.x * dt + (inertia ? 0 : idleSpeed * dt)
           theta.current = clamp(theta.current + velocity.current.y * dt, -0.65, 0.95)
           const decay = Math.exp(-SCENE_MOTION.dragDamping * dt)
           velocity.current.x *= decay

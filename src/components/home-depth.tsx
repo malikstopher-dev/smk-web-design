@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, type ReactNode } from "react"
+import { PlanetsScene } from "@/components/planets-scene"
 import { sceneFrame, subscribeScene, wakeScene } from "@/lib/scene-runtime"
 import styles from "./home-depth.module.css"
 
@@ -71,5 +72,8 @@ export function HomeDepth({ children, className }: { children: ReactNode; classN
     }
   }, [])
 
-  return <section ref={ref} data-home-depth className={`${className} ${styles.scene}`}>{children}</section>
+  return <section ref={ref} data-home-depth className={`${className} ${styles.scene}`}>
+    <div data-hero-planets aria-hidden className={styles.planets}><PlanetsScene /></div>
+    {children}
+  </section>
 }

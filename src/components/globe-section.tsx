@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react"
 import { GlobeMarkers } from "@/components/globe-markers"
-import { PlanetsScene } from "@/components/planets-scene"
 import { CLIENT_GEO } from "@/lib/markers"
 import type { Dict } from "@/i18n/types"
 
@@ -23,7 +22,6 @@ export function GlobeSection({ globe }: { globe: Dict["globe"] }) {
       <link rel="preload" as="image" href="/planets/earth-day-2k.jpg" fetchPriority="high" />
       {["earth-night-1k.jpg", "earth-clouds-1k.jpg", "jupiter-2k.jpg", "saturn-2k.jpg", "mars-2k.jpg", "venus-2k.jpg", "moon_1024.jpg"].map(texture => <link key={texture} rel="preload" as="image" href={`/planets/${texture}`} />)}
       <div data-solar-stage className="relative isolate aspect-square w-full">
-        <div data-hero-planets aria-hidden className="pointer-events-none absolute inset-0"><PlanetsScene /></div>
         <div className="absolute inset-0 flex items-center justify-center">
           <GlobeMarkers markers={markers} onSelect={setSelected} selectedId={selected} rotationStep={turn} paused={paused} interactionLabel={globe.interactionLabel} cinematic speed={0.00065} className="!w-[62%]" />
         </div>

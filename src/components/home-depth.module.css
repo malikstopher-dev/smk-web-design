@@ -18,6 +18,16 @@
    section. Horizontal clipping contains the rings without trapping scrolling. */
 .scene.scene { overflow-x: clip; overflow-y: visible; z-index: 0; }
 
+/* The planet canvas frames the whole landing scene; Earth stays in its own
+   interactive stage, while the smaller bodies can sit on either side. */
+.planets {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  height: min(100svh, 980px);
+  pointer-events: none;
+}
+
 .scene [data-hero-globe]::before {
   content: "";
   position: absolute;
