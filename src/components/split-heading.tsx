@@ -30,17 +30,16 @@ export function SplitHeading({
   id?: string
   style?: CSSProperties
 }) {
-  const [triggered, setTriggered] = useState(() =>
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? true
-      : false,
-  )
-  const ref = useRef<HTMLElement | null>(null)
+  const [triggered, setTriggered] = useState(false)
+  const ref = useRef<HTMLHeadingElement | null>(null)
 
   useEffect(() => {
     const el = ref.current
     if (!el || triggered) return
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const frame = requestAnimationFrame(() => setTriggered(true))
+      return () => cancelAnimationFrame(frame)
+    }
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
@@ -57,7 +56,7 @@ export function SplitHeading({
   const words = text.split(" ")
 
   return (
-    <Tag className={className} style={style} id={id}>
+    <Tag ref={ref} className={className} style={style} id={id} aria-label={text}>
       {words.map((word, i) => {
         const side = i % 2 === 0 ? -1 : 1
         // Stable decimal strings across Node SSR and the browser's CSS parser.

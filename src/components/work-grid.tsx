@@ -35,7 +35,7 @@ function CardBody({
           alt={dict.workPage.cardAlt.replace("{name}", project.name)}
           fill
           sizes="(max-width: 640px) calc(100vw - 48px), (max-width: 1024px) 50vw, 33vw"
-          className="object-cover"
+          className="object-contain"
         />
         {project.url && (
           <span aria-hidden className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/30 bg-[#03070f]/85 text-white">

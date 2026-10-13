@@ -81,7 +81,7 @@ export default async function HomePage({
             <h1 data-depth-title className="display-xl mt-6 text-white">
               Stopher Malik
             </h1>
-            <p data-depth-tagline className="mt-7 max-w-xl font-display text-3xl leading-[1.12] text-[#e8b04b] sm:text-4xl lg:text-[3.4rem]">
+            <p data-depth-tagline className="mt-7 max-w-xl font-display text-3xl leading-[1.12] text-[#ececea] sm:text-4xl lg:text-[3.4rem]">
               {d.hero.tagline}
             </p>
             <p data-depth-intro className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
@@ -92,7 +92,7 @@ export default async function HomePage({
                 href={SITE.whatsapp.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center gap-2.5 rounded-full bg-[#e8b04b] px-7 text-sm font-medium text-[#03070f] shadow-[0_14px_38px_-18px_rgba(232,176,75,0.95)] transition-[background-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:bg-[#f1c56b] hover:shadow-[0_18px_44px_-16px_rgba(232,176,75,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]"
+                className="inline-flex min-h-12 items-center gap-2.5 rounded-full border border-[#ececea] bg-[#ececea] px-7 text-sm font-medium text-[#141719] transition-colors duration-200 hover:border-white hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03070f]"
               >
                 <MessageCircle className="h-4 w-4" />
                 {d.hero.quoteCta}
@@ -146,7 +146,7 @@ export default async function HomePage({
         <SplitHeading
           id="services-heading"
           as="h2"
-          className="display-lg mt-4 text-[#e8b04b]"
+          className="display-lg mt-4 text-[#ececea]"
           text={d.home.servicesTitle}
         />
         <div className="mt-12">
