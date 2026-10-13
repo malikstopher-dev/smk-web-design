@@ -54,11 +54,11 @@ export default async function BlogPostPage({
   params: Promise<{ locale: string; slug: string }>
 }) {
   const { locale, slug } = await params
+  if (locale !== "en") {
+    redirect(`/en/blog/${slug}`)
+  }
   const post = getBlogPost(slug)
   if (!post) notFound()
-  if (locale !== "en") {
-    redirect(`/en/blog/${post.slug}`)
-  }
   const d = getDict(locale)
   const lp = (path: string) => `/${locale}${path}`
 
