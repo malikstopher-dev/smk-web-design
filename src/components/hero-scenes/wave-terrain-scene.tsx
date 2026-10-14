@@ -307,9 +307,14 @@ export const WaveTerrainScene = forwardRef<
     tilt.rotation.x = controls.tilt + smoothedTilt.current
     tilt.rotation.y = THREE.MathUtils.damp(tilt.rotation.y, controls.scroll * 0.6 + controls.pointerX * 0.25, 5, delta)
     if (stackRef.current) {
-      stackRef.current.position.y = 0.3 + Math.sin(state.clock.elapsedTime * 0.65) * 0.08
+      const time = state.clock.elapsedTime
+      const spread = 0.44 + (selection % 3) * 0.08 + (Math.sin(time * .95) * .5 + .5) * .24
+      stackRef.current.position.y = 0.42 + Math.sin(time * .95) * 0.15
+      stackRef.current.rotation.z = .2 + Math.sin(time * .6) * .1
       stackRef.current.children.forEach((layer, index) => {
-        layer.position.y = THREE.MathUtils.damp(layer.position.y, -index * (0.4 + (selection % 3) * 0.1), 4, delta)
+        layer.position.y = THREE.MathUtils.damp(layer.position.y, -index * spread, 4, delta)
+        layer.position.x = Math.sin(time * .95 + index * .7) * index * .12
+        layer.rotation.y = Math.sin(time * .7 + index * .8) * index * .06
       })
     }
   })

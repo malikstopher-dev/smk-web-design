@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { SignalDiagram } from "@/components/signal-diagram"
 import styles from "./signal-panels.module.css"
+import type { Dict } from "@/i18n/types"
 
 /* ═══════════════════════════════════════════════════════
    PROCESS TIMELINE — vertical line draws with scroll,
@@ -18,8 +19,10 @@ const EASE = "cubic-bezier(0.16, 1, 0.3, 1)"
 
 export function ProcessTimeline({
   steps,
+  controls,
 }: {
   steps: { title: string; body: string }[]
+  controls: Pick<Dict["sceneControls"], "pause" | "play">
 }) {
   const lineRef = useRef<HTMLDivElement>(null)
   const stepRefs = useRef<(HTMLLIElement | null)[]>([])
@@ -113,7 +116,7 @@ export function ProcessTimeline({
   return (
     <div className={styles.process}>
       <div className={styles.processVisual}>
-        <SignalDiagram stage={selected} process />
+        <SignalDiagram stage={selected} process controls={controls} />
         <p className={styles.stageCaption} aria-hidden="true">{steps[selected]?.title}</p>
       </div>
     <div className="relative mt-8 pl-10 sm:pl-14">

@@ -49,7 +49,7 @@ export function ServicesBoard({
           }}><span>{String(index + 1).padStart(2, "0")}</span><span>{dict.servicesPage.items[index].title}</span><ArrowUpRight aria-hidden size={16} /></button>)}
         </div>
         <div>
-        <SignalDiagram stage={selected} />
+        <SignalDiagram stage={selected} controls={dict.sceneControls} />
         {services.map((service, index) => {
           const item = dict.servicesPage.items[index]
           return (

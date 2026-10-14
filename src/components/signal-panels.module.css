@@ -54,7 +54,7 @@
 .pricing { scroll-margin-top: 100px; }
 .pricingGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; align-items: stretch; padding-top: 20px; perspective: 1300px; }
 .tier { position: relative; display: flex; flex-direction: column; width: 100%; padding: 30px 26px; text-align: left; border: 1px solid #ffffff24; border-radius: 12px; background: #09131fe8; color: #e6e8eb; cursor: pointer; transition: transform 450ms cubic-bezier(.22,1,.36,1), border-color 250ms, background 250ms; transform-origin: bottom center; }
-.tier[aria-checked="true"] { transform: translateY(-12px); border-color: #e8b04baa; background: linear-gradient(155deg, #213040, #0a1421 60%); box-shadow: 0 22px 36px #0005; }
+.tier[aria-checked="true"] { border-color: #e8b04baa; background: linear-gradient(155deg, #213040, #0a1421 60%); box-shadow: 0 22px 36px #0005; }
 .tier:focus-visible { outline: 2px solid #e8b04b; outline-offset: 5px; }
 .tierName { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; }
 .tierName i { width: 16px; height: 16px; border-radius: 50%; border: 1px solid #adb7c2; flex-shrink: 0; }
@@ -133,7 +133,6 @@
   .processVisual { position: relative; top: auto; }
   .processVisual .diagram { height: 240px; }
   .pricingGrid { gap: 24px; }
-  .tier[aria-checked="true"] { transform: translateY(-4px); }
   .price { font-size: 40px; }
   .summary { padding: 22px; }
   .summary .primary { width: 100%; }
@@ -147,4 +146,48 @@
 @media (prefers-reduced-motion: reduce) {
   .planes, .plane, .tier, .article, .letter, .envelope { transition: none; }
   .article:hover { transform: none; }
+}
+
+/* One unfolding motion for each board, shared by Services and Process. */
+.diagram { height: 260px; }
+.diagramOrbit { transform-style: preserve-3d; position: relative; top: 24px; z-index: 1; animation: boardOrbit 7s ease-in-out infinite; }
+.plane { --spread: 31px; animation: boardUnfold 7s ease-in-out infinite; }
+.diagram[data-stage="1"] .plane, .diagram[data-stage="3"] .plane { --spread: 38px; }
+.diagram[data-moving="false"] .diagramOrbit,
+.diagram[data-moving="false"] .plane { animation-play-state: paused; }
+@keyframes boardOrbit {
+  0%, 100% { transform: translateY(9px) rotateY(-9deg) rotateZ(-3deg); }
+  50% { transform: translateY(-9px) rotateY(11deg) rotateZ(4deg); }
+}
+@keyframes boardUnfold {
+  0%, 100% { transform: translate3d(0, 0, calc(var(--layer) * 17px)); }
+  50% { transform: translate3d(calc(var(--layer) * 6px), 0, calc(var(--layer) * var(--spread))); }
+}
+.motionToggle { position: absolute; bottom: 12px; right: 12px; z-index: 4; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #adbdcd40; border-radius: 50%; background: #0a1421e8; color: #d9e2eb; cursor: pointer; }
+.motionToggle:focus-visible { outline: 2px solid #f2efe9; outline-offset: 4px; }
+.envelopeFloat { position: absolute; inset: 0; transform-style: preserve-3d; animation: envelopeDrift 6s ease-in-out infinite; }
+.letter { animation: letterOpen 6s ease-in-out infinite; }
+.contactObject[data-moving="false"] .envelopeFloat,
+.contactObject[data-moving="false"] .letter { animation-play-state: paused; }
+.contactObject[data-focused="true"] .letter { animation: none; transform: translateZ(-1px) translateY(-60%); }
+.contactObject .motionToggle { right: 16%; bottom: 8%; }
+@keyframes envelopeDrift {
+  0%, 100% { transform: translateY(12px) rotateY(-9deg) rotateZ(-3deg); }
+  50% { transform: translateY(-12px) rotateY(12deg) rotateZ(3deg); }
+}
+@keyframes letterOpen {
+  0%, 100% { transform: translateZ(-1px) translateY(-14%); }
+  50% { transform: translateZ(-1px) translateY(-58%); }
+}
+.tier { transition: border-color 250ms, background 250ms, box-shadow 450ms; }
+.servicePanel:not([hidden]) { animation: panelSettle 550ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes panelSettle { from { transform: translateY(16px); opacity: .5; } to { transform: translateY(0); opacity: 1; } }
+@media (max-width: 640px) {
+  .diagram { height: 230px; }
+  .diagramOrbit { scale: .9; }
+  .contactObject { margin-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .diagramOrbit, .plane, .envelopeFloat, .letter, .servicePanel:not([hidden]) { animation: none; }
+  .motionToggle { display: none; }
 }

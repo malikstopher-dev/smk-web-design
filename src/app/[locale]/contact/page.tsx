@@ -94,7 +94,7 @@ export default async function ContactPage({
         title={d.contactPage.title}
         lede={d.contactPage.lede}
       />
-      <ContactSignal />
+      <ContactSignal controls={d.sceneControls} />
       <ContactMesh />
       </div>
 

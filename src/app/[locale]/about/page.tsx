@@ -85,7 +85,7 @@ export default async function AboutPage({
                 {d.aboutPage.processHeading}
               </h2>
             </Reveal>
-            <ProcessTimeline steps={d.aboutPage.process} />
+            <ProcessTimeline steps={d.aboutPage.process} controls={d.sceneControls} />
           </div>
 
           <div className="mt-24">
