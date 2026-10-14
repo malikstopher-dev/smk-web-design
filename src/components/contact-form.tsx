@@ -31,7 +31,24 @@ export function ContactForm({
   serviceOptions: string[]
   defaultService?: string
 }) {
-  const [state, action, pending] = useActionState(submitContact, initial)
+  const [state, action, pending] = useActionState(async (previous: ContactState, formData: FormData): Promise<ContactState> => {
+    const validated = await submitContact(previous, formData)
+    if (validated.status !== "ready" || !validated.submission) return validated
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(validated.submission),
+        signal: AbortSignal.timeout(15000),
+      })
+      const result = await response.json().catch(() => ({})) as { success?: boolean }
+      return response.ok && result.success
+        ? { status: "success" }
+        : { status: "error", message: labels.errors.send }
+    } catch {
+      return { status: "error", message: labels.errors.network }
+    }
+  }, initial)
   const formRef = useRef<HTMLFormElement>(null)
   const [filled, setFilled] = useState<string[]>([])
   const [focused, setFocused] = useState("")

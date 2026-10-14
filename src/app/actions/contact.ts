@@ -4,9 +4,10 @@ import { getDict } from "@/i18n/index"
 import { contactFieldValid } from "@/lib/contact-validation"
 
 export interface ContactState {
-  status: "idle" | "success" | "error"
+  status: "idle" | "ready" | "success" | "error"
   message?: string
   errors?: Partial<Record<"name" | "email" | "message", string>>
+  submission?: Record<string, string>
 }
 
 export async function submitContact(
@@ -43,30 +44,19 @@ export async function submitContact(
     return { status: "error", message: t.send }
   }
 
-  const fd = new FormData()
-  fd.set("access_key", accessKey)
-  fd.set("from_name", "SMK Web Design Contact")
-  fd.set("subject", `New enquiry from ${name}`)
-  fd.set("name", name)
-  fd.set("email", email)
-  fd.set("replyto", email)
-  fd.set("phone", phone || "Not provided")
-  fd.set("service", service || "General enquiry")
-  fd.set("message", message)
-
-  try {
-    const res = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      body: fd,
-      headers: { Accept: "application/json" },
-      signal: AbortSignal.timeout(12000),
-    })
-    const data = (await res.json().catch(() => ({}))) as { success?: boolean }
-    if (res.ok && data.success) {
-      return { status: "success" }
-    }
-    return { status: "error", message: t.send }
-  } catch {
-    return { status: "error", message: t.network }
+  // Web3Forms requires browser delivery on its standard plan. The owner
+  // approved exposing this public form identifier on 14 October 2026.
+  // Return only validated fields; never proxy the provider request here.
+  return {
+    status: "ready",
+    submission: {
+      access_key: accessKey,
+      from_name: "SMK Web Design Contact",
+      subject: `New enquiry from ${name}`,
+      name, email, replyto: email,
+      phone: phone || "Not provided",
+      service: service || "General enquiry",
+      message,
+    },
   }
 }
