@@ -1,6 +1,7 @@
 "use server"
 
 import { getDict } from "@/i18n/index"
+import { contactFieldValid } from "@/lib/contact-validation"
 
 export interface ContactState {
   status: "idle" | "success" | "error"
@@ -30,9 +31,9 @@ export async function submitContact(
   const message = text("message")
 
   const errors: ContactState["errors"] = {}
-  if (name.length < 2 || name.length > 120 || /[\r\n]/.test(name)) errors.name = t.name
-  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = t.email
-  if (message.length < 10 || message.length > 5000) errors.message = t.message
+  if (!contactFieldValid("name", name)) errors.name = t.name
+  if (!contactFieldValid("email", email)) errors.email = t.email
+  if (!contactFieldValid("message", message)) errors.message = t.message
   if (Object.keys(errors).length > 0) {
     return { status: "error", errors }
   }

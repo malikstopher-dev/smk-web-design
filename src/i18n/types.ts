@@ -158,6 +158,7 @@ export interface Dict {
       servicePlaceholder: string
       message: string
       messagePlaceholder: string
+      messageHint: string
       submit: string
       sending: string
       successTitle: string

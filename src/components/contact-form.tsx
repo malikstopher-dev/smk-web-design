@@ -7,6 +7,7 @@ import { submitContact, type ContactState } from "@/app/actions/contact"
 import styles from "./signal-panels.module.css"
 import type { Dict } from "@/i18n/types"
 import { SITE } from "@/lib/site"
+import { CONTACT_LIMITS, contactFieldValid } from "@/lib/contact-validation"
 
 const initial: ContactState = { status: "idle" }
 
@@ -74,9 +75,9 @@ export function ContactForm({
       className={styles.contactForm}
       onInput={event => {
         const form = event.currentTarget
-        setFilled(["name", "email", "message"].filter(name => {
+        setFilled((["name", "email", "message"] as const).filter(name => {
           const field = form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | null
-          return field && field.value.trim() && field.validity.valid
+          return field && contactFieldValid(name, field.value)
         }))
       }}
       onFocus={event => {
@@ -180,17 +181,21 @@ export function ContactForm({
             name="message"
             required
             rows={5}
-            minLength={10}
-            maxLength={5000}
+            minLength={CONTACT_LIMITS.message.min}
+            maxLength={CONTACT_LIMITS.message.max}
             value={values.message}
             onChange={event => setValues(value => ({ ...value, message: event.target.value }))}
             placeholder={labels.messagePlaceholder}
             aria-invalid={Boolean(state.errors?.message)}
-            aria-describedby={state.errors?.message ? "cf-message-error" : undefined}
+            aria-describedby={`cf-message-hint${state.errors?.message ? " cf-message-error" : ""}`}
             className={`w-full resize-y border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-white/25 focus:border-white/30 focus-visible:ring-2 focus-visible:ring-white/10 ${
               state.errors?.message ? "border-red-500 dark:border-red-500" : ""
             }`}
           />
+          <div id="cf-message-hint" className="mt-2 flex justify-between gap-4 text-xs text-slate-300">
+            <span>{labels.messageHint.replace("{min}", String(CONTACT_LIMITS.message.min)).replace("{max}", String(CONTACT_LIMITS.message.max))}</span>
+            <span aria-hidden="true">{values.message.trim().length} / {CONTACT_LIMITS.message.max}</span>
+          </div>
           <FieldError id="cf-message-error" msg={state.errors?.message} />
         </div>
       </div>

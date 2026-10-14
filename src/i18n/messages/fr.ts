@@ -338,6 +338,7 @@ export const fr: Dict = {
       servicePlaceholder: "Demande générale",
       message: "Détails du projet",
       messagePlaceholder: "Parlez-moi de votre entreprise et de ce que le site doit faire pour vous...",
+      messageHint: "Décrivez votre projet en {min} à {max} caractères.",
       submit: "Envoyer le message",
       sending: "Envoi…",
       successTitle: "Message envoyé",
@@ -353,7 +354,7 @@ export const fr: Dict = {
       errors: {
         name: "Veuillez saisir votre nom.",
         email: "Veuillez saisir une adresse email valide.",
-        message: "Dites-m'en un peu plus sur votre projet.",
+        message: "Saisissez 10 à 5 000 caractères. Les espaces au début et à la fin ne comptent pas.",
         send: "Échec de l'envoi. Essayez WhatsApp.",
         network: "Erreur réseau. Essayez WhatsApp.",
       },
