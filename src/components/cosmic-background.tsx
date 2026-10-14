@@ -1,7 +1,11 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import dynamic from "next/dynamic"
+import { usePathname } from "next/navigation"
 import { subscribeScene, wakeScene, type SceneFrame } from "@/lib/scene-runtime"
+
+const BackgroundPlanets = dynamic(() => import("./planets-scene").then(module => module.PlanetsScene), { ssr: false })
 
 const LAYERS = [
   { count: 145, mobile: 74, radius: 0.65, drift: 1.4, pointer: 9, scroll: 0.055, alpha: 0.4 },
@@ -11,6 +15,8 @@ const LAYERS = [
 
 export function CosmicBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const pathname = usePathname()
+  const isInnerPage = pathname.split("/").filter(Boolean).length > 1
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -93,7 +99,7 @@ export function CosmicBackground() {
     <div id="cosmic-nebula-1" />
     <div id="cosmic-nebula-2" />
     <canvas ref={canvasRef} id="cosmic-star-canvas" />
-    <div id="cosmic-moon" />
+    {isInnerPage && <BackgroundPlanets placement="background" />}
     <div id="noise-overlay" aria-hidden />
   </div>
 }

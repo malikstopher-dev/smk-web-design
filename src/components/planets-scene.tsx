@@ -14,6 +14,16 @@ const BODIES = [
   { id: "moon", texture: "/planets/moon_1024.jpg", radius: .052, mobileRadius: .058, depth: -2.6, x: .79, y: .47, mobileX: .84, mobileY: .35, spin: 0.045, drift: 0.05, rim: [0.65, 0.72, 0.86], roughness: 1 },
 ] as const
 
+// Keep the shared background's bodies in the margins, clear of inner-page
+// headings and interactive hero objects. Home retains its own composition.
+const BACKGROUND_POSITIONS = {
+  jupiter: { x: -.94, y: -.56, mobileX: -.91, mobileY: -.62 },
+  saturn: { x: .33, y: .67, mobileX: .54, mobileY: .68 },
+  mars: { x: -.82, y: .64, mobileX: -.76, mobileY: .69 },
+  venus: { x: .94, y: -.64, mobileX: .91, mobileY: -.82 },
+  moon: { x: .84, y: .60, mobileX: .89, mobileY: .15 },
+} as const
+
 const SURFACE_VERTEX = `
   varying vec2 vUv;
   varying vec3 vNormal;
@@ -143,7 +153,7 @@ const RING_FRAGMENT = `
   }
 `
 
-export function PlanetsScene() {
+export function PlanetsScene({ placement = "hero" }: { placement?: "hero" | "background" }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -273,7 +283,7 @@ export function PlanetsScene() {
       const view = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; wakeScene() })
       view.observe(canvas)
       const unsubscribe = subscribeScene(s => {
-        if (!inView || document.documentElement.dataset.innerHeroScene) return
+        if (!inView) return
         const dpr = Math.min(devicePixelRatio || 1, s.compact ? 1.25 : 1.75) * s.quality
         if (Math.abs(dpr - lastDpr) > 0.04 || canvasWidth !== lastWidth || canvasHeight !== lastHeight || s.compact !== lastCompact) {
           lastDpr = dpr
@@ -286,12 +296,13 @@ export function PlanetsScene() {
           camera.updateProjectionMatrix()
           for (const body of bodies) {
             const cfg = body.config
+            const position = placement === "background" ? BACKGROUND_POSITIONS[cfg.id] : cfg
             const halfH = Math.tan(19 * Math.PI / 180) * (11 - cfg.depth)
-            body.baseX = (s.compact ? cfg.mobileX : cfg.x) * halfH * camera.aspect
-            body.baseY = (s.compact ? cfg.mobileY : cfg.y) * halfH
+            body.baseX = (s.compact ? position.mobileX : position.x) * halfH * camera.aspect
+            body.baseY = (s.compact ? position.mobileY : position.y) * halfH
             // Size against the shorter hero dimension. A full-width desktop
             // canvas must not inflate Saturn's rings or the smaller planets.
-            const radius = (s.compact ? cfg.mobileRadius : cfg.radius) * halfH * 2 * Math.min(1, camera.aspect)
+            const radius = (s.compact ? cfg.mobileRadius : cfg.radius) * halfH * 2 * Math.min(1, camera.aspect) * (placement === "background" ? .8 : 1)
             body.axis.scale.setScalar(radius)
             body.surfaceMaterial.uniforms.uRadius.value = radius
             if (body.ringMaterial) body.ringMaterial.uniforms.uRadius.value = radius
@@ -367,7 +378,7 @@ export function PlanetsScene() {
     }
 
     return () => { destroyed = true; dispose() }
-  }, [])
+  }, [placement])
 
-  return <canvas ref={canvasRef} data-planet-scene aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
+  return <canvas ref={canvasRef} data-planet-scene data-placement={placement} aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
 }
