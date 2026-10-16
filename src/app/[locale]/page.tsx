@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowUpRight, MessageCircle } from "lucide-react"
-import { GlobeSection } from "@/components/globe-section"
 import { HomeDepth } from "@/components/home-depth"
 import {
   JsonLd,
@@ -13,7 +12,7 @@ import { CtaBand } from "@/components/page-hero"
 import { SplitHeading } from "@/components/split-heading"
 import { HomeServicesGrid } from "@/components/home-services-grid"
 import { WorkBoard } from "@/components/work-board"
-import { WordmarkBanner } from "@/components/wordmark-banner"
+import { ProjectOutcomes, ProjectProcess } from "@/components/project-guide"
 import { HTML_LANG } from "@/i18n/config"
 import { getDict } from "@/i18n/index"
 import { FEATURED_PROJECTS, PROJECTS } from "@/lib/projects"
@@ -33,22 +32,6 @@ export async function generateMetadata({
     alternates: siteAlternates(`/${locale}`),
     openGraph: siteOpenGraph({ locale, path: `/${locale}` }),
   }
-}
-
-function OrbitRings() {
-  return (
-    <div
-      aria-hidden
-      data-depth-orbits
-      className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
-    >
-      <span className="absolute rounded-full border border-white/[0.06]" style={{ width: "116%", height: "116%" }} />
-      <span className="absolute hidden rounded-full border border-white/[0.04] sm:block" style={{ width: "134%", height: "134%" }} />
-      <span className="absolute hidden rounded-full border border-dashed border-white/[0.08] sm:block" style={{ width: "154%", height: "154%" }}>
-        <span className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/70 shadow-[0_0_8px_2px_rgba(255,255,255,0.35)]" />
-      </span>
-    </div>
-  )
 }
 
 export default async function HomePage({
@@ -71,10 +54,10 @@ export default async function HomePage({
       <JsonLd data={personSchema(d.jsonld.personDesc)} />
       <JsonLd data={localBusinessSchema(d.jsonld.businessDesc)} />
 
-      <HomeDepth className="relative isolate flex min-h-[100svh] items-center px-6 pb-16 pt-28 sm:px-10 lg:pt-24">
+      <HomeDepth controls={d.sceneControls} className="flex items-center px-6 sm:px-10">
         <div data-hero-layout className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-4">
           <div data-hero-copy className="relative z-20 max-w-2xl">
-            <p className="tech-label flex items-center gap-3">
+            <p className="flex items-center gap-3 text-xs leading-relaxed text-white/70">
               <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[#e8b04b]" />
               {d.hero.eyebrowRole} · {d.hero.eyebrowLocation}
             </p>
@@ -111,12 +94,6 @@ export default async function HomePage({
             </p>
           </div>
 
-          <div data-depth-sphere data-hero-globe className="relative z-10 mx-auto w-full max-w-[38rem] lg:max-w-none">
-            <OrbitRings />
-            <div className="relative z-10">
-              <GlobeSection globe={d.globe} />
-            </div>
-          </div>
         </div>
       </HomeDepth>
 
@@ -135,7 +112,7 @@ export default async function HomePage({
         />
       </section>
 
-      <WordmarkBanner text={d.home.bannerText} className="mt-20" />
+      <ProjectOutcomes copy={d.projectGuide} />
 
       {/* ═══ SERVICES — Hairline list ═══ */}
       <section aria-labelledby="services-heading" className="mx-auto max-w-6xl px-6 sm:px-10">
@@ -151,12 +128,15 @@ export default async function HomePage({
         />
         <div className="mt-12">
           <HomeServicesGrid
+            controls={d.sceneControls}
             items={serviceItems}
             viewLabel={d.servicesPage.discuss}
             locale={locale}
           />
         </div>
       </section>
+
+      <ProjectProcess dict={d} locale={locale} />
 
       <CtaBand
         title={d.home.ctaTitle}

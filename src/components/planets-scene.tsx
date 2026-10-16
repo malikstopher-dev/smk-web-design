@@ -153,8 +153,10 @@ const RING_FRAGMENT = `
   }
 `
 
-export function PlanetsScene({ placement = "hero" }: { placement?: "hero" | "background" }) {
+export function PlanetsScene({ placement = "hero", paused = false }: { placement?: "hero" | "background"; paused?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const pausedRef = useRef(paused)
+  useEffect(() => { pausedRef.current = paused; wakeScene() }, [paused])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -282,6 +284,9 @@ export function PlanetsScene({ placement = "hero" }: { placement?: "hero" | "bac
       sizeObserver.observe(canvas)
       const view = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; wakeScene() })
       view.observe(canvas)
+      let animationTime = 0
+      let pointerX = 0
+      let pointerY = 0
       const unsubscribe = subscribeScene(s => {
         if (!inView) return
         const dpr = Math.min(devicePixelRatio || 1, s.compact ? 1.25 : 1.75) * s.quality
@@ -312,14 +317,18 @@ export function PlanetsScene({ placement = "hero" }: { placement?: "hero" | "bac
           canvas.dataset.dpr = dpr.toFixed(2)
           canvas.dataset.spheres = "5"
         }
-        const time = s.reduced ? 0 : s.time
+        if (!pausedRef.current && !s.reduced) {
+          animationTime += s.delta
+          pointerX = s.pointerX
+          pointerY = s.pointerY
+        }
+        const time = s.reduced ? 0 : animationTime
         // Earth and the surrounding bodies now share one in-flow display area.
         // Page scroll must not pull a second, independent composition across it.
         const progress = 0
         canvas.style.opacity = "1"
         const amount = s.compact ? 0.65 : 1
-        const pointerX = s.reduced ? 0 : s.pointerX
-        const pointerY = s.reduced ? 0 : s.pointerY
+        if (s.reduced) { pointerX = 0; pointerY = 0 }
         light.set(-0.65 + pointerX * 0.16 + Math.sin(time * 0.14) * 0.04, 0.38 - pointerY * 0.09, 0.7).normalize()
         for (const body of bodies) {
           const cfg = body.config

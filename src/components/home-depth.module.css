@@ -1,112 +1,57 @@
-.scene {
-  --title-depth: 0px;
-  --title-scale: 1;
-  --globe-depth: 0px;
-  --globe-scale: 1;
-  --orbit-depth: 0px;
-  --orbit-angle: 0deg;
-  --tagline-depth: 0px;
-  --tagline-scale: 1;
-  --title-opacity: 1;
-  --globe-opacity: 1;
-  --intro-depth: 0px;
-  --intro-opacity: 1;
-  --orbit-yaw: 0deg;
+.scene.scene {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  min-height: min(760px, 92svh);
+  padding-block: 9rem 5rem;
 }
-
-/* Same in-flow layout; the single globe is allowed to continue into the work
-   section. Horizontal clipping contains the rings without trapping scrolling. */
-.scene.scene { overflow-x: clip; overflow-y: visible; z-index: 0; }
-
-/* The planet canvas frames the whole landing scene; Earth stays in its own
-   interactive stage, while the smaller bodies can sit on either side. */
-.planets {
+.planets { position: absolute; inset: 0; z-index: -2; pointer-events: none; opacity: .65; }
+/* Earth shares the text's canvas; it never reserves a second grid row. */
+.earth {
   position: absolute;
-  inset: 0 0 auto;
-  z-index: 0;
-  height: min(100svh, 980px);
+  z-index: -1;
+  width: min(65vw, 780px);
+  right: -2%;
+  top: 50%;
+  transform: translateY(-45%);
   pointer-events: none;
+  mask-image: linear-gradient(90deg, transparent, #000 28%);
 }
-
-.scene [data-hero-globe]::before {
+.scene::after {
   content: "";
   position: absolute;
-  inset: 5%;
+  inset: 0;
   z-index: -1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 46% 38%, rgba(100, 147, 214, 0.16), rgba(40, 73, 126, 0.07) 42%, transparent 72%);
-  filter: blur(20px);
   pointer-events: none;
+  background: linear-gradient(90deg, rgba(3,7,15,.85), rgba(3,7,15,.5) 42%, transparent 75%);
 }
-
-/* Individual transform properties compose with the existing entrance motion. */
-.scene [data-depth-title] {
-  translate: 0 var(--title-depth);
-  scale: var(--title-scale);
-  transform-origin: center top;
-  opacity: var(--title-opacity);
+.scene [data-hero-layout] { display: block; }
+.scene [data-hero-copy] { max-width: 650px; }
+.scene [data-depth-title] { font-size: clamp(3.5rem, 7.8vw, 7.5rem); }
+.scene [data-depth-tagline] { max-width: 590px; text-wrap: balance; }
+.scene [data-depth-intro] { max-width: 500px; }
+.pause {
+  position: absolute; right: 1.5rem; bottom: 1rem; z-index: 20;
+  display: grid; place-items: center; width: 44px; height: 44px;
+  border: 1px solid #ffffff30; border-radius: 50%; color: #ececea; background: #03070f99;
 }
-
-.scene [data-depth-sphere] {
-  translate: 0 var(--globe-depth);
-  scale: var(--globe-scale);
-  opacity: var(--globe-opacity);
-  transform-origin: center center;
-}
-
-.scene [data-depth-orbits] {
-  transform: perspective(1100px) translateY(var(--orbit-depth)) rotateX(var(--orbit-angle)) rotateY(var(--orbit-yaw));
-  opacity: var(--globe-opacity);
-}
-
-.scene [data-depth-tagline] {
-  translate: 0 var(--tagline-depth);
-  scale: var(--tagline-scale);
-  transform-origin: center;
-}
-
-.scene [data-depth-intro] { translate: 0 var(--intro-depth); opacity: var(--intro-opacity); }
-.scene :global(.orbit-spin) { animation-duration: 45s; }
-.scene :global(.orbit-slow) { animation-duration: 28s; }
-.scene[data-stage="work"] [data-depth-sphere] { pointer-events: none; }
-
-/* Keep the complete Earth within the first portrait screen alongside the
-   offer and contact action. Country details remain in normal flow below it. */
-@media (max-width: 767px) {
-  .scene.scene {
-    padding-top: 5.5rem;
-    padding-bottom: 2.5rem;
-    align-items: flex-start;
+.pause:hover { background: #182331; }
+.pause:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+@media (max-width: 1023px) {
+  .scene.scene { min-height: 0; padding-block: 7.5rem 5rem; }
+  .earth {
+    width: min(85vw, 580px); top: auto; bottom: -22%; right: -15%; transform: none;
+    mask-image: linear-gradient(135deg, transparent 7%, #000 55%);
   }
-  .scene [data-hero-planets] { height: 100%; }
-  .scene [data-hero-layout] { gap: 0.75rem; }
-  .scene [data-depth-title] {
-    margin-top: 1rem;
-    font-size: clamp(2.3rem, 10.2vw, 3.75rem);
-  }
-  .scene [data-depth-tagline] {
-    margin-top: 1rem;
-    font-size: clamp(1.65rem, 6.3vw, 2.5rem);
-    text-wrap: balance;
-  }
-  .scene [data-depth-intro] { margin-top: 0.85rem; font-size: 0.9375rem; line-height: 1.5; }
-  .scene [data-hero-actions] { margin-top: 1.2rem; gap: 0.5rem; }
-  .scene [data-hero-actions] a { padding-inline: 1rem; font-size: 0.8125rem; }
-  .scene [data-earth-globe] { margin-inline: auto; }
-  .scene [data-solar-stage] { margin-block: 1rem; }
-  .scene [data-depth-orbits] { display: none; }
-  .scene [data-hero-globe] figcaption { margin-top: 0.25rem; }
+  .scene::after { background: linear-gradient(110deg, rgba(3,7,15,.88), rgba(3,7,15,.65) 53%, rgba(3,7,15,.08)); }
+  .scene [data-depth-title] { margin-top: 1.25rem; font-size: clamp(2.75rem, 8.5vw, 4.5rem); }
+  .scene [data-depth-tagline] { margin-top: 1rem; font-size: clamp(1.9rem, 5.7vw, 3rem); }
+  .scene [data-depth-intro] { margin-top: 1rem; font-size: 1rem; line-height: 1.6; }
+  .scene [data-hero-actions] { margin-top: 1.5rem; gap: .5rem; }
+  .scene [data-hero-actions] a { padding-inline: 1.1rem; font-size: .8125rem; }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .scene [data-depth-title],
-  .scene [data-depth-sphere],
-  .scene [data-depth-orbits],
-  .scene [data-depth-tagline],
-  .scene [data-depth-intro] {
-    translate: none;
-    scale: none;
-    transform: none;
-    opacity: 1;
-  }
+@media (max-width: 480px) {
+  .scene.scene { padding-block: 6.5rem 4.5rem; }
+  .earth { width: 100vw; right: -24%; bottom: -14%; }
 }
+@media (prefers-reduced-motion: reduce) { .pause { display: none; } }

@@ -5,6 +5,8 @@
 }
 
 .card {
+  display: flex;
+  flex-direction: column;
   grid-column: span 1;
   min-width: 0;
   min-height: 324px;
@@ -12,7 +14,7 @@
   border: 1px solid rgba(193, 210, 225, 0.18);
   background: linear-gradient(150deg, #101b2a 0%, #08111d 46%, #050b13 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 12px 28px rgba(0, 0, 0, 0.15);
-  transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: border-color 200ms;
 }
 
 .card::before {
@@ -28,8 +30,7 @@
 .card:hover,
 .card:focus-within {
   z-index: 1;
-  transform: translateY(-6px);
-  box-shadow: 0 25px 48px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  border-color: rgba(193, 210, 225, .45);
 }
 
 .featured {
@@ -38,6 +39,7 @@
 }
 
 .link {
+  flex: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -51,6 +53,7 @@
 }
 
 .visual {
+  flex-shrink: 0;
   position: relative;
   display: flex;
   align-items: center;
@@ -183,4 +186,53 @@
 @media (prefers-reduced-motion: reduce) {
   .card { transition: none; }
   .card:hover, .card:focus-within { transform: none; }
+}
+
+/* Each illustration has its own readable, continuous mechanical movement. */
+.layoutPanel { animation: assemble 5s ease-in-out infinite; transform-origin: 108px 82px; }
+.drawLines { stroke-dasharray: 1; animation: draw 5s ease-in-out infinite; }
+.layoutButton { animation: buttonBuild 5s ease-in-out infinite; transform-origin: 169px 112px; }
+.dataPacket { animation: packet 4.5s ease-in-out infinite; }
+.dataReply { animation: reply 4.5s ease-in-out -2s infinite; }
+.chartBars path { transform-box: fill-box; transform-origin: center bottom; animation: grow 5.5s ease-in-out infinite; }
+.chartBars path:nth-child(2) { animation-delay: -.3s; }
+.chartBars path:nth-child(3) { animation-delay: -.6s; }
+.chartBars path:nth-child(4) { animation-delay: -.9s; }
+.trendLine { stroke-dasharray: 1; animation: draw 5.5s ease-in-out infinite; }
+.trendDot { transform-box: fill-box; transform-origin: center; animation: dot 5.5s ease-in-out infinite; }
+.deployArrow { animation: deploy 4s ease-in-out infinite; }
+.deployPacket { animation: upload 4s ease-in-out infinite; }
+.designCursor { animation: cursor 6s ease-in-out infinite; }
+.clickRing { transform-origin: 209px 80px; animation: click 6s ease-in-out infinite; }
+.brandLeft { animation: brandLeft 6s ease-in-out infinite; }
+.brandRight { animation: brandRight 6s ease-in-out infinite; }
+.visual[data-moving="false"] svg * { animation-play-state: paused; }
+.motionControl {
+  position: absolute; bottom: 0; right: 0; width: 44px; height: 44px;
+  display: grid; place-items: center; color: #dce7ee; background: #091522d9;
+  border-top: 1px solid #ffffff16; border-left: 1px solid #ffffff16;
+}
+.motionControl svg { width: 12px; height: 12px; filter: none; }
+.motionControl:focus-visible { outline: 2px solid white; outline-offset: -3px; }
+.motionControl:hover { background: #23374c; }
+@keyframes assemble {
+  0%, 100% { transform: translate(-14px, 7px) scale(.9); opacity: .45; }
+  35%, 75% { transform: translate(0, 0) scale(1); opacity: 1; }
+}
+@keyframes draw { 0%, 100% { stroke-dashoffset: 1; opacity: .3; } 40%, 80% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes buttonBuild { 0%, 15%, 100% { transform: scaleX(.35); opacity: .4; } 45%, 80% { transform: scaleX(1); opacity: 1; } }
+@keyframes packet { 0%, 10% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 45% { transform: translate(34px, 0); } 70%, 100% { transform: translate(65px, -26px); opacity: 0; } }
+@keyframes reply { 0%, 10% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 45% { transform: translate(-19px, -28px); } 70%, 100% { transform: translate(-53px, -28px); opacity: 0; } }
+@keyframes grow { 0%, 100% { transform: scaleY(.35); } 40%, 75% { transform: scaleY(1); } }
+@keyframes dot { 0%, 25%, 100% { opacity: .2; transform: scale(.6); } 50%, 75% { opacity: 1; transform: scale(1.2); } }
+@keyframes deploy { 0%, 100% { transform: translateX(-12px); opacity: .35; } 50% { transform: translateX(5px); opacity: 1; } }
+@keyframes upload { 0% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 35% { transform: translate(31px, 0); } 55% { transform: translate(31px, 28px); } 80%, 100% { transform: translate(65px, 28px); opacity: 0; } }
+@keyframes cursor { 0%, 100% { transform: translate(-50px, 20px); } 45%, 70% { transform: translate(10px, 8px); } }
+@keyframes click { 0%, 40%, 75%, 100% { transform: scale(.3); opacity: 0; } 48% { opacity: .8; } 65% { transform: scale(1.9); opacity: 0; } }
+@keyframes brandLeft { 0%, 100% { transform: translateX(-18px); } 50% { transform: translateX(12px); } }
+@keyframes brandRight { 0%, 100% { transform: translateX(18px); } 50% { transform: translateX(-12px); } }
+@media (prefers-reduced-motion: reduce) {
+  .visual svg * { animation: none !important; }
+  .dataPacket, .dataReply, .deployPacket, .clickRing { display: none; }
+  .motionControl { display: none; }
 }

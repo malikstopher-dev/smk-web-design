@@ -212,8 +212,10 @@ export function GlobeMarkers({ markers, className = "", speed = 0.0022, onSelect
         }
       }
       const respond = cinematic && !dragging && !focused && !s.reduced
-      px += ((respond ? s.pointerX : 0) - px) * settle
-      py += ((respond ? s.pointerY : 0) - py) * settle
+      if (!pausedRef.current) {
+        px += ((respond ? s.pointerX : 0) - px) * settle
+        py += ((respond ? s.pointerY : 0) - py) * settle
+      }
       if (s.reduced) px = py = 0
       const curPhi = phi.current + px * SCENE_MOTION.globePointerYaw
       const curTheta = theta.current + py * SCENE_MOTION.globePointerPitch
