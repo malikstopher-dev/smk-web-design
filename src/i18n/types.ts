@@ -18,6 +18,22 @@ export interface LegalDocument {
 }
 
 export interface Dict {
+  projectGuide: {
+    title: string
+    intro: string
+    outcomes: { title: string; body: string }[]
+    processIntro: string
+    scopeTitle: string
+    scopeIntro: string
+    scope: { title: string; body: string }[]
+    pricingLink: string
+    pricingNote: string
+    faqTitle: string
+    faqs: { question: string; answer: string }[]
+    briefTitle: string
+    briefBody: string
+    briefPoints: string[]
+  }
   sceneControls: { drag: string; left: string; right: string; pause: string; play: string; search: string; all: string; empty: string }
   nav: {
     home: string

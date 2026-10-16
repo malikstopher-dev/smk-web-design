@@ -3,6 +3,7 @@ import { JsonLd, breadcrumbSchema } from "@/components/json-ld"
 import { InnerHero } from "@/components/inner-hero"
 import { Reveal } from "@/components/reveal"
 import { PricingCards } from "@/components/pricing-cards"
+import { PricingQuestions } from "@/components/project-guide"
 import { getDict } from "@/i18n/index"
 import { SITE } from "@/lib/site"
 import { siteAlternates, siteOpenGraph } from "@/lib/seo"
@@ -67,6 +68,7 @@ export default async function PricingPage({
           </p>
         </Reveal>
       </section>
+      <PricingQuestions copy={d.projectGuide} />
     </>
   )
 }

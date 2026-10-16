@@ -15,6 +15,7 @@ import {
 import { ContactForm } from "@/components/contact-form"
 import { ContactMesh } from "@/components/contact-anim"
 import { ContactSignal } from "@/components/contact-signal"
+import { ProjectBrief } from "@/components/project-guide"
 import styles from "@/components/signal-panels.module.css"
 import { JsonLd, breadcrumbSchema, localBusinessSchema } from "@/components/json-ld"
 import { PageHero } from "@/components/page-hero"
@@ -97,6 +98,8 @@ export default async function ContactPage({
       <ContactSignal controls={d.sceneControls} />
       <ContactMesh />
       </div>
+
+      <ProjectBrief copy={d.projectGuide} />
 
       <section className={`${styles.contactLayout} mx-auto grid max-w-6xl px-6 sm:px-10 lg:grid-cols-[1.15fr_0.85fr]`}>
         <Reveal>

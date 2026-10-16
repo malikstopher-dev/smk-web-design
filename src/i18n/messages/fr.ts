@@ -2,6 +2,37 @@ import type { Dict } from "@/i18n/types"
 import { email, hours, phoneDisplay } from "@/lib/contact"
 
 export const fr: Dict = {
+  projectGuide: {
+    title: "Donnez aux clients une prochaine étape claire.",
+    intro: "Un client doit comprendre votre offre, votre zone d’activité et comment vous joindre. Cela guide les pages, les textes et le développement.",
+    outcomes: [
+      { title: "Des appels pour vos services", body: "Présentez vos réalisations, vos zones d’intervention et vos services. Rendez l’appel ou la demande par WhatsApp facile à trouver." },
+      { title: "Des réservations pour votre établissement", body: "Réunissez menus, photos, adresse et informations de réservation pour aider les visiteurs à préparer leur venue." },
+      { title: "Commandes et services en ligne", body: "Rendez les produits, le paiement et les formulaires faciles à comprendre. Définissez les intégrations avant le développement." },
+    ],
+    processIntro: "Vous travaillez directement avec moi, du premier échange à la validation finale. Le périmètre précise les pages, les retouches, le prix et le calendrier.",
+    scopeTitle: "Ce que comprend la création",
+    scopeIntro: "Choisissez les services nécessaires. Le devis précise les livrables et ce qui est inclus à chaque étape.",
+    scope: [
+      { title: "Pages et contenu", body: "Définissez la liste des pages, l’action attendue sur chacune et les textes, photos et fichiers de marque nécessaires." },
+      { title: "Vérification sur vos écrans", body: "Examinez la maquette sur votre téléphone. Vérifiez la navigation, la lisibilité et le parcours de contact, de réservation ou d’achat avant validation." },
+      { title: "Mise en ligne et remise", body: "Vérifiez le domaine, HTTPS, les formulaires et les réglages de référencement prévus. Confirmez les accès aux comptes et les modalités d’assistance." },
+    ],
+    pricingLink: "Voir les forfaits et leur contenu",
+    pricingNote: "La création est facturée une fois. Le renouvellement du domaine, l’hébergement et les services payants ont leurs propres coûts, précisés dans le devis.",
+    faqTitle: "Avant de choisir un forfait",
+    faqs: [
+      { question: "Le forfait Starter comprend-il un site ?", answer: "Non. Starter comprend un logo, les textes de présentation de l’entreprise, une carte de visite, la configuration Google Business et des conseils pour les réseaux sociaux. Business Growth comprend un site de 1 à 3 pages ; Premium Brand, un site d’au moins 5 pages." },
+      { question: "Comment le prix final est-il déterminé ?", answer: "Le nombre de pages, le contenu, le travail graphique et les fonctionnalités définissent le périmètre. Les réservations, paiements en ligne et autres intégrations doivent figurer dans le devis." },
+      { question: "L’hébergement et le renouvellement du domaine sont-ils inclus ?", answer: "La création du site est un projet ponctuel. Le domaine, l’hébergement, l’e-mail et les services tiers payants peuvent entraîner des frais de renouvellement. Le devis doit préciser ces coûts et qui gère les comptes." },
+      { question: "Combien de temps faut-il pour créer un site ?", answer: "Business Growth prévoit 7 à 14 jours ; les projets Premium ont un calendrier personnalisé. Le délai convenu dépend du périmètre et de la réception des contenus, accès et retours dans les temps." },
+      { question: "Comment fonctionnent les retouches et l’assistance ?", answer: "Le périmètre précise les retouches et l’assistance incluses. De nouvelles pages ou un changement de direction peuvent nécessiter un autre devis. Premium Brand inclut 60 jours d’assistance, selon les modalités de l’accord." },
+      { question: "Que faut-il envoyer pour obtenir un devis ?", answer: "Envoyez le nom de l’entreprise, les services, la localisation, le site existant et l’action souhaitée des visiteurs. Ajoutez un budget et une date cible si vous en avez. Un message WhatsApp suffit pour commencer." },
+    ],
+    briefTitle: "Quelques détails permettent un devis précis.",
+    briefBody: "Un cahier des charges complet n’est pas nécessaire. Présentez votre activité et ce que le site doit permettre.",
+    briefPoints: ["Vos services, vos clients et vos zones d’intervention", "Votre site actuel, logo, photos ou sites de référence", "Les pages ou fonctions souhaitées, le budget et la date de lancement"],
+  },
   sceneControls: { drag: "Faites glisser pour explorer", left: "Tourner à gauche", right: "Tourner à droite", pause: "Suspendre l’animation", play: "Reprendre l’animation", search: "Trouver un article", all: "Tous les sujets", empty: "Aucun article ne correspond à cette recherche." },
   nav: {
     home: "Accueil",

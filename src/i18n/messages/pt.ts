@@ -2,6 +2,37 @@ import type { Dict } from "@/i18n/types"
 import { email, hours, phoneDisplay } from "@/lib/contact"
 
 export const pt: Dict = {
+  projectGuide: {
+    title: "Mostre ao cliente o próximo passo.",
+    intro: "O cliente precisa de perceber o que oferece, onde trabalha e como entrar em contacto. Isso orienta as páginas, os textos e o desenvolvimento.",
+    outcomes: [
+      { title: "Chamadas para serviços locais", body: "Apresente os trabalhos, as zonas de atendimento e os serviços. Deixe a chamada ou o pedido por WhatsApp fácil de encontrar." },
+      { title: "Reservas para o seu espaço", body: "Reúna menus, fotografias, localização e informações de reserva para ajudar os clientes a planear a visita." },
+      { title: "Encomendas e serviços online", body: "Torne os produtos, o pagamento e os formulários fáceis de seguir. Defina as integrações antes de começar o desenvolvimento." },
+    ],
+    processIntro: "Trabalha directamente comigo, da primeira conversa à revisão final. O âmbito define as páginas, revisões, preço e calendário.",
+    scopeTitle: "O que entra na criação do site",
+    scopeIntro: "Escolha os serviços necessários. O orçamento regista as entregas e o que está incluído em cada etapa.",
+    scope: [
+      { title: "Páginas e conteúdo", body: "Defina a lista de páginas, a acção do cliente em cada uma e os textos, fotografias e ficheiros da marca necessários." },
+      { title: "Revisão nos seus ecrãs", body: "Reveja o desenho no telemóvel. Verifique a navegação, a leitura e o percurso de contacto, reserva ou compra antes de aprovar." },
+      { title: "Lançamento e entrega", body: "Verifique o domínio, HTTPS, formulários e configuração de pesquisa previstos. Confirme os acessos às contas e as condições de apoio." },
+    ],
+    pricingLink: "Ver os pacotes e o que incluem",
+    pricingNote: "A criação tem pagamento único. Renovações de domínio, alojamento e serviços pagos têm custos próprios, indicados no orçamento.",
+    faqTitle: "Antes de escolher um pacote",
+    faqs: [
+      { question: "O pacote Starter inclui um site?", answer: "Não. Starter inclui logótipo, textos de apresentação da empresa, cartão de visita, configuração do Google Business e orientação para redes sociais. Business Growth inclui um site de 1 a 3 páginas; Premium Brand inclui um site com 5 ou mais páginas." },
+      { question: "O que determina o preço final?", answer: "O número de páginas, os conteúdos, o trabalho de design e as funcionalidades definem o âmbito. Reservas, pagamentos online e outras integrações devem constar do orçamento." },
+      { question: "O alojamento e as renovações de domínio estão incluídos?", answer: "A criação do site é um projecto pontual. Domínio, alojamento, e-mail e serviços pagos de terceiros podem ter custos de renovação. O orçamento deve identificar esses custos e quem gere as contas." },
+      { question: "Quanto tempo demora um site?", answer: "Business Growth prevê 7 a 14 dias; os projectos Premium têm um calendário próprio. O prazo acordado depende do âmbito e da recepção atempada dos conteúdos, acessos e comentários." },
+      { question: "Como funcionam as revisões e o apoio?", answer: "O âmbito define as revisões e o apoio incluídos. Novas páginas ou uma mudança de direcção podem exigir outro orçamento. Premium Brand inclui 60 dias de apoio, conforme as condições do acordo." },
+      { question: "O que devo enviar para pedir orçamento?", answer: "Envie o nome da empresa, os serviços, a localização, o site actual e a acção que pretende dos visitantes. Inclua um orçamento disponível e um prazo, se os tiver. Uma mensagem WhatsApp basta para começar." },
+    ],
+    briefTitle: "Alguns detalhes ajudam a preparar o orçamento.",
+    briefBody: "Não precisa de um documento completo. Comece pelo negócio e pelo que o site deve fazer.",
+    briefPoints: ["Os seus serviços, clientes e zonas de atendimento", "O site actual, logótipo, fotografias ou sites de referência", "As páginas ou funcionalidades, orçamento disponível e data de lançamento"],
+  },
   sceneControls: { drag: "Arraste para explorar", left: "Rodar para a esquerda", right: "Rodar para a direita", pause: "Pausar a animação", play: "Retomar a animação", search: "Encontrar um artigo", all: "Todos os temas", empty: "Nenhum artigo corresponde a esta pesquisa." },
   nav: {
     home: "Início",

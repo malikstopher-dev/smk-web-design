@@ -3,6 +3,7 @@ import { JsonLd, breadcrumbSchema } from "@/components/json-ld"
 import { CtaBand } from "@/components/page-hero"
 import { InnerHero } from "@/components/inner-hero"
 import { ServicesBoard } from "@/components/services-board"
+import { ProjectScope } from "@/components/project-guide"
 import { getDict } from "@/i18n/index"
 import { SERVICES } from "@/lib/site"
 import { siteAlternates, siteOpenGraph } from "@/lib/seo"
@@ -57,6 +58,8 @@ export default async function ServicesPage({
           locale={locale}
         />
       </section>
+
+      <ProjectScope copy={d.projectGuide} />
 
       <CtaBand
         title={d.ctaBand.title}

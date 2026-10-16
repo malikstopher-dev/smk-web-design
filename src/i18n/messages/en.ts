@@ -2,6 +2,37 @@ import type { Dict } from "@/i18n/types"
 import { email, hours, phoneDisplay } from "@/lib/contact"
 
 export const en: Dict = {
+  projectGuide: {
+    title: "Give customers a clear next step.",
+    intro: "A customer should understand what you offer, where you work and how to reach you. That shapes the pages, the writing and the build.",
+    outcomes: [
+      { title: "Calls for local services", body: "Show the work, the areas you cover and the services customers need. Put a call or WhatsApp enquiry within reach." },
+      { title: "Bookings for your venue", body: "Bring menus, photographs, location and booking details together so guests can plan a visit." },
+      { title: "Orders and online services", body: "Make products, payment steps and customer forms easy to follow. Agree the integrations before development starts." },
+    ],
+    processIntro: "You work directly with me, from the first conversation to the final review. The scope sets the pages, revisions, price and timing.",
+    scopeTitle: "What goes into the build",
+    scopeIntro: "Choose the services you need. Your quote records the deliverables and what is included at each stage.",
+    scope: [
+      { title: "Pages and content", body: "Agree the page list, the customer action on each page and the words, photographs and brand files needed." },
+      { title: "Review on real screens", body: "Review the layout on your phone. Check navigation, readability and the enquiry, booking or checkout path before approving it." },
+      { title: "Launch and handover", body: "Check the domain, HTTPS, forms and search setup included in your scope. Confirm account access and the support arrangements." },
+    ],
+    pricingLink: "See packages and what they include",
+    pricingNote: "The build is once-off. Domain renewals, hosting and paid services have their own costs, as set out in your quote.",
+    faqTitle: "Before choosing a package",
+    faqs: [
+      { question: "Does the Starter package include a website?", answer: "No. Starter covers a logo, business profile copy, business card, Google Business setup and social media guidance. Business Growth includes a 1–3 page website; Premium Brand includes a website of 5 or more pages." },
+      { question: "What determines the final price?", answer: "The number of pages, content, design work and required features determine the scope. Booking systems, online payments and other integrations need to be specified in the quote." },
+      { question: "Are hosting and domain renewals included?", answer: "The website build is a once-off project. Domain, hosting, email and paid third-party services may carry renewal charges. Your quote should identify those costs and who manages the accounts." },
+      { question: "How long does a website take?", answer: "Business Growth lists 7–14 days; Premium projects have a custom timeline. The agreed schedule depends on scope and receiving content, account access and feedback on time." },
+      { question: "How do revisions and support work?", answer: "Your scope sets the included revisions and support. New pages or a change of direction may need a separate quote. Premium Brand includes 60 days of support; the agreement defines what it covers." },
+      { question: "What should I send for a quote?", answer: "Share your business name, services, location, existing website and the action you want visitors to take. Include a budget range and deadline if you have them. A WhatsApp message is enough to start." },
+    ],
+    briefTitle: "A few details help me quote accurately.",
+    briefBody: "You do not need a finished brief. Start with the business and what the site needs to do.",
+    briefPoints: ["Your services, customers and the areas you cover", "Your existing site, logo, photographs or example sites", "The pages or features you need, budget and preferred launch date"],
+  },
   sceneControls: { drag: "Drag to explore", left: "Turn left", right: "Turn right", pause: "Pause motion", play: "Resume motion", search: "Find an article", all: "All topics", empty: "No articles match this search." },
   nav: {
     home: "Home",
