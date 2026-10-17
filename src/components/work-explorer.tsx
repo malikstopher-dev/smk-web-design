@@ -101,9 +101,6 @@ export function WorkExplorer({
                 <span>{dict.workPage.explorer.selectedLabel}</span>
                 <strong>{padIndex(activeIndex)}</strong>
                 <small>/{total}</small>
-                <div className={styles.orbitThumbnail} key={active.slug} data-project-thumbnail={active.slug}>
-                  <Image src={active.image} alt={dict.workPage.cardAlt.replace("{name}", active.name)} fill sizes="(max-width: 520px) 145px, 220px" />
-                </div>
               </div>
             </div>
             <div className={styles.orbitButtons} role="tablist" aria-label={dict.workPage.filterAria}>
@@ -135,6 +132,18 @@ export function WorkExplorer({
               })}
             </div>
           </div>
+          <a
+            className={styles.orbitThumbnail}
+            key={active.slug}
+            data-project-thumbnail={active.slug}
+            href={active.url || "#selected-project-preview"}
+            target={active.url ? "_blank" : undefined}
+            rel={active.url ? "noopener noreferrer" : undefined}
+            aria-label={`${dict.workPage.explorer.inspect}: ${active.name}`}
+          >
+            <Image src={active.image} alt={dict.workPage.cardAlt.replace("{name}", active.name)} fill sizes="(max-width: 520px) 96px, 132px" />
+            <span className={styles.thumbnailArrow} aria-hidden><ArrowUpRight size={14} /></span>
+          </a>
           <p className={styles.instruction}>{dict.workPage.explorer.instruction}</p>
           <div className={styles.orbitControls}>
             {!reduced && <button type="button" onClick={() => { setAutoplay(!autoplay); setPaused(false) }} aria-pressed={!autoplay} aria-label={autoplay ? dict.sceneControls.pause : dict.sceneControls.play}>{autoplay ? <Pause aria-hidden size={15} /> : <Play aria-hidden size={15} />}</button>}

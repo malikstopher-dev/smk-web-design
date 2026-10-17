@@ -135,8 +135,11 @@
   letter-spacing: -0.08em;
 }
 
-.orbitThumbnail { position: relative; width: clamp(130px, 16vw, 210px); aspect-ratio: 16 / 10; margin-top: 12px; border: 1px solid #c4d8e8aa; border-radius: 6px; background: #07101c; box-shadow: 0 12px 25px #0009, 0 3px 0 #617285; overflow: hidden; animation: preview-arrive 500ms ease both; }
+.orbitThumbnail { position: relative; display: block; width: clamp(96px, 10vw, 132px); aspect-ratio: 16 / 10; margin: 18px auto 0; border: 1px solid #c4d8e8aa; border-radius: 6px; background: #07101c; box-shadow: 0 8px 18px #0006; overflow: hidden; animation: preview-arrive 500ms ease both; }
 .orbitThumbnail img { object-fit: contain; }
+.orbitThumbnail:hover { border-color: white; }
+.orbitThumbnail:focus-visible { outline: 2px solid white; outline-offset: 5px; }
+.thumbnailArrow { position: absolute; right: 0; bottom: 0; display: grid; place-items: center; width: 24px; height: 24px; background: #07101ce8; color: white; pointer-events: none; }
 .projectLink { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; margin-top: 22px; border-bottom: 1px solid #b9cddd80; color: #f2f2ed; font-size: 14px; }
 .projectLink:focus-visible { outline: 2px solid white; outline-offset: 4px; }
 
