@@ -52,7 +52,7 @@ export default async function PricingPage({
 
       <section className="mx-auto max-w-6xl px-6 sm:px-10">
         <div className="editorial-divider mb-12" />
-        <PricingCards pricing={d.pricingPage} />
+        <PricingCards pricing={d.pricingPage} controls={d.sceneControls} />
         <Reveal delay={140}>
           <p className="mt-8 text-center text-sm text-white">
             {d.pricingPage.notSurePrefix}{" "}
