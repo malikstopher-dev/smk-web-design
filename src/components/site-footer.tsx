@@ -14,6 +14,15 @@ import { WordmarkBanner } from "@/components/wordmark-banner"
 import type { Dict } from "@/i18n/types"
 import type { Locale } from "@/i18n/config"
 import { SITE } from "@/lib/site"
+import styles from "./site-footer.module.css"
+
+function FooterLinks({ label, items }: { label: string; items: { href: string; label: string }[] }) {
+  const links = <ul>{items.map(item => <li key={item.href}><Link href={item.href}>{item.label}</Link></li>)}</ul>
+  return <div className={styles.linkGroup}>
+    <nav className={styles.desktopLinks} aria-label={label}><p>{label}</p>{links}</nav>
+    <details className={styles.mobileLinks}><summary>{label}<span aria-hidden>+</span></summary><nav aria-label={label}>{links}</nav></details>
+  </div>
+}
 
 function TikTokIcon({ className = "" }: { className?: string }) {
   return (
@@ -49,11 +58,11 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
   ]
 
   return (
-    <footer className="relative mt-20 overflow-hidden border-t border-white/[0.06]">
+    <footer className={`relative mt-20 overflow-hidden border-t border-white/[0.06] ${styles.footer}`}>
       {/* Decorative SMK wordmark behind the columns */}
       <span
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-display font-semibold tracking-tight text-white"
+        className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-display font-semibold tracking-tight text-white md:block"
         style={{
           fontSize: "clamp(3.25rem, 22vw, 220px)",
           lineHeight: 1,
@@ -63,17 +72,17 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
         SMK
       </span>
 
-      <WordmarkBanner text="Stopher Malik" className="relative pb-2 pt-14 sm:pt-20" />
+      <div className="hidden md:block"><WordmarkBanner text="Stopher Malik" className="relative pb-2 pt-14 sm:pt-20" /></div>
 
-      <div className="relative mx-auto grid max-w-6xl gap-10 px-6 pb-14 pt-8 sm:px-10 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
-        <div>
+      <div className={`relative mx-auto grid max-w-6xl gap-10 px-6 pb-14 pt-8 sm:px-10 md:grid-cols-[1.4fr_1fr_1fr_1.2fr] ${styles.columns}`}>
+        <div className={styles.brand}>
           <p className="font-display text-base font-semibold tracking-tight text-white">
             {SITE.business}
           </p>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/35">
             {dict.footer.blurb}
           </p>
-          <p className="tech-label mt-6">
+          <p className="tech-label mt-6 hidden md:block">
             {dict.footer.followUs}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -84,7 +93,7 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`${s.name} — ${s.handle}`}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/30 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/30 hover:text-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white/60 transition-colors duration-200 hover:border-white/30 hover:text-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 {SOCIAL_ICONS[s.name]}
               </a>
@@ -92,51 +101,10 @@ export function SiteFooter({ locale, dict }: { locale: Locale; dict: Dict }) {
           </div>
         </div>
 
-        <nav aria-label={`${dict.footer.pages} (footer)`}>
-          <p className="tech-label">
-            {dict.footer.pages}
-          </p>
-          <ul className="mt-4 space-y-2.5">
-            {items.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={lp(item.href)}
-                  className="text-sm text-white/35 transition-colors hover:text-white/70"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-            <li>
-              <Link
-                href={lp("/contact")}
-                className="text-sm text-white/35 transition-colors hover:text-white/70"
-              >
-                {dict.nav.contact}
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        <FooterLinks label={dict.footer.pages} items={[...items, { href: "/contact", label: dict.nav.contact }].map(item => ({ ...item, href: lp(item.href) }))} />
+        <FooterLinks label={dict.footer.servicesCol} items={dict.servicesPage.items.map((service, index) => ({ href: lp(`/services#${SITE_SERVICES_SLUGS[index]}`), label: service.title }))} />
 
-        <nav aria-label={`${dict.footer.servicesCol} (footer)`}>
-          <p className="tech-label">
-            {dict.footer.servicesCol}
-          </p>
-          <ul className="mt-4 space-y-2.5">
-            {dict.servicesPage.items.map((s, i) => (
-              <li key={SITE_SERVICES_SLUGS[i]}>
-                <Link
-                  href={lp(`/services#${SITE_SERVICES_SLUGS[i]}`)}
-                  className="text-sm text-white/35 transition-colors hover:text-white/70"
-                >
-                  {s.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div>
+        <div className={styles.contact}>
           <p className="tech-label">
             {dict.footer.contactCol}
           </p>
