@@ -10,9 +10,9 @@
 .earth {
   position: absolute;
   z-index: -1;
-  width: min(65vw, 780px);
+  width: min(46vw, 550px);
   right: -2%;
-  top: 50%;
+  top: 60%;
   transform: translateY(-45%);
   pointer-events: none;
   mask-image: linear-gradient(90deg, transparent, #000 28%);
@@ -40,7 +40,7 @@
 @media (max-width: 1023px) {
   .scene.scene { min-height: 0; padding-block: 7.5rem 5rem; }
   .earth {
-    width: min(85vw, 580px); top: auto; bottom: -22%; right: -15%; transform: none;
+    width: min(60vw, 410px); top: auto; bottom: -12%; right: -8%; transform: none;
     mask-image: linear-gradient(135deg, transparent 7%, #000 55%);
   }
   .scene::after { background: linear-gradient(110deg, rgba(3,7,15,.88), rgba(3,7,15,.65) 53%, rgba(3,7,15,.08)); }
@@ -52,6 +52,6 @@
 }
 @media (max-width: 480px) {
   .scene.scene { padding-block: 6.5rem 4.5rem; }
-  .earth { width: 100vw; right: -24%; bottom: -14%; }
+  .earth { width: 68vw; right: -12%; bottom: -8%; }
 }
 @media (prefers-reduced-motion: reduce) { .pause { display: none; } }
