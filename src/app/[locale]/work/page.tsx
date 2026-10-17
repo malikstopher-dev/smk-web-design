@@ -41,7 +41,7 @@ export default async function WorkPage({
         ])}
       />
 
-      <InnerHero eyebrow={d.nav.work} heading={d.workPage.title.replace("{n}", String(PROJECTS.length))} subtext={d.workPage.lede} scene="work" controls={d.sceneControls} link={{ href: "#work-explorer-heading", label: d.workPage.explorer.title }} previews={PROJECTS.filter(p => ["boma", "salem"].includes(p.slug))} />
+      <InnerHero eyebrow={d.nav.work} heading={d.workPage.title.replace("{n}", String(PROJECTS.length))} subtext={d.workPage.lede} scene="work" controls={d.sceneControls} link={{ href: "#work-explorer-heading", label: d.workPage.explorer.title }} />
 
       <WorkExplorer projects={PROJECTS} locale={locale} dict={d} />
 

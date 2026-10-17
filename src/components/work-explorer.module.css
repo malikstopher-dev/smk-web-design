@@ -129,11 +129,16 @@
 .centerReadout strong {
   margin-top: 0.15rem;
   color: #fbfaf6;
-  font-size: clamp(3.8rem, 8vw, 6.8rem);
+  font-size: clamp(2rem, 5vw, 3.2rem);
   font-weight: 500;
   line-height: 0.9;
   letter-spacing: -0.08em;
 }
+
+.orbitThumbnail { position: relative; width: clamp(130px, 16vw, 210px); aspect-ratio: 16 / 10; margin-top: 12px; border: 1px solid #c4d8e8aa; border-radius: 6px; background: #07101c; box-shadow: 0 12px 25px #0009, 0 3px 0 #617285; overflow: hidden; animation: preview-arrive 500ms ease both; }
+.orbitThumbnail img { object-fit: contain; }
+.projectLink { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; margin-top: 22px; border-bottom: 1px solid #b9cddd80; color: #f2f2ed; font-size: 14px; }
+.projectLink:focus-visible { outline: 2px solid white; outline-offset: 4px; }
 
 .centerReadout small {
   margin-top: 0.3rem;
@@ -162,7 +167,7 @@
   color: rgba(221, 235, 255, 0.8);
   font-size: clamp(0.58rem, 1vw, 0.68rem);
   font-variant-numeric: tabular-nums;
-  transform: rotate(calc(var(--index) * 360deg / var(--total))) translateY(calc(-1 * clamp(10.2rem, 15.5vw, 13rem))) rotate(calc(var(--index) * -360deg / var(--total)));
+  transform: translate(-50%, -50%) rotate(calc(var(--index) * 360deg / var(--total))) translateY(calc(-1 * clamp(10.2rem, 15.5vw, 13rem))) rotate(calc(var(--index) * -360deg / var(--total)));
   pointer-events: auto;
   transition: border-color 220ms ease, background 220ms ease, color 220ms ease, box-shadow 220ms ease, scale 220ms ease;
 }
@@ -316,11 +321,12 @@
   .explorerGrid { width: min(100% - 2rem, 38rem); }
   .heading { font-size: clamp(2.7rem, 14vw, 4rem); }
   .orbitStage { width: calc(100% - 1rem); }
-  .orbitButton { transform: rotate(calc(var(--index) * 360deg / var(--total))) translateY(calc(-1 * clamp(8.2rem, 30vw, 10rem))) rotate(calc(var(--index) * -360deg / var(--total))); }
+  .orbitButton { width: 30px; height: 30px; transform: translate(-50%, -50%) rotate(calc(var(--index) * 360deg / var(--total))) translateY(calc(-1 * clamp(8.2rem, 39vw, 10rem))) rotate(calc(var(--index) * -360deg / var(--total))); }
   .previewCopy h3 { font-size: 2.4rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .orbitThumbnail { animation: none; }
   .previewImage { animation: none; }
   .orbitButton,
   .orbitControls button,
