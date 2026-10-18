@@ -30,7 +30,6 @@ export function PortraitCard({
   caption: string
 }) {
   const wrapRef = useRef<HTMLDivElement>(null)
-  const armedRef = useRef(false)
   /* SSR, reduced motion, and no-JS render the finished card.
      Motion-OK clients hide it after mount, then reveal. */
   const [entered, setEntered] = useState(true)
@@ -50,10 +49,11 @@ export function PortraitCard({
     setEntered(false)
 
     let raf = 0
+    let armed = false
     const io = new IntersectionObserver(
       (entries) => {
-        if (!entries.some((e) => e.isIntersecting) || armedRef.current) return
-        armedRef.current = true
+        if (!entries.some((e) => e.isIntersecting) || armed) return
+        armed = true
         io.disconnect()
         raf = requestAnimationFrame(() => setEntered(true))
       },
@@ -67,9 +67,8 @@ export function PortraitCard({
   }, [])
 
   return (
-    <div>
+    <div ref={wrapRef}>
       <div
-        ref={wrapRef}
         className={styles.frame}
         style={{
           opacity: entered ? 1 : 0,
